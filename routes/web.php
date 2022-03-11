@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\JobPostingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,7 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/{any?}', function () {
-    return view('job_posting.app');
+    return view('layouts.app');
 })->where('any','.*');
-
-//Route::resource('/job_postings', JobPostingController::class);

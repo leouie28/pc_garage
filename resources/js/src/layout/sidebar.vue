@@ -1,6 +1,10 @@
 <template>
     <v-navigation-drawer
       v-model="drawer"
+      :color="'#00695C'"
+      class=" accent-4"
+      width=300
+      dark
       app
     >
         <v-img src="" class="mt-3 pa-4">
@@ -11,7 +15,7 @@
                 size="64"
                 >
                 </v-avatar>
-                <div>admin user</div>
+                <div>@user</div>
             </div>
         </v-img>
       <v-divider></v-divider>
@@ -41,7 +45,7 @@ export default {
         return{
             links: [
                 ['mdi-view-dashboard-outline', 'Dashboard'],
-                ['mdi-briefcase', 'Jobs'],
+                ['mdi-briefcase', 'Product'],
                 ['mdi-account-group', 'Users'],
                 ['mdi-alert-octagon', 'Reports'],
                 ['mdi-logout', 'Logout'],

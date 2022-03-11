@@ -2125,6 +2125,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2298,11 +2299,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['drawer'],
   data: function data() {
     return {
-      links: [['mdi-view-dashboard-outline', 'Dashboard'], ['mdi-briefcase', 'Jobs'], ['mdi-account-group', 'Users'], ['mdi-alert-octagon', 'Reports'], ['mdi-logout', 'Logout']]
+      links: [['mdi-view-dashboard-outline', 'Dashboard'], ['mdi-briefcase', 'Product'], ['mdi-account-group', 'Users'], ['mdi-alert-octagon', 'Reports'], ['mdi-logout', 'Logout']]
     };
   }
 });
@@ -20738,7 +20743,7 @@ var render = function () {
         },
       }),
       _vm._v(" "),
-      _c("v-toolbar-title", [_vm._v("Job Posting")]),
+      _c("v-toolbar-title", [_vm._v("Your Buisness")]),
       _vm._v(" "),
       _c("v-spacer"),
       _vm._v(" "),
@@ -20896,7 +20901,8 @@ var render = function () {
   return _c(
     "v-navigation-drawer",
     {
-      attrs: { app: "" },
+      staticClass: " accent-4",
+      attrs: { color: "#00695C", width: "300", dark: "", app: "" },
       model: {
         value: _vm.drawer,
         callback: function ($$v) {
@@ -20916,7 +20922,7 @@ var render = function () {
               attrs: { color: "grey darken-1", size: "64" },
             }),
             _vm._v(" "),
-            _c("div", [_vm._v("admin user")]),
+            _c("div", [_vm._v("@user")]),
           ],
           1
         ),
@@ -83036,8 +83042,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Leouie Tabique\Desktop\web\job_posting\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Leouie Tabique\Desktop\web\job_posting\resources\css\app.css */"./resources/css/app.css");
+__webpack_require__(/*! /home/romar/Tabique/Projects/template/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/romar/Tabique/Projects/template/resources/css/app.css */"./resources/css/app.css");
 
 
 /***/ })

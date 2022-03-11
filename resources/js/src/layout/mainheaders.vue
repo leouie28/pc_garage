@@ -5,7 +5,7 @@
       elevation="4"
     >
       <v-app-bar-nav-icon @click="$emit('handDrawer')"></v-app-bar-nav-icon>
-      <v-toolbar-title>Job Posting</v-toolbar-title>
+      <v-toolbar-title>Your Buisness</v-toolbar-title>
       <v-spacer />
       <v-col lg="6" cols="12">
         <v-form class="mt-5">
