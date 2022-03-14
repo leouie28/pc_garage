@@ -1,8 +1,9 @@
 <template>
     <v-app-bar app
-      color="white"
+      :color="'#00897B'"
       elevate-on-scroll
       elevation="4"
+      dark
     >
       <v-app-bar-nav-icon @click="$emit('handDrawer')"></v-app-bar-nav-icon>
       <v-toolbar-title>Your Buisness</v-toolbar-title>
@@ -15,6 +16,9 @@
           dense
           placeholder="Search Here"
           append-icon="mdi-magnify"
+          color="success"
+          light
+          background-color="#fff"
           >
           </v-text-field>
         </v-form>
