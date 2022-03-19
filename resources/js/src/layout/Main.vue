@@ -34,7 +34,7 @@ export default {
   data: () => ({
     cards: ['Today', 'Yesterday'],
     drawer: true,
-    login: true,
+    login: false,
   }),
   mounted(){
     console.log(this.$route)
