@@ -22,9 +22,10 @@
 
       <v-list>
         <v-list-item
-          v-for="[icon, text] in links"
+          v-for="[icon, text, route] in links"
           :key="icon"
           link
+          @click="$router.push({name: route})"
         >
           <v-list-item-icon>
             <v-icon>{{ icon }}</v-icon>
@@ -43,13 +44,16 @@ export default {
     props:['drawer'],
     data(){
         return{
-            links: [
-                ['mdi-view-dashboard-outline', 'Dashboard'],
-                ['mdi-briefcase', 'Product'],
-                ['mdi-account-group', 'Users'],
-                ['mdi-alert-octagon', 'Reports'],
-                ['mdi-logout', 'Logout'],
-                ],
+          links: [
+            ['mdi-domain', 'Companies', 'comp'],
+            ['mdi-view-dashboard-outline', 'Dashboard', 'dash'],
+            ['mdi-face-agent', 'Employees', 'emp'],
+            ['mdi-account-group', 'Customers', 'cust'],
+            ['mdi-briefcase', 'Products', 'prod'],
+            ['mdi-format-list-checks', 'Orders', 'ord'],
+            ['mdi-credit-card-outline', 'Payments', 'pay'],
+            ['mdi-logout', 'Logout'],
+          ],
         }
     }
 }
