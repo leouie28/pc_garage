@@ -33,7 +33,6 @@ class AuthController extends Controller
             return response(['message' => 'Incorrect Credentials'],404);
         }
         Auth::login($admin);
-
         return response(['user' => auth()->user()]);
     }
     public function logout(Request $request){
