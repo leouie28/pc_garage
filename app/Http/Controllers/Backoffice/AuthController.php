@@ -24,23 +24,17 @@ class AuthController extends Controller
             'message' => 'Validation Error',
             'data'    => $validator->errors()
         ], 422);
-        
+        dd($request);
         $admin = Admin::where('email',$data['email'])->first();
         if(!$admin){
-            return response(['error_message' => 'Incorrect credentials']);
+            return response(['message' => 'Incorrect Credentials'],404);
         }
-        $admin->makeVisible(['password']);
         if(!Hash::check($data['password'],$admin->password)){
-            return response(['error_message' => 'Incorrect credentials']);
+            return response(['message' => 'Incorrect Credentials'],404);
         }
         Auth::login($admin);
 
         return response(['user' => auth()->user()]);
-    }
-    
-    public function checkAdmin(Request $request){
-        
-        return Auth::check(); 
     }
     public function logout(Request $request){
         auth()->guard('web')->logout();

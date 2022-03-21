@@ -18,37 +18,27 @@ class AuthController extends Controller
             'email'    => 'required|email',
             'password' => 'required',
         ]);
-        
         if($validator->fails())
         return response()->json([
             'message' => 'Validation Error',
             'data'    => $validator->errors()
-        ], 422);
+        ], 404);
 
         $employee = Employee::where('email', $request->email)->first();  
         if(!$employee){
-            return response(['error_message' => 'Incorrect credentials']);
+            return response()->json(['message' => 'Incorrect Credentials'], 404);
         }
         if(Hash::check($request->password,$employee->password)){
             $data['name'] = $employee->name;
             $data['accesstoken'] = $employee->createToken('accessToken')->accessToken;
 
-            return response()->json([
-                'status'  => true,
-                'message' => 'Employee Login Successful',
-            ]);
+            return response()->json($employee, 200);
         } 
         else{ 
-            return response()->json([
-                'message' => 'Invalid Credentials'
-            ],422);
+            return response()->json(['message' => 'Invalid Credentials'], 404);
         }
     }
-    public function checkEmployee(Request $request)
-    {
-        return $request->user();
-    }
-    public function logout(Request $request)
+    public function logout()
     {
         auth()->guard('api')->user()->token()->revoke();
         return response()->json(['Logout Success'], 200); 
