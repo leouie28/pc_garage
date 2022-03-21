@@ -16,7 +16,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(),
         [
             'email'    => 'required|email',
-            'password' => 'required',
+            'password' => 'required ',
         ]);
         
         if($validator->fails())
@@ -36,5 +36,16 @@ class AuthController extends Controller
         Auth::login($admin);
 
         return response(['user' => auth()->user()]);
+    }
+    
+    public function checkAdmin(Request $request){
+        
+        return Auth::check(); 
+    }
+    public function logout(Request $request){
+        auth()->guard('web')->logout();
+        $request->session()->invalidate();
+
+        return "logout success";
     }
 }
