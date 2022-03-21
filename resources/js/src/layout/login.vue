@@ -23,18 +23,23 @@
                                                     </v-btn>
                                                 </div> -->
                                                 <!-- <h4 class="text-center mlt-4">Ensure your email for registration</h4> -->
-                                                <v-form>
+                                                <v-form
+                                                ref="form"
+                                                v-model="login">
                                                     <v-text-field
+                                                        v-model="credential.email"
                                                         label="Email"
                                                         name="Email"
+                                                        :rules="emailRules"
                                                         prepend-icon="mdi-email"
                                                         type="text"
                                                         color="teal accent-3"
                                                     />
                                                     <v-text-field
-                                                        id="password"
+                                                        v-model="credential.password"
                                                         label="Password"
                                                         name="Password"
+                                                        :rules="passwordRules"
                                                         prepend-icon="mdi-lock"
                                                         type="password"
                                                         color="teal accent-3"
@@ -43,7 +48,7 @@
                                                 <a href="#" style="text-decoration: none; color: black;"><h3 class="text-center mt-3">Forgot your password ?</h3></a>
                                             </v-card-text>
                                             <div class="text-center mt-3">
-                                                <v-btn rounded color="teal accent-3" dark>SIGN IN</v-btn>
+                                                <v-btn rounded color="teal accent-3" dark @click="login">SIGN IN</v-btn>
                                             </div>
                                             <br>
                                         </v-col>
@@ -66,11 +71,37 @@
 
 <script>
   export default {
-    data: () => ({
-      step: 1
-    }),
-    props: {
-      source: String
+    name: 'login',
+    data(){
+     return{
+          credential:{
+              emial:null,
+              password:null
+          },
+          dialog : false,
+            email       : '',
+            emailRules  : [
+                email => !!email || 'E-mail is required',
+                v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+            ],
+            password        : '',
+            passwordRules   : [
+                password => !!password ||'Password is required',
+            ],
+             errors: {
+                email : []
+            },
+
+     }
+ },
+    methods: {
+         login(){
+          this.$store.dispatch('login', this.credential).then(() =>{
+              this.$router.push({
+                  name: 'Main'
+              })
+          })
+      }
     }
   };
 </script>
