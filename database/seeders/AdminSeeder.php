@@ -18,7 +18,7 @@ class AdminSeeder extends Seeder
             'first_name' =>'ubi',
             'last_name' =>'admin',
             'email' =>'ubiadmin@admin.com',
-            'password' =>'admin123',//password
+            'password' =>bcrypt('admin123'),//password
         ]);
     }
 }
