@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Employee extends Authenticatable
+class Company extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -22,5 +22,4 @@ class Employee extends Authenticatable
     protected $hidden = [
         'password',
     ];
-    
 }
