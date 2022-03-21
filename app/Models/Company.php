@@ -13,11 +13,12 @@ class Company extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable=[
-        'first_name',
-        'last_name',
+        'name',
         'phone',
+        'address',
         'email',
         'password',
+        'status',
     ];
     protected $hidden = [
         'password',
