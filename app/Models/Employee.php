@@ -13,14 +13,20 @@ class Employee extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable=[
-        'first_name',
-        'last_name',
-        'phone',
+        'name',
         'email',
         'password',
+        'phone',
+        'position',
+        'status',
+        'company_id',
     ];
     protected $hidden = [
         'password',
     ];
+    public function company()
+    {
+        return $this->belongsto(Company::class);
+    }
     
 }

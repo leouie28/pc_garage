@@ -23,4 +23,8 @@ class Company extends Authenticatable
     protected $hidden = [
         'password',
     ];
+    public function employees()
+    {
+        return $this->hasmany(Employee::class);
+    }
 }

@@ -23,7 +23,6 @@ class CreateEmployeesTable extends Migration
             $table->boolean('status')->default(0);
             $table->unsignedBigInteger('company_id');
             $table->timestamps();
-            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
         });
     }
 
