@@ -24,12 +24,11 @@ class AuthController extends Controller
             'message' => 'Validation Error',
             'data'    => $validator->errors()
         ], 422);
-        dd($request);
         $admin = Admin::where('email',$data['email'])->first();
         if(!$admin){
             return response(['message' => 'Incorrect Credentials'],404);
         }
-        if(!Hash::check($data['password'],$admin->password)){
+        if(Hash::check($data['password'],$admin->password)){
             return response(['message' => 'Incorrect Credentials'],404);
         }
         Auth::login($admin);
@@ -40,5 +39,29 @@ class AuthController extends Controller
         $request->session()->invalidate();
 
         return "logout success";
+    }
+    //for company admin login
+    public function companyLogin(Request $request)
+    {
+        $validator = Validator::make($request->all(),
+        [
+            'email'    => 'required|email',
+            'password' => 'required ',
+        ]);
+        
+        if($validator->fails())
+        return response()->json([
+            'message' => 'Validation Error',
+            'data'    => $validator->errors()
+        ], 422);
+        $company = Company::where('email',$data['email'])->first();
+        if(!$company){
+            return response(['message' => 'Incorrect Credentials'],404);
+        }
+        if(!Hash::check($data['password'],$company->password)){
+            return response(['message' => 'Incorrect Credentials'],404);
+        }
+        Auth::login($admin);
+        return response(['user' => auth()->user()]);
     }
 }
