@@ -44,6 +44,10 @@ return [
             'driver' => 'passport',
             'provider' => 'employee',
         ],
+        'company-api' => [
+            'driver' => 'passport',
+            'provider' => 'company',
+        ],
     ],
 
     /*
@@ -71,6 +75,10 @@ return [
         'employee' => [
             'driver' => 'eloquent',
             'model' => App\Models\Employee::class,
+        ],
+        'company' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Company::class,
         ],
 
         // 'users' => [
@@ -103,6 +111,12 @@ return [
         ],
         'employee' => [
             'provider' => 'employee',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'company' => [
+            'provider' => 'company',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

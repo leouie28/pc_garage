@@ -16,9 +16,11 @@ class CompanySeeder extends Seeder
     {
         Company::create([
             'name' =>'test',
-            'email' =>'test@gmail.com',
+            'email' =>'admintest@gmail.com',
             'phone' => '09512318472',
-            'address' => 'calbayog city',
+            'barangay' => 'cahumpan',
+            'city' => 'cahumpan',
+            'province' => 'cahumpan',
             'password' =>bcrypt('123456'),//password
             'status' =>'0',
         ]);
