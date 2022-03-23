@@ -29,10 +29,9 @@ class AuthController extends Controller
             return response()->json(['message' => 'Incorrect Credentials'], 404);
         }
         if(Hash::check($request->password,$employee->password)){
-            $data['name'] = $employee->name;
-            $data['email'] = $employee->email;
-            $data['accesstoken'] = $employee->createToken('accessToken')->accessToken;
-
+            $token = $employee->createToken('accessToken')->accessToken;
+            $data = $employee;
+            $data['accesstoken'] = $token;
             return response()->json($data, 200);
         } 
         else{ 
