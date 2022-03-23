@@ -27,4 +27,16 @@ class Company extends Authenticatable
     {
         return $this->hasmany(Employee::class);
     }
+    public function products()
+    {
+        return $this->hasmany(Product::class);
+    }
+    public function categories()
+    {
+        return $this->hasmany(Category::class);
+    }
+    public function customers()
+    {
+        return $this->belongsToMany(Customer::class);
+    }
 }

@@ -20,7 +20,7 @@ class CreateOptionsTable extends Migration
             $table->string('name');
             $table->unsignedBigInteger('variation_id');
             $table->timestamps();
-            $table->foreign('variation_id')->references('id')->on('variations')->onDelete('cascade');
+            
         });
     }
 

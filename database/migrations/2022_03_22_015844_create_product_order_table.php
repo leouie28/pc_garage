@@ -16,6 +16,8 @@ class CreateProductOrderTable extends Migration
         Schema::create('product_order', function (Blueprint $table) {
             $table->id();
             $table->boolean('status')->default(0);
+            $table->integer('quantity')->default(1);
+            $table->double('price');
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('option_id');

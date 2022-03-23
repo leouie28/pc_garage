@@ -24,9 +24,13 @@ class Employee extends Authenticatable
     protected $hidden = [
         'password',
     ];
-    public function company()
+    public function companies()
     {
         return $this->belongsto(Company::class);
+    }
+    public function orders()
+    {
+        return $this->hasmany(Order::class);
     }
     
 }

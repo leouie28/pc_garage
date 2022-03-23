@@ -63,7 +63,7 @@
 
 <script>
   export default {
-    name: 'login',
+    name: 'Login',
     data(){
      return{
           credential:{
@@ -85,12 +85,21 @@
  },
     methods: {
          login(){
-          this.$store.dispatch('login', this.credential).then(() =>{
-              this.$router.push({
-                  name: 'Main'
-              })
-          })
-      }
+            let payload = this.credential
+                axios.post(`/admin/login`,{...payload}).then(({data})=>{
+                    if(!data.error_message){
+                        this.$router.push({name:'dashboard'})
+                    }else {
+                        this.iserror = true
+                        setTimeout(() => {
+                            this.iserror = false
+                        }, 5000);
+                    }
+                })
+                .finally(()=>{
+                    this.isloading = false
+                })
+        }
     }
   };
 </script>

@@ -23,7 +23,7 @@
 <script>
 import MainHeaders from './mainheaders.vue'
 import Sidebar from './sidebar.vue'
-import Login from './login.vue'
+import Login from './Login.vue'
 
 export default {
   components:{
