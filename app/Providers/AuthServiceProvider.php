@@ -30,6 +30,7 @@ class AuthServiceProvider extends ServiceProvider
 
         Passport::tokensCan([
             'employee' => 'User Type',
+            'company' => 'User Type',
             'admin' => 'Admin User Type',
         ]);
     }
