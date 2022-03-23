@@ -84,22 +84,16 @@
      }
  },
     methods: {
-         login(){
-            let payload = this.credential
-                axios.post(`/admin/login`,{...payload}).then(({data})=>{
-                    if(!data.error_message){
-                        this.$router.push({name:'dashboard'})
-                    }else {
-                        this.iserror = true
-                        setTimeout(() => {
-                            this.iserror = false
-                        }, 5000);
-                    }
-                })
-                .finally(()=>{
-                    this.isloading = false
-                })
-        }
+         login() {
+                this.axios.post('http://127.0.0.1:8000/api/login', this.credential)
+                    .then(({data}) => {
+                        Auth.login(data.access_token,data.credential); //set local storage
+                        this.$router.push('/dashboard');
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
     }
   };
 </script>
