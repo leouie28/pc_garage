@@ -15,11 +15,13 @@ class EmployeeSeeder extends Seeder
     public function run()
     {
         Employee::create([
-            'first_name' =>'rence',
-            'last_name' =>'bagaan',
-            'phone' => '09512318472',
-            'email' =>'florence@gmail.com',
+            'name' =>'rence',
+            'email' =>'test@gmail.com',
             'password' =>bcrypt('123456'),//password
+            'phone' => '09512318472',
+            'position' => 'Waiter',
+            'status' => '0',
+            'company_id' => '1',
         ]);
     }
 }
