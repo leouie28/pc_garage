@@ -32,12 +32,16 @@ class AuthController extends Controller
             
             $admin = Admin::select('admins.*')->find(auth()->guard('admin')->user()->id);
             $data =  $admin;
-            $data['token'] =  $admin->createToken('MyToken',['admin'])->accessToken;
+            $data['token'] =  $admin->createToken('Sadmintoken',['admin'])->accessToken;
             return response()->json($data, 200);
         } 
         else{ 
             return response()->json(['message' => 'Invalid Credentials'], 404);
         }
+    }
+    public function checkSadmin(Request $request){
+        return Auth::check();
+        // return Auth::guard('web')->user(); 
     }
     public function sadminLogout()
     {
@@ -64,12 +68,16 @@ class AuthController extends Controller
             
             $company = Company::select('companies.*')->find(auth()->guard('company')->user()->id);
             $data =  $company;
-            $data['token'] =  $company->createToken('Mytoken',['company'])->accessToken; 
+            $data['token'] =  $company->createToken('Admintoken',['company'])->accessToken; 
             return response()->json($data, 200);
         } 
         else{ 
             return response()->json(['message' => 'Invalid Credentials'], 404);
         }
+    }
+    public function checkAdmin(Request $request){
+        return Auth::check();
+        // return Auth::guard('web')->user(); 
     }
     public function adminLogout()
     {

@@ -1,6 +1,6 @@
 <template>
   <v-app
-  v-if="login"
+  v-if="isAuth"
   >
     <main-headers @handDrawer="drawer = !drawer"></main-headers>
     <sidebar :drawer="drawer"></sidebar>
@@ -13,17 +13,13 @@
       </v-container>
     </v-main>
   </v-app>
-  <v-app
-  v-else
-  >
-    <login></login>
-  </v-app>
+    <login v-else></login>
 </template>
 
 <script>
 import MainHeaders from './mainheaders.vue'
 import Sidebar from './sidebar.vue'
-import Login from './auth/login.vue'
+import Login from './login.vue'
 
 export default {
   components:{
@@ -31,13 +27,28 @@ export default {
     Sidebar,
     Login,
   },
-  data: () => ({
-    cards: ['Today', 'Yesterday'],
-    drawer: true,
-    login: false,
-  }),
+  data(){
+        return{
+            isSuperAdmin:false,
+            isAuth:false,
+            isfetching:true,
+        }
+    },
+    methods:{
+       getAuthadmin(){
+            axios.get(`/api/checkadmin`).then(({data})=>{
+                console.log(data,"slllslslls")
+                this.isAuth = data
+                this.isfetching = false
+            })
+        }
+    },
   mounted(){
-    console.log(this.$route)
-  }
+  },
+   watch:{
+        $route (to, from){
+           this.getAuthadmin()
+        }
+    }
 }
 </script>
