@@ -38,15 +38,27 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'Admin',
+            'provider' => 'users',
+        ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+        'admin-api' => [
+            'driver' => 'passport',
+            'provider' => 'admins',
+        ],
+        'company' => [
+            'driver' => 'session',
+            'provider' => 'companies',
+        ],
+        'company-api' => [
+            'driver' => 'passport',
+            'provider' => 'companies',
         ],
         'api' => [
             'driver' => 'passport',
             'provider' => 'employee',
-        ],
-        'company-api' => [
-            'driver' => 'passport',
-            'provider' => 'company',
         ],
     ],
 
@@ -68,7 +80,11 @@ return [
     */
 
     'providers' => [
-        'Admin' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+        'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
@@ -76,7 +92,7 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Employee::class,
         ],
-        'company' => [
+        'companies' => [
             'driver' => 'eloquent',
             'model' => App\Models\Company::class,
         ],
@@ -115,8 +131,8 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-        'company' => [
-            'provider' => 'company',
+        'companies' => [
+            'provider' => 'companies',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
