@@ -6,7 +6,7 @@
       dark
     >
       <v-app-bar-nav-icon @click="$emit('handDrawer')"></v-app-bar-nav-icon>
-      <v-toolbar-title>Your Buisness</v-toolbar-title>
+      <!-- <v-toolbar-title>Your Buisness</v-toolbar-title>
       <v-spacer />
       <v-col lg="6" cols="12">
         <v-form class="mt-5">
@@ -62,7 +62,7 @@
             </v-list-item>
           </template>
         </v-list>
-      </v-menu>
+      </v-menu> -->
 
       <!-- <v-btn icon>
         <v-icon>mdi-heart</v-icon>

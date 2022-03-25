@@ -5,38 +5,38 @@ export default [
     //     name: 'crud'
     // },
     {
-        path: '/comp',
-        component: () => import('../pages/crud/index_company.vue'),
-        name: 'comp'
+        path: '/company',
+        component: () => import('../pages/crud/company.vue'),
+        name: 'company'
     },
     {
-        path: '/dash',
-        component: () => import('../pages/crud/index_dashboard.vue'),
-        name: 'dash'
+        path: '/dashboards',
+        component: () => import('../pages/crud/dashboard.vue'),
+        name: 'dashboards'
     },
     {
-        path: '/emp',
+        path: '/employee',
         component: () => import('../pages/crud/employee.vue'),
-        name: 'emp'
+        name: 'employee'
     },
     {
-        path: '/cust',
+        path: '/customer',
         component: () => import('../pages/crud/customer.vue'),
-        name: 'cust'
+        name: 'customer'
     },
     {
-        path: '/prod',
+        path: '/product',
         component: () => import('../pages/crud/product.vue'),
-        name: 'prod'
+        name: 'product'
     },
     {
-        path: '/ord',
+        path: '/order',
         component: () => import('../pages/crud/order.vue'),
-        name: 'ord'
+        name: 'order'
     },
     {
-        path: '/pay',
+        path: '/payment',
         component: () => import('../pages/crud/payment.vue'),
-        name: 'pay'
+        name: 'payment'
     },
 ]
