@@ -45,13 +45,13 @@ export default {
     data(){
         return{
           links: [
-            ['mdi-domain', 'Companies', 'comp'],
-            ['mdi-view-dashboard-outline', 'Dashboard', 'dash'],
-            ['mdi-face-agent', 'Employees', 'emp'],
-            ['mdi-account-group', 'Customers', 'cust'],
-            ['mdi-briefcase', 'Products', 'prod'],
-            ['mdi-format-list-checks', 'Orders', 'ord'],
-            ['mdi-credit-card-outline', 'Payments', 'pay'],
+            ['mdi-domain', 'Companies', 'company'],
+            ['mdi-view-dashboard-outline', 'Dashboard', 'dashboards'],
+            ['mdi-face-agent', 'Employees', 'employee'],
+            ['mdi-account-group', 'Customers', 'customer'],
+            ['mdi-briefcase', 'Products', 'product'],
+            ['mdi-format-list-checks', 'Orders', 'order'],
+            ['mdi-credit-card-outline', 'Payments', 'payment'],
             ['mdi-logout', 'Logout'],
           ],
         }

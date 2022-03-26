@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "apexcharts": "^3.33.2",
+        "vue-toast-notification": "^3.0.0",
         "vuetify": "^2.6.3"
     }
 }

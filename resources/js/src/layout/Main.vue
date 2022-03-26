@@ -23,7 +23,7 @@
 <script>
 import MainHeaders from './mainheaders.vue'
 import Sidebar from './sidebar.vue'
-import Login from './login.vue'
+import Login from './auth/login.vue'
 
 export default {
   components:{
@@ -34,7 +34,7 @@ export default {
   data: () => ({
     cards: ['Today', 'Yesterday'],
     drawer: true,
-    login: false,
+    login: true,
   }),
   mounted(){
     console.log(this.$route)
