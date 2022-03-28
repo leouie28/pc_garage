@@ -1,9 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+<<<<<<< Updated upstream
 use App\Http\Controllers\Backoffice\AuthController;
 <<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\Backoffice\AuthController;
 
 Route::post('/login',[AuthController::class,'login']);
 Route::post('/companyLogin',[AuthController::class,'companyLogin']);
@@ -12,11 +17,13 @@ Route::group(['middleware'=>['auth:web']],function(){
     Route::post('logout',[AuthController::class,'logout']);
 });
 
+//Company section
 Route::get('company', [CompanyController::class, 'index']);
 Route::post('company/create', [CompanyController::class, 'store']);
 Route::put('company/update/{id}', [CompanyController::class, 'update']);
 Route::delete('company/destroy/{id}', [CompanyController::class, 'destroy']);
 Route::put('updateStatus/{id}', [CompanyController::class, 'updateStatus']);
+<<<<<<< Updated upstream
 =======
 
 
@@ -40,3 +47,12 @@ Route::group( ['prefix' => 'admin','middleware' => ['auth:company-api','scopes:c
     //Route::get('dashboard',[LoginController::class, 'adminDashboard']);
 });
 >>>>>>> 1a216b13420d2af6ae1abca3b40d032c0814352e
+=======
+
+//Employee section
+Route::get('employee', [EmployeeController::class, 'index']);
+Route::post('employee/create', [EmployeeController::class, 'store']);
+Route::put('employee/update/{id}', [EmployeeController::class, 'update']);
+Route::delete('employee/destroy/{id}', [EmployeeController::class, 'destroy']);
+Route::put('updateStatus/{id}', [EmployeeController::class, 'updateStatus']);
+>>>>>>> Stashed changes

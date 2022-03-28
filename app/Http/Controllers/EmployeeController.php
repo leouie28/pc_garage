@@ -2,42 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class CompanyController extends Controller
+class EmployeeController extends Controller
 {
     public function index()
     {
-        return Company::get();
+        return Employee::get();
     }
 
     public function create()
     {
-        return Company::view();
+        return Employee::view();
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|unique:companies',
+            'email' => 'required|email|unique:employees',
             'phone' => 'required|regex:/(09)[0-9]{9}/',
             'password' => 'required|min:8',
         ]);
 
-        $company = new Company([
+        $employee = new Employee([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'barangay' => $request->barangay,
-            'city' => $request->city,
-            'province' => $request->province,
+            'position' => $request->position,
             'password' => Hash::make($request->password)
         ]);
-        $company->save();
+        $employee->save();
  
-        return response()->json('Company successfully added');
+        return response()->json('employee successfully added');
     }
 
     public function show($id)
@@ -53,37 +51,37 @@ class CompanyController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'email' => 'required|email|unique:companies,email,'.$id,
+            'email' => 'required|email|unique:employees,email,'.$id,
             'phone' => 'required|regex:/(09)[0-9]{9}/',
             'password' => 'min:8',
         ]);
 
-        $company = Company::find($id);
+        $employee = Employee::find($id);
         $input = $request->all();
 
         if(!isset($input['password'])){
-            $input['password'] = $company->password;
+            $input['password'] = $employee->password;
         }else {
             $input['password'] = Hash::make($request->password);
         }
 
-        $company->update($input);
+        $employee->update($input);
  
-        return response()->json('Company successfully updated');
+        return response()->json('employee successfully updated');
     }
 
     public function destroy($id)
     {
-        $company = Company::find($id);
-        $company->delete();
+        $employee = Employee::find($id);
+        $employee->delete();
  
-        return response()->json('Company successfully deleted');
+        return response()->json('employee successfully deleted');
     }
 
     public function updateStatus($id)
     {
-        $company = Company::find($id);
-        $company->update(['status'=>  !$company->status]);
-        return  $company;
+        $employee = Employee::find($id);
+        $employee->update(['status'=>  !$employee->status]);
+        return  $employee;
     }
 }
