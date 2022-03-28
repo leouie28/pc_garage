@@ -21,14 +21,11 @@
                                                     </v-btn>
                                                 </div> -->
                                                 <!-- <h4 class="text-center mlt-4">Ensure your email for registration</h4> -->
-                                                <v-form
-                                                ref="form"
-                                                v-model="login">
+                                                <v-form>
                                                     <v-text-field
                                                         v-model="credential.email"
                                                         label="Email"
                                                         name="Email"
-                                                        :rules="emailRules"
                                                         prepend-icon="mdi-email"
                                                         type="text"
                                                         color="teal accent-3"
@@ -37,7 +34,6 @@
                                                         v-model="credential.password"
                                                         label="Password"
                                                         name="Password"
-                                                        :rules="passwordRules"
                                                         prepend-icon="mdi-lock"
                                                         type="password"
                                                         color="teal accent-3"
@@ -45,6 +41,9 @@
                                                 </v-form>
                                                 <a href="#" style="text-decoration: none; color: black;"><h3 class="text-center mt-3">Forgot your password ?</h3></a>
                                             </v-card-text>
+                                                <v-flex class="class-text" md10>
+                                                    <small v-if="iserror" class="errormessege">Invalid email or password</small>
+                                                </v-flex>
                                             <div class="text-center mt-3">
                                                 <v-btn rounded color="teal accent-3" dark @click="login">SIGN IN</v-btn>
                                             </div>
@@ -63,30 +62,18 @@
 
 <script>
   export default {
-    name: 'Login',
+    name: 'login',
     data(){
      return{
-          credential:{
-              emial:null,
-              password:null
-          },
-          dialog : false,
-            email       : '',
-            emailRules  : [
-                email => !!email || 'E-mail is required',
-                v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-            ],
-            password        : '',
-            passwordRules   : [
-                password => !!password ||'Password is required',
-            ],
-
+          credential:{},
+          isloading:false,
+          iserror:false,
      }
  },
     methods: {
-         login(){
-            let payload = this.credential
-                axios.post(`/admin/login`,{...payload}).then(({data})=>{
+         login() {
+                let payload = this.credential
+                axios.post(`/api/admin/login`,{...payload}).then(({data})=>{
                     if(!data.error_message){
                         this.$router.push({name:'dashboard'})
                     }else {
@@ -97,8 +84,13 @@
                     }
                 })
                 .finally(()=>{
-                    this.isloading = false
-                })
+                this.isloading = false
+            })
+        }
+    },
+    watch:{
+        $route (to, from){
+           
         }
     }
   };
