@@ -37,10 +37,11 @@ export default {
     methods:{
        getAuthadmin(){
             axios.get(`/api/checkadmin`).then(({data})=>{
-                console.log(data,"slllslslls")
+                console.log(data,"check")
                 this.isAuth = data
                 this.isfetching = false
             })
+            
         }
     },
   mounted(){

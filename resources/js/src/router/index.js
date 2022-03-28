@@ -26,9 +26,12 @@ const router = new Router({
 })
 router.beforeEach((to, from, next) => {
     Axios.get(`/api/checkadmin`).then(({data})=>{
-        if (to.matched.some((record) => record.meta.requiresAuth)) {
-          // Check if user is authenticated
+        if (to.matched.some(record => record.meta.requiresAuth)) {
+          // this route requires auth, check if logged in
+          // if not, redirect to login page.
           if (!data) {
+            next()
+          } else {
             next({
               name: 'login',
               query: { redirect: to.fullPath }
