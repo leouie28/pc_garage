@@ -1,17 +1,20 @@
 <template>
-  <div class="dashboard">
+  <div>
     <v-row>
       <v-col lg="12">
         <v-card rounded="24" elevation="2">
+
           <v-data-table
             :headers="headers"
             :items="companies"
+            item-key="name"
             class="elevation-1"
+            :search="search"
           >
 
-            <template v-slot:[`item.address`]="{ item }">
-                {{ item.barangay +', ' + item.city }}
-            </template>
+            <!-- <template v-slot:[`item.address`]="{ item }">
+                {{ item.barangay + ', ' + item.city +', ' + item.province }}
+            </template> -->
 
             <template v-slot:[`item.status`]="{ item }">
               <v-btn icon @click="updateStatus(item.id)">
@@ -30,12 +33,19 @@
                   inset
                   vertical
                 ></v-divider>
+                <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  class="mr-4"
+                  single-line
+                  hide-details
+                ></v-text-field>
                 <v-spacer></v-spacer>
                 <v-btn
                   color="primary"
                   dark
                   class="mb-2"
-                  style="float: right;"
                   @click="addDialog"
                 >
                   Add Company
@@ -55,11 +65,7 @@
                       <v-container>
                         <v-form ref="form">
                           <v-row>
-                            <v-col
-                                cols="12"
-                                sm="6"
-                                md="4"
-                            >
+                            <v-col>
                                 <v-text-field
                                 v-model="payload.name"
                                 label="Company name"
@@ -68,10 +74,12 @@
                                 :error-messages="errorMessages"
                                 ></v-text-field>
                             </v-col>
+                          </v-row>
+                          <v-row>
                             <v-col
-                                cols="12"
-                                sm="6"
-                                md="4"
+                                cols="24"
+                                sm="12"
+                                md="8"
                             >
                                 <v-text-field
                                 v-model="payload.email"
@@ -142,7 +150,6 @@
                                 v-model="payload.password"
                                 label="Password"
                                 type="password"
-                                prepend-icon="mdi-lock"
                                 ></v-text-field>
                             </v-col>
                           </v-row>
@@ -224,12 +231,19 @@
         { text: 'Name', value: 'name' },
         { text: 'Email', align: 'center', value: 'email', sortable: false },
         { text: 'Phone No.', align: 'center', value: 'phone', sortable: false },
-        { text: 'Address', align: 'center', value: 'address', sortable: false },
+        // { text: 'Address', align: 'center', value: 'address', sortable: false },
+        { text: 'Barangay', align: 'center', value: 'barangay', sortable: false },
+        { text: 'City', align: 'center', value: 'city', sortable: false },
+        { text: 'Province', align: 'center', value: 'province', sortable: false },
         { text: 'Status', align: 'center', value: 'status', sortable: false },
         { text: 'Actions', align: 'center', value: 'actions', sortable: false },
+        // {value: 'barangay', class: 'hide' },
+        // {value: 'barangay', class: 'hide' },
+        // {value: 'barangay', class: 'hide' },
       ],
       companies: [],
       payload:{},
+      search: '',
       editedIndex: -1,
       editedItem: {
         name: '',
@@ -256,6 +270,32 @@
         val || this.closeDelete()
       },
     },
+    
+    // computed: {
+    //   headers () {
+    //     let q = 'hide-header'
+    //     return [
+    //       {
+    //       text: 'ID',
+    //       align: 'center',
+    //       sortable: false,
+    //       value: 'id',
+    //     },
+    //     { text: 'Name', value: 'name' },
+    //     { text: 'Email', align: 'center', value: 'email', sortable: false },
+    //     { text: 'Phone No.', align: 'center', value: 'phone', sortable: false },
+    //     //{ text: 'Address', align: 'center', value: 'address', sortable: false },
+    //     { text: 'Barangay', align: 'center', value: 'barangay', sortable: false },
+    //     { text: 'City', align: 'center', value: 'city', sortable: false },
+    //     { text: 'Province', align: 'center', value: 'province', sortable: false },
+    //     { text: 'Status', align: 'center', value: 'status', sortable: false },
+    //     { text: 'Actions', align: 'center', value: 'actions', sortable: false },
+    //     {hiddenvalue: 'barangay' },
+    //     {hiddenvalue: 'city' },
+    //     {hiddenvalue: 'province' },
+    //     ]
+    //   }
+    // },
 
     created () {
       //this.$toast.success('Successfully updated client status', {position: 'bottom'});
@@ -324,6 +364,14 @@
             this.initialize()
             this.close()
             // this.$toast.success('successfully updated!', {position:'bottom'})
+          }).catch(error => {
+            if(error.response.data.errors.email) {
+              alert(error.response.data.errors.email)
+            } else if (error.response.data.errors.phone) {
+              alert(error.response.data.errors.phone)
+            } else if (error.response.data.errors.password) {
+              alert(error.response.data.errors.password)
+            }
           })
         } else {
           axios.post('/admin/company/create', this.payload).then(({data}) => {
@@ -332,6 +380,10 @@
           }).catch(error => {
               if(error.response.data.errors.email) {
                 alert(error.response.data.errors.email)
+              } else if (error.response.data.errors.phone) {
+                alert(error.response.data.errors.phone)
+              } else if (error.response.data.errors.password) {
+                alert(error.response.data.errors.password)
               }
             })
         }
@@ -342,7 +394,7 @@
           console.log('Success');
           this.initialize();
         })
-      }
+      },
     },
   }
 </script>
@@ -354,4 +406,8 @@
       border: 1px solid rgb(235, 235, 235);
       box-shadow: 1px 5px 5px #ccc;
   }
+
+  /* .hide-header {
+    display: none !important;
+  } */
 </style>
