@@ -27,37 +27,30 @@ export default {
     Sidebar,
     Login,
   },
-<<<<<<< HEAD
-  data: () => ({
-    cards: ['Today', 'Yesterday'],
-    drawer: true,
-    login: true,
-  }),
-=======
   data(){
-        return{
-            isSuperAdmin:false,
-            isAuth:false,
-            isfetching:true,
-        }
-    },
-    methods:{
-       getAuthadmin(){
-            axios.get(`/api/checkadmin`).then(({data})=>{
-                console.log(data,"check")
-                this.isAuth = data
-                this.isfetching = false
-            })
-            
-        }
-    },
->>>>>>> 1a216b13420d2af6ae1abca3b40d032c0814352e
-  mounted(){
-  },
-   watch:{
-        $route (to, from){
-           this.getAuthadmin()
-        }
+    return{
+      cards: ['Today', 'Yesterday'],
+      drawer: true,
+      login: false,
+      isSuperAdmin: false,
+      isAuth: false,
+      isfetching: true,
     }
+  },
+  methods:{
+    getAuthadmin(){
+      axios.get(`/api/checkadmin`).then(({data})=>{
+          console.log(data,"check")
+          this.isAuth = data
+          this.isfetching = false
+      })
+    }
+  },
+  mounted(){},
+  watch:{
+    $route (to, from){
+        this.getAuthadmin()
+    }
+  }
 }
 </script>

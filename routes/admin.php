@@ -12,14 +12,6 @@ Route::group(['middleware'=>['auth:web']],function(){
     Route::post('logout',[AuthController::class,'logout']);
 });
 
-//Company section
-Route::get('company', [CompanyController::class, 'index']);
-Route::post('company/create', [CompanyController::class, 'store']);
-Route::put('company/update/{id}', [CompanyController::class, 'update']);
-Route::delete('company/destroy/{id}', [CompanyController::class, 'destroy']);
-Route::put('updateStatus/{id}', [CompanyController::class, 'updateStatus']);
-
-
 /*
 Route::post('admin/login',[AuthController::class,'login']);
 Route::group(['middleware'=>['auth:web']],function(){
@@ -39,6 +31,13 @@ Route::group( ['prefix' => 'admin','middleware' => ['auth:company-api','scopes:c
     Route::post('adminLogout',[AuthController::class,'adminLogout']);
     //Route::get('dashboard',[LoginController::class, 'adminDashboard']);
 });
+
+//Company section
+Route::get('company', [CompanyController::class, 'index']);
+Route::post('company/create', [CompanyController::class, 'store']);
+Route::put('company/update/{id}', [CompanyController::class, 'update']);
+Route::delete('company/destroy/{id}', [CompanyController::class, 'destroy']);
+Route::put('updateStatus/{id}', [CompanyController::class, 'updateStatus']);
 
 //Employee section
 Route::get('employee', [EmployeeController::class, 'index']);
