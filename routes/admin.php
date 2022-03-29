@@ -17,6 +17,7 @@ Route::post('admin/login',[AuthController::class,'login']);
 Route::group(['middleware'=>['auth:web']],function(){
     Route::post('logout',[AuthController::class,'logout']);
 });*/
+
 //super admin login
 Route::post('superadmin/login',[AuthController::class, 'sadminLogin'])->name('sadminLogin');
 Route::get('checksadmin',[AuthController::class,'checkSadmin'])->name('checkSadmin');

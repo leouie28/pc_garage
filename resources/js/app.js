@@ -15,9 +15,6 @@ const app = new Vue({
     el: '#app',
     vuetify,
     router,
-<<<<<<< HEAD
     // VueToast,
-=======
     store
->>>>>>> 1a216b13420d2af6ae1abca3b40d032c0814352e
 });
