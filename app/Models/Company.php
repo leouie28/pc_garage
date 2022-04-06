@@ -37,6 +37,6 @@ class Company extends Authenticatable
     }
     public function customers()
     {
-        return $this->belongsToMany(Customer::class);
+        return $this->belongsToMany(Customer::class, 'company_customer');
     }
 }
