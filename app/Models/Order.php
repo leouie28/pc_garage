@@ -13,7 +13,7 @@ class Order extends Model
         'total',
         'payment_id',
         'customer_id',
-        'customer_id'        
+        'employee_id'        
     ];
     public function payments()
     {

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     use HasFactory;
-    
     protected $fillable=[
         'name',
         'phone',
@@ -18,8 +17,8 @@ class Customer extends Model
     {
         return $this->hasmany(Order::class);
     }
-    public function componies()
+    public function companies()
     {
-        return $this->belongsToMany(Compony::class);
+        return $this->belongsToMany(Company::class, 'company_customer');
     }
 }

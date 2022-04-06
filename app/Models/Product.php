@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+    protected $table = 'products';
     protected $fillable =[
 
         'name',
@@ -27,6 +28,10 @@ class Product extends Model
     public function categories()
     {
         return $this->belongsto(Category::class);
+    }
+    public function images()
+    {
+        return $this->hasMany(Image::class);
     }
     public function orders()
     {

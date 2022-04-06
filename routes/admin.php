@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\Backoffice\AuthController;
+use App\Http\Controllers\Backoffice\CustomerController;
+use App\Http\Controllers\Backoffice\ImageController;
 
 Route::post('/login',[AuthController::class,'login']);
 Route::post('/companyLogin',[AuthController::class,'companyLogin']);
@@ -30,6 +32,8 @@ Route::post('admin/login',[AuthController::class, 'adminLogin'])->name('adminLog
 Route::get('checkadmin',[AuthController::class,'checkAdmin'])->name('checkAdmin');
 Route::group( ['prefix' => 'admin','middleware' => ['auth:company-api','scopes:company'] ],function(){
     Route::post('adminLogout',[AuthController::class,'adminLogout']);
+    Route::post('customer/store',[CustomerController::class,'store']);
+    Route::post('image/store',[ImageController::class,'store']);
     //Route::get('dashboard',[LoginController::class, 'adminDashboard']);
 });
 
