@@ -270,32 +270,6 @@
         val || this.closeDelete()
       },
     },
-    
-    // computed: {
-    //   headers () {
-    //     let q = 'hide-header'
-    //     return [
-    //       {
-    //       text: 'ID',
-    //       align: 'center',
-    //       sortable: false,
-    //       value: 'id',
-    //     },
-    //     { text: 'Name', value: 'name' },
-    //     { text: 'Email', align: 'center', value: 'email', sortable: false },
-    //     { text: 'Phone No.', align: 'center', value: 'phone', sortable: false },
-    //     //{ text: 'Address', align: 'center', value: 'address', sortable: false },
-    //     { text: 'Barangay', align: 'center', value: 'barangay', sortable: false },
-    //     { text: 'City', align: 'center', value: 'city', sortable: false },
-    //     { text: 'Province', align: 'center', value: 'province', sortable: false },
-    //     { text: 'Status', align: 'center', value: 'status', sortable: false },
-    //     { text: 'Actions', align: 'center', value: 'actions', sortable: false },
-    //     {hiddenvalue: 'barangay' },
-    //     {hiddenvalue: 'city' },
-    //     {hiddenvalue: 'province' },
-    //     ]
-    //   }
-    // },
 
     created () {
       //this.$toast.success('Successfully updated client status', {position: 'bottom'});
@@ -406,8 +380,4 @@
       border: 1px solid rgb(235, 235, 235);
       box-shadow: 1px 5px 5px #ccc;
   }
-
-  /* .hide-header {
-    display: none !important;
-  } */
 </style>

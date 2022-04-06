@@ -40,7 +40,7 @@ export default {
   methods:{
     getAuthadmin(){
       axios.get(`/api/checkadmin`).then(({data})=>{
-          console.log(data,"check")
+          //console.log(data,"check")
           this.isAuth = data
           this.isfetching = false
       })
