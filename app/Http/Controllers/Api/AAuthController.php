@@ -30,7 +30,7 @@ class AAuthController extends Controller
         }
         if(Hash::check($request->password,$company->password)){
             $token = $company->createToken('accessToken')->accessToken;
-            $data = $company;
+            $data['created_at'] = $employee->created_at;
             $data['accesstoken'] = $token;
             return response()->json($data, 200);
         } 

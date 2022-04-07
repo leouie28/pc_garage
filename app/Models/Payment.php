@@ -14,6 +14,6 @@ class Payment extends Model
     ];
     public function orders()
     {
-        return $this->hasmany(Order::class);
+        return $this->hasMany(Order::class);
     }
 }

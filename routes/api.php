@@ -3,7 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Backoffice\CAAuthController;
+use App\Http\Controllers\Api\ProductOrderController;
+use App\Http\Controllers\Api\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,5 +29,8 @@ Route::group(['middleware'=>['auth:api']],function(){
 
 Route::post('/login',[AuthController::class,'login']);
 Route::group(['middleware'=>['auth:api']],function(){
+    Route::post('productOrder',[ProductOrderController::class,'store']);
+    // Route::get('orders',[OrderController::class,'index']);
+    Route::get('orders/{id}',[OrderController::class,'show']);
     Route::post('logout',[AuthController::class,'logout']);
 });
