@@ -7,6 +7,7 @@ export default [
     {
         path: '/company',
         component: () => import('../pages/crud/company.vue'),
+        meta: { requireAuth: true },
         name: 'company'
     },
     {

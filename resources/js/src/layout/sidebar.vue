@@ -36,6 +36,13 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <template v-slot:append>
+            <div class="pa-2">
+                <v-btn @click="logout" block color="#89ABB5">
+                    Logout
+                </v-btn>
+            </div>
+        </template>
     </v-navigation-drawer>
 </template>
 
@@ -52,9 +59,14 @@ export default {
             ['mdi-briefcase', 'Products', 'product'],
             ['mdi-format-list-checks', 'Orders', 'order'],
             ['mdi-credit-card-outline', 'Payments', 'payment'],
-            ['mdi-logout', 'Logout'],
+            // ['mdi-logout', 'Logout'],
           ],
         }
+    },
+    methods:{
+      logout(){
+          this.$emit('logout');
+      },
     }
 }
 </script>

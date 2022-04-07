@@ -38,9 +38,10 @@
                                                     prepend-icon="mdi-lock"
                                                     type="password"
                                                     color="teal accent-3"
+                                                    @keydown.enter="login"
                                                 />
                                             </v-form>
-                                            <a href="#" style="text-decoration: none; color: black;"><h3 class="text-center mt-3">Forgot your password ?</h3></a>
+                                            <a href="https://google.com" target="_blank" style="text-decoration: none; color: black;"><h3 class="text-center mt-3">Forgot your password ?</h3></a>
                                         </v-card-text>
                                         <v-flex class="class-text" md10>
                                             <small v-if="iserror" class="errormessege">Invalid email or password</small>
@@ -73,7 +74,7 @@ export default {
         return{
 
             credential:{
-                emial:null,
+                email:null,
                 password:null
             },
 
@@ -98,7 +99,7 @@ export default {
         let payload = this.credential
             axios.post(`/admin/login`,{...payload}).then(({data})=>{
                 if(!data.error_message){
-                    this.$router.push({name:'dashboard'})
+                    this.$router.push({name:'company'})
                 }else {
                     this.iserror = true
                     setTimeout(() => {
