@@ -25,6 +25,11 @@ export default [
         name: 'customer'
     },
     {
+        path: '/category',
+        component: () => import('../pages/crud/category.vue'),
+        name: 'category'
+    },
+    {
         path: '/product',
         component: () => import('../pages/crud/product.vue'),
         name: 'product'

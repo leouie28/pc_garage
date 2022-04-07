@@ -18,3 +18,4 @@ Route::get('/{any?}', function () {
 })->where('any','.*');
 
 Route::resource('companies','App\Http\Controllers\CompanyController');
+Route::resource('category','App\Http\Controllers\CategoryController');
