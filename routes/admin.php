@@ -7,14 +7,14 @@ use App\Http\Controllers\Backoffice\AuthController;
 use App\Http\Controllers\Backoffice\CustomerController;
 use App\Http\Controllers\Backoffice\ImageController;
 
-// Route::post('/login',[AuthController::class,'login']);
-// Route::post('/companyLogin',[AuthController::class,'companyLogin']);
 Route::post('login',[AuthController::class, 'adminLogin'])->name('adminLogin');
 Route::get('checkadmin',[AuthController::class,'checkAdmin'])->name('checkAdmin');
 Route::group(['middleware'=>['auth:admin']],function(){
-    // Route::post('logout',[AuthController::class,'logout']);
-    //Route::get('checksadmin',[AuthController::class,'checkSadmin'])->name('checkSadmin');
+
+    //Ngadi isulod an iyo routes
+
     Route::get('logout',[AuthController::class,'adminLogout']);
+
     //Company section
     Route::get('company', [CompanyController::class, 'index']);
     Route::post('company/create', [CompanyController::class, 'store']);
