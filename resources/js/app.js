@@ -5,13 +5,19 @@ import router from './src/router/index'
 import Vue from 'vue';
 import { store } from "./src/plugins/store";
 import vuetify from '@/plugins/vuetify';
-
+// import VueToast from 'vue-toast-notification';
+// import 'vue-toast-notification/dist/index.css';
 
 Vue.component('main-app', require('@/layout/Main.vue').default);
+// Vue.use(VueToast);
 
 const app = new Vue({
     el: '#app',
     vuetify,
     router,
+<<<<<<< HEAD
     store
+=======
+    // VueToast,
+>>>>>>> 81d054fe079f7a212183a3acecb62c7c620e609d
 });

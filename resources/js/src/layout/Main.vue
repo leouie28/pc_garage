@@ -27,6 +27,7 @@ export default {
     Sidebar,
     Login,
   },
+<<<<<<< HEAD
   data(){
         return{
             isSuperAdmin:false,
@@ -44,6 +45,13 @@ export default {
             
         }
     },
+=======
+  data: () => ({
+    cards: ['Today', 'Yesterday'],
+    drawer: true,
+    login: true,
+  }),
+>>>>>>> 81d054fe079f7a212183a3acecb62c7c620e609d
   mounted(){
   },
    watch:{
