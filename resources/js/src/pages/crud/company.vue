@@ -63,7 +63,7 @@
 
                     <v-card-text>
                       <v-container>
-                        <v-form ref="form">
+                        <v-form ref="form" v-model="valid" lazy-validation>
                           <v-row>
                             <v-col>
                                 <v-text-field
@@ -167,7 +167,7 @@
                           Cancel
                       </v-btn>
                       <v-btn
-                          color="blue darken-1"
+                          color="green darken-1"
                           text
                           @click="save"
                       >
@@ -184,7 +184,7 @@
                       <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                      <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                      <v-btn color="red darken-1" text @click="deleteItemConfirm">OK</v-btn>
                       <v-spacer></v-spacer>
                       </v-card-actions>
                   </v-card>
@@ -197,12 +197,14 @@
               <v-icon
                   small
                   class="mr-2"
+                  color="green darken-1"
                   @click="editDialog(item)"
               >
                   mdi-pencil
               </v-icon>
               <v-icon
                   small
+                  color="red darken-1"
                   @click="deleteItem(item)"
               >
                   mdi-delete
@@ -241,6 +243,7 @@
         // {value: 'barangay', class: 'hide' },
         // {value: 'barangay', class: 'hide' },
       ],
+      valid: '',
       companies: [],
       payload:{},
       search: '',
@@ -286,12 +289,13 @@
       editDialog(item){
         this.dialog = true
         this.formTitle = 'Edit Company'
-        this.payload = item
+        this.payload = JSON.parse(JSON.stringify(item))
       },
 
       addDialog(){
         this.formTitle = 'Add Company'
         this.dialog = true
+        this.resetValidation();
       },
       
       editItem (id) {
@@ -364,10 +368,20 @@
       },
       
       updateStatus(id){
-        axios.put('/admin/updateStatus/'+id).then(({data}) => {
-          console.log('Success');
+        axios.put('/admin/company/updateStatus/'+id).then(({data}) => {
+          //console.log('Success');
           this.initialize();
         })
+      },
+
+      resetValidation() {
+        this.payload.name =''
+        this.payload.email = ''
+        this.payload.phone = ''
+        this.payload.barangay = ''
+        this.payload.city = ''
+        this.payload.province = ''
+        this.$refs.form.resetValidation();
       },
     },
   }

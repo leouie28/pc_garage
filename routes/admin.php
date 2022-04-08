@@ -20,14 +20,14 @@ Route::group(['middleware'=>['auth:admin']],function(){
     Route::post('company/create', [CompanyController::class, 'store']);
     Route::put('company/update/{id}', [CompanyController::class, 'update']);
     Route::delete('company/destroy/{id}', [CompanyController::class, 'destroy']);
-    Route::put('updateStatus/{id}', [CompanyController::class, 'updateStatus']);
+    Route::put('company/updateStatus/{id}', [CompanyController::class, 'updateStatus']);
 
     //Employee section
     Route::get('employee', [EmployeeController::class, 'index']);
     Route::post('employee/create', [EmployeeController::class, 'store']);
     Route::put('employee/update/{id}', [EmployeeController::class, 'update']);
     Route::delete('employee/destroy/{id}', [EmployeeController::class, 'destroy']);
-    Route::put('updateStatus/{id}', [EmployeeController::class, 'updateStatus']);
+    Route::put('employee/updateStatus/{id}', [EmployeeController::class, 'updateStatus']);
 
 });
 
