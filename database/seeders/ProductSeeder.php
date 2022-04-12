@@ -103,6 +103,17 @@ class ProductSeeder extends Seeder
             'company_id' => '1',
         ]);
         Product::create([
+            'name' =>'Puto',
+            'description' =>'made from rice',
+            'price' =>'02.00',
+            'reference' => 'calbayog',
+            'stock' => '200',
+            'comment' => 'maboga',
+            'is_service' => '0',
+            'category_id' => '1',
+            'company_id' => '1',
+        ]);
+        Product::create([
             'name' =>'Philippines Adobo',
             'description' =>'Masarap',
             'price' =>'55.00',
