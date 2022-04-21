@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
+    protected $table = 'orders';
     protected $fillable = [
 
         'total',
         'payment_id',
         'customer_id',
-        'customer_id'        
+        'employee_id'        
     ];
     public function payments()
     {
@@ -21,15 +22,15 @@ class Order extends Model
     }
     public function customers()
     {
-        return $this->belongsto(Cutomer::class);
+        return $this->belongsto(Customer::class, 'customer_id', 'id');
     }
     public function employees()
     {
-        return $this->belongsto(Employee::class);
+        return $this->belongsto(Employee::class, 'employee_id', 'id');
     }
     public function products()
     {
-        return $this->belongsToMany(Product::class)
+        return $this->belongsToMany(Product::class, 'order_product')
             ->withPivot('quantity', 'price')
             ->withTimestamps();
     }

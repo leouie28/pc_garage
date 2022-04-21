@@ -1,17 +1,20 @@
 <template>
-  <div class="dashboard">
+  <div>
     <v-row>
       <v-col lg="12">
         <v-card rounded="24" elevation="2">
+
           <v-data-table
             :headers="headers"
             :items="companies"
+            item-key="name"
             class="elevation-1"
+            :search="search"
           >
 
-            <template v-slot:[`item.address`]="{ item }">
-                {{ item.barangay +', ' + item.city }}
-            </template>
+            <!-- <template v-slot:[`item.address`]="{ item }">
+                {{ item.barangay + ', ' + item.city +', ' + item.province }}
+            </template> -->
 
             <template v-slot:[`item.status`]="{ item }">
               <v-btn icon @click="updateStatus(item.id)">
@@ -31,11 +34,24 @@
                   vertical
                 ></v-divider>
                 <v-spacer></v-spacer>
+                <v-col
+                  cols="6"
+                  md="3"
+                  sm="4"
+                >
+                <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  class="mr-4"
+                  single-line
+                  hide-details
+                ></v-text-field>
+                </v-col>
                 <v-btn
                   color="primary"
                   dark
                   class="mb-2"
-                  style="float: right;"
                   @click="addDialog"
                 >
                   Add Company
@@ -53,13 +69,9 @@
 
                     <v-card-text>
                       <v-container>
-                        <v-form ref="form">
+                        <v-form ref="form" v-model="valid" lazy-validation>
                           <v-row>
-                            <v-col
-                                cols="12"
-                                sm="6"
-                                md="4"
-                            >
+                            <v-col>
                                 <v-text-field
                                 v-model="payload.name"
                                 label="Company name"
@@ -68,10 +80,12 @@
                                 :error-messages="errorMessages"
                                 ></v-text-field>
                             </v-col>
+                          </v-row>
+                          <v-row>
                             <v-col
-                                cols="12"
-                                sm="6"
-                                md="4"
+                                cols="24"
+                                sm="12"
+                                md="8"
                             >
                                 <v-text-field
                                 v-model="payload.email"
@@ -142,7 +156,6 @@
                                 v-model="payload.password"
                                 label="Password"
                                 type="password"
-                                prepend-icon="mdi-lock"
                                 ></v-text-field>
                             </v-col>
                           </v-row>
@@ -160,7 +173,7 @@
                           Cancel
                       </v-btn>
                       <v-btn
-                          color="blue darken-1"
+                          color="green darken-1"
                           text
                           @click="save"
                       >
@@ -177,7 +190,7 @@
                       <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                      <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                      <v-btn color="red darken-1" text @click="deleteItemConfirm">OK</v-btn>
                       <v-spacer></v-spacer>
                       </v-card-actions>
                   </v-card>
@@ -190,12 +203,14 @@
               <v-icon
                   small
                   class="mr-2"
+                  color="green darken-1"
                   @click="editDialog(item)"
               >
                   mdi-pencil
               </v-icon>
               <v-icon
                   small
+                  color="red darken-1"
                   @click="deleteItem(item)"
               >
                   mdi-delete
@@ -224,12 +239,20 @@
         { text: 'Name', value: 'name' },
         { text: 'Email', align: 'center', value: 'email', sortable: false },
         { text: 'Phone No.', align: 'center', value: 'phone', sortable: false },
-        { text: 'Address', align: 'center', value: 'address', sortable: false },
+        // { text: 'Address', align: 'center', value: 'address', sortable: false },
+        { text: 'Barangay', align: 'center', value: 'barangay', sortable: false },
+        { text: 'City', align: 'center', value: 'city', sortable: false },
+        { text: 'Province', align: 'center', value: 'province', sortable: false },
         { text: 'Status', align: 'center', value: 'status', sortable: false },
         { text: 'Actions', align: 'center', value: 'actions', sortable: false },
+        // {value: 'barangay', class: 'hide' },
+        // {value: 'barangay', class: 'hide' },
+        // {value: 'barangay', class: 'hide' },
       ],
+      valid: '',
       companies: [],
       payload:{},
+      search: '',
       editedIndex: -1,
       editedItem: {
         name: '',
@@ -272,12 +295,13 @@
       editDialog(item){
         this.dialog = true
         this.formTitle = 'Edit Company'
-        this.payload = item
+        this.payload = JSON.parse(JSON.stringify(item))
       },
 
       addDialog(){
         this.formTitle = 'Add Company'
         this.dialog = true
+        this.resetValidation();
       },
       
       editItem (id) {
@@ -324,6 +348,14 @@
             this.initialize()
             this.close()
             // this.$toast.success('successfully updated!', {position:'bottom'})
+          }).catch(error => {
+            if(error.response.data.errors.email) {
+              alert(error.response.data.errors.email)
+            } else if (error.response.data.errors.phone) {
+              alert(error.response.data.errors.phone)
+            } else if (error.response.data.errors.password) {
+              alert(error.response.data.errors.password)
+            }
           })
         } else {
           axios.post('/admin/company/create', this.payload).then(({data}) => {
@@ -332,17 +364,31 @@
           }).catch(error => {
               if(error.response.data.errors.email) {
                 alert(error.response.data.errors.email)
+              } else if (error.response.data.errors.phone) {
+                alert(error.response.data.errors.phone)
+              } else if (error.response.data.errors.password) {
+                alert(error.response.data.errors.password)
               }
             })
         }
       },
       
       updateStatus(id){
-        axios.put('/admin/updateStatus/'+id).then(({data}) => {
-          console.log('Success');
+        axios.put('/admin/company/updateStatus/'+id).then(({data}) => {
+          //console.log('Success');
           this.initialize();
         })
-      }
+      },
+
+      resetValidation() {
+        this.payload.name =''
+        this.payload.email = ''
+        this.payload.phone = ''
+        this.payload.barangay = ''
+        this.payload.city = ''
+        this.payload.province = ''
+        this.$refs.form.resetValidation();
+      },
     },
   }
 </script>

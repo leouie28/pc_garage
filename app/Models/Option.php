@@ -16,6 +16,6 @@ class Option extends Model
     ];
     public function variations()
     {
-        return $this->belongsto(Variation::class);
+        return $this->belongsto(Variation::class, 'variation_id', 'id');
     }
 }

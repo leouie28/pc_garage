@@ -3,7 +3,7 @@
       v-model="drawer"
       :color="'#00695C'"
       class=" accent-4"
-      width=300
+      width=200
       dark
       app
     >
@@ -25,24 +25,33 @@
           v-for="[icon, text, route] in links"
           :key="icon"
           link
-          @click="$router.push({name: route})"
+          @click="$router.push({name: route}).catch(() => {})"
+          :class="getUrl == route ? 'active' : '' "
         >
           <v-list-item-icon>
-            <v-icon>{{ icon }}</v-icon>
+            <v-icon dense>{{ icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{ text }}</v-list-item-title>
+            <v-list-item-title style="font-size: 14px">{{ text }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <template v-slot:append>
+            <div class="pa-2">
+                <v-btn @click="logout" block color="#89ABB5" style="font-size: 14px">
+                    <v-icon dense>mdi-logout</v-icon>
+                    Logout
+                </v-btn>
+            </div>
+        </template>
     </v-navigation-drawer>
 </template>
 
 <script>
 export default {
     props:['drawer'],
-    data(){
+    data: function (){
         return{
           links: [
             ['mdi-domain', 'Companies', 'company'],
@@ -53,9 +62,27 @@ export default {
             ['mdi-briefcase', 'Products', 'product'],
             ['mdi-format-list-checks', 'Orders', 'order'],
             ['mdi-credit-card-outline', 'Payments', 'payment'],
-            ['mdi-logout', 'Logout'],
+            // ['mdi-logout', 'Logout'],
           ],
+          mutalbeList: JSON.parse(this.drawer),
         }
-    }
+    },
+    methods:{
+      logout(){
+          this.$emit('logout');
+      },
+    },
+    computed: {
+      getUrl(){
+        let url = this.$route.fullPath
+        let path = url.split('/')
+        return path[1]
+      },
+    },
 }
 </script>
+<style scope> 
+.active {
+  background-color: #00564c !important;
+}
+</style>

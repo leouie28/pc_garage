@@ -18,7 +18,6 @@ class CreateCompanyCustomerTable extends Migration
             $table->unsignedBigInteger('company_id');
             $table->unsignedBigInteger('customer_id');
             $table->timestamps();
-            
         });
     }
 
