@@ -29,6 +29,12 @@
                   inset
                   vertical
                 ></v-divider>
+                <v-spacer></v-spacer>
+                <v-col
+                  cols="6"
+                  md="3"
+                  sm="4"
+                >
                 <v-text-field
                   v-model="search"
                   append-icon="mdi-magnify"
@@ -37,7 +43,7 @@
                   single-line
                   hide-details
                 ></v-text-field>
-                <v-spacer></v-spacer>
+                </v-col>
                 <v-btn
                   color="primary"
                   dark

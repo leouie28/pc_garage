@@ -19,3 +19,7 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #b30000; 
 }
+
+.v-application--is-ltr .v-list-item__icon:first-child {
+    margin-right: 10px !important;
+}

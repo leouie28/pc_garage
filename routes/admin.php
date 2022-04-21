@@ -3,9 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\OrderProductController;
 use App\Http\Controllers\Backoffice\AuthController;
-use App\Http\Controllers\Backoffice\CustomerController;
 use App\Http\Controllers\Backoffice\ImageController;
+use App\Http\Controllers\Backoffice\CustomerController;
 
 Route::post('login',[AuthController::class, 'adminLogin'])->name('adminLogin');
 Route::get('checkadmin',[AuthController::class,'checkAdmin'])->name('checkAdmin');
@@ -14,6 +15,9 @@ Route::group(['middleware'=>['auth:admin']],function(){
     //Ngadi isulod an iyo routes
 
     Route::get('logout',[AuthController::class,'adminLogout']);
+
+    //Search section
+    Route::get('search', [SearchController::class, 'index']);
 
     //Company section
     Route::get('company', [CompanyController::class, 'index']);
@@ -28,6 +32,13 @@ Route::group(['middleware'=>['auth:admin']],function(){
     Route::put('employee/update/{id}', [EmployeeController::class, 'update']);
     Route::delete('employee/destroy/{id}', [EmployeeController::class, 'destroy']);
     Route::put('employee/updateStatus/{id}', [EmployeeController::class, 'updateStatus']);
+
+    //OderProduct section
+    Route::get('orderProduct', [OrderProductController::class, 'index']);
+    Route::post('orderProduct/create', [OrderProductController::class, 'store']);
+    Route::put('orderProduct/update/{id}', [OrderProductController::class, 'update']);
+    Route::delete('orderProduct/destroy/{id}', [OrderProductController::class, 'destroy']);
+    Route::put('orderProduct/updateStatus/{id}', [OrderProductController::class, 'updateStatus']);
 
 });
 

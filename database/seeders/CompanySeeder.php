@@ -14,8 +14,6 @@ class CompanySeeder extends Seeder
      */
     public function run()
     {
-        Company::truncate();
-
         Company::create([
             'name' =>'test',
             'email' =>'admintest@gmail.com',
@@ -27,10 +25,10 @@ class CompanySeeder extends Seeder
             'status' =>'0',
         ]);
         Company::create([
-            'name' =>'test101',
-            'email' =>'testing@gmail.com',
-            'phone' => '09512318472',
-            'barangay' => 'cahumpan',
+            'name' =>'admin',
+            'email' =>'testtest@gmail.com',
+            'phone' => '09512318111',
+            'barangay' => 'obrero',
             'city' => 'calbayog',
             'province' => 'samar',
             'password' =>bcrypt('123456'),//password
