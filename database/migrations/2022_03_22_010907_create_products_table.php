@@ -20,7 +20,6 @@ class CreateProductsTable extends Migration
             $table->double('price');
             $table->string('reference');
             $table->integer('stock');
-            $table->string('comment');
             $table->boolean('is_service')->default(0);
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('company_id');

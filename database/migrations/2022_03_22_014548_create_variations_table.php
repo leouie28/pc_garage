@@ -18,7 +18,6 @@ class CreateVariationsTable extends Migration
             $table->string('name');
             $table->unsignedBigInteger('product_id');
             $table->timestamps();
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
     }
 
