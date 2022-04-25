@@ -29,6 +29,8 @@ services:
       PMA_HOST: mysql
       PMA_PORT: 3306
       PMA_ABSOLUTE_URI: https://ub.checkmy.dev/phpmyadmin
+    networks:
+      - UB
   php:
     build:
       context: .
