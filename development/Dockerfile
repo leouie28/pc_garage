@@ -10,10 +10,12 @@ WORKDIR /var/www/html
 #    source ~/.bashrc
 
 # Setup extensions
-RUN apt-get install curl wget gpgv ca-certificates lsb-release apt-transport-https -y
-RUN wget https://packages.sury.org/php/apt.gpg
-RUN apt-key add apt.gpg
 RUN apt update -y
-RUN apt-get install php8.0 php8.0-json php8.0-common php8.0-zip php8.0-gd php8.0-mbstring php8.0-curl php8.0-xml php8.0-bcmath php8.0-gd php8.0-fpm php8.0-mysql libapache2-mod-php8.0 libapache2-mod-fcgid -y
+RUN apt install -y lsb-release ca-certificates apt-transport-https software-properties-common -y
+RUN echo “deb https://packages.sury.org/php/ $(lsb_release -sc) main” | sudo tee /etc/apt/sources.list.d/sury-php.list
+RUN wget -qO – https://packages.sury.org/php/apt.gpg | apt-key add –
+RUN apt update -y
+
+RUN apt-get install php8.0-{mysql,cli,common,imap,ldap,xml,fpm,curl,mbstring,zip,bcmath,gd} -y
 
 COPY development/php/uploads.ini /usr/local/etc/php/conf.d
