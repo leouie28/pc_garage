@@ -10,7 +10,7 @@ WORKDIR /var/www/html
 #    source ~/.bashrc
 
 # Setup extensions
-RUN apt-get install curl wget gnupg2 ca-certificates lsb-release apt-transport-https -y
+RUN apt-get install curl wget gpgv ca-certificates lsb-release apt-transport-https -y
 RUN wget https://packages.sury.org/php/apt.gpg
 RUN apt-key add apt.gpg
 RUN apt update -y
