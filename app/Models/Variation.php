@@ -17,4 +17,8 @@ class Variation extends Model
     {
         return $this->hasmany(Option::class);
     }
+    public function products()
+    {
+        return $this->belongsto(Product::class);
+    }
 }

@@ -32,5 +32,14 @@ class EmployeeSeeder extends Seeder
             'status' => '0',
             'company_id' => '2',
         ]);
+        Employee::create([
+            'name' =>'Margielyn',
+            'email' =>'marg@gmail.com',
+            'password' =>bcrypt('123456'),//password
+            'phone' => '09512118222',
+            'position' => 'Cashier',
+            'status' => '0',
+            'company_id' => '3',
+        ]);
     }
 }

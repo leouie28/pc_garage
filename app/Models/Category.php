@@ -17,6 +17,10 @@ class Category extends Model
     {
         return $this->belongsto(Company::class);
     }
+    // public function users()
+    // {
+    //     return $this->belongsto(User::class); //changes
+    // }
     public function products()
     {
         return $this->hasmany(Product::class);

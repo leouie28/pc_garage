@@ -25,9 +25,13 @@ class Product extends Model
     {
         return $this->belongsto(Company::class);
     }
+    // public function users()
+    // {
+    //     return $this->belongsto(User::class); //changes
+    // }
     public function categories()
     {
-        return $this->belongsto(Category::class);
+        return $this->belongsto(Category::class, 'category_id', 'id');
     }
     public function images()
     {
@@ -35,8 +39,16 @@ class Product extends Model
     }
     public function orders()
     {
-        return $this->belongsToMany(Order::class)
+        return $this->belongsToMany(Order::class, 'order_product')
             ->withPivot('quantity', 'price')
             ->withTimestamps();
+    }
+    public function variations()
+    {
+        return $this->hasmany(Variation::class);
+    }
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
     }
 }
