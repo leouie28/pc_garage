@@ -10,13 +10,6 @@ class OrderProductController extends Controller
 {
     public function index()
     {
-       
-        // $user = Auth::user();
-        // $orderProduct = OrderProduct::where('status', 0)->with('orders', function($q) use($user) {
-        //     return $q->where('employee_id', '=', $user->id);
-        // })->with(['products', 'options'])->get();
-        // return response($orderProduct, 200);
-
         return OrderProduct::with('products', 'options.variations', 'orders.customers')->get();
     }
 

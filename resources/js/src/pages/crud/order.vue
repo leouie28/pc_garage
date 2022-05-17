@@ -10,6 +10,7 @@
             item-key="name"
             class="elevation-1"
             :search="search"
+            dense
           >
 
             <template v-slot:[`item.status`]="{ item }">

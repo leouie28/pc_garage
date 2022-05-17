@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class EmployeeController extends Controller
 {
     public function index()
     {
-        return Employee::get();
+        $user = Auth::user();
+        $employee = Employee::where('company_id', $user->id)->get();
+
+        return response()->json($employee, 200);
     }
 
     public function create()
@@ -26,16 +30,18 @@ class EmployeeController extends Controller
             'password' => 'required|min:8',
         ]);
 
+        $user = Auth::user();
         $employee = new Employee([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'position' => $request->position,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'company_id' => $user->id,
         ]);
         $employee->save();
  
-        return response()->json('employee successfully added');
+        return response()->json($employee, 200);
     }
 
     public function show($id)
@@ -67,7 +73,7 @@ class EmployeeController extends Controller
 
         $employee->update($input);
  
-        return response()->json('employee successfully updated');
+        return response()->json($employee, 200);
     }
 
     public function destroy($id)
@@ -75,7 +81,7 @@ class EmployeeController extends Controller
         $employee = Employee::find($id);
         $employee->delete();
  
-        return response()->json('employee successfully deleted');
+        return response()->json($employee, 200);
     }
 
     public function updateStatus($id)

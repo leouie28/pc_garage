@@ -10,6 +10,7 @@
             item-key="name"
             class="elevation-1"
             :search="search"
+            dense
           >
 
             <!-- <template v-slot:[`item.address`]="{ item }">
@@ -75,6 +76,7 @@
                                 <v-text-field
                                 v-model="payload.name"
                                 label="Company name"
+                                dense
                                 :rules="[() => !!payload.name ||  'this field is required']"
                                 ref="name"
                                 :error-messages="errorMessages"
@@ -82,80 +84,84 @@
                             </v-col>
                           </v-row>
                           <v-row>
-                            <v-col
-                                cols="24"
-                                sm="12"
-                                md="8"
-                            >
-                                <v-text-field
-                                v-model="payload.email"
-                                label="Email"
-                                :rules="[() => !!payload.email ||  'this field is required']"
-                                ref="name"
-                                :error-messages="errorMessages"
-                                ></v-text-field>
+                            <v-col>
+                              <v-text-field
+                              v-model="payload.email"
+                              label="Email"
+                              dense
+                              :rules="[() => !!payload.email ||  'this field is required']"
+                              ref="name"
+                              :error-messages="errorMessages"
+                              ></v-text-field>
                             </v-col>
+                          </v-row>
+                          <v-row>
                             <v-col
-                                cols="12"
-                                sm="6"
-                                md="4"
+                                cols="18"
+                                sm="9"
+                                md="6"
                             >
                                 <v-text-field
                                 v-model="payload.phone"
                                 label="Cellphone Number"
+                                dense
                                 :rules="[() => !!payload.phone ||  'this field is required']"
                                 ref="name"
                                 :error-messages="errorMessages"
                                 ></v-text-field>
                             </v-col>
                             <v-col
-                                cols="12"
-                                sm="6"
-                                md="4"
+                                cols="18"
+                                sm="9"
+                                md="6"
                             >
                                 <v-text-field
                                 v-model="payload.barangay"
                                 label="Barangay"
+                                dense
                                 :rules="[() => !!payload.barangay ||  'this field is required']"
                                 ref="name"
                                 :error-messages="errorMessages"
                                 ></v-text-field>
                             </v-col>
                             <v-col
-                                cols="12"
-                                sm="6"
-                                md="4"
+                                cols="18"
+                                sm="9"
+                                md="6"
                             >
                                 <v-text-field
                                 v-model="payload.city"
                                 label="City"
+                                dense
                                 :rules="[() => !!payload.city ||  'this field is required']"
                                 ref="name"
                                 :error-messages="errorMessages"
                                 ></v-text-field>
                             </v-col>
                             <v-col
-                                cols="12"
-                                sm="6"
-                                md="4"
+                                cols="18"
+                                sm="9"
+                                md="6"
                             >
                                 <v-text-field
                                 v-model="payload.province"
                                 label="Province"
+                                dense
                                 :rules="[() => !!payload.province ||  'this field is required']"
                                 ref="name"
                                 :error-messages="errorMessages"
                                 ></v-text-field>
                             </v-col>
                             <v-col
-                                cols="12"
-                                sm="6"
-                                md="4"
+                                cols="18"
+                                sm="9"
+                                md="6"
                             >
                                 <v-text-field
                                 v-model="payload.password"
                                 label="Password"
                                 type="password"
+                                dense
                                 ></v-text-field>
                             </v-col>
                           </v-row>
@@ -301,7 +307,6 @@
       addDialog(){
         this.formTitle = 'Add Company'
         this.dialog = true
-        this.resetValidation();
       },
       
       editItem (id) {
@@ -327,6 +332,7 @@
       close () {
         this.payload= {}
         this.dialog = false
+        this.$refs.form.resetValidation();
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
@@ -349,7 +355,9 @@
             this.close()
             // this.$toast.success('successfully updated!', {position:'bottom'})
           }).catch(error => {
-            if(error.response.data.errors.email) {
+            if(error.response.data.errors.name) {
+              alert(error.response.data.errors.name)
+            } else if(error.response.data.errors.email) {
               alert(error.response.data.errors.email)
             } else if (error.response.data.errors.phone) {
               alert(error.response.data.errors.phone)
@@ -362,14 +370,16 @@
             this.initialize()
             this.close()
           }).catch(error => {
-              if(error.response.data.errors.email) {
-                alert(error.response.data.errors.email)
-              } else if (error.response.data.errors.phone) {
-                alert(error.response.data.errors.phone)
-              } else if (error.response.data.errors.password) {
-                alert(error.response.data.errors.password)
-              }
-            })
+            if(error.response.data.errors.name) {
+              alert(error.response.data.errors.name)
+            } else if(error.response.data.errors.email) {
+              alert(error.response.data.errors.email)
+            } else if (error.response.data.errors.phone) {
+              alert(error.response.data.errors.phone)
+            } else if (error.response.data.errors.password) {
+              alert(error.response.data.errors.password)
+            }
+          })
         }
       },
       
@@ -378,16 +388,6 @@
           //console.log('Success');
           this.initialize();
         })
-      },
-
-      resetValidation() {
-        this.payload.name =''
-        this.payload.email = ''
-        this.payload.phone = ''
-        this.payload.barangay = ''
-        this.payload.city = ''
-        this.payload.province = ''
-        this.$refs.form.resetValidation();
       },
     },
   }

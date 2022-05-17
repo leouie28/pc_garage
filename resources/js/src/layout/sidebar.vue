@@ -51,7 +51,7 @@
 <script>
 export default {
     props:['drawer'],
-    data: function (){
+    data: () => {
         return{
           links: [
             ['mdi-domain', 'Companies', 'company'],
@@ -63,7 +63,6 @@ export default {
             ['mdi-credit-card-outline', 'Payments', 'payment'],
             // ['mdi-logout', 'Logout'],
           ],
-          mutalbeList: JSON.parse(this.drawer),
         }
     },
     methods:{

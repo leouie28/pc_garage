@@ -19,4 +19,6 @@ Route::get('/{any?}', function () {
 
 Route::resource('companies','App\Http\Controllers\CompanyController');
 Route::resource('employees','App\Http\Controllers\EmployeeController');
+Route::resource('products','App\Http\Controllers\ProductController');
 Route::resource('order_product','App\Http\Controllers\OrderProductController');
+Route::resource('categories','App\Http\Controllers\CategoryController');

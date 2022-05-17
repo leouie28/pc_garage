@@ -5,6 +5,7 @@ import router from './src/router/index'
 import Vue from 'vue';
 import { store } from "./src/plugins/store";
 import vuetify from '@/plugins/vuetify';
+import "./src/mixins/index";
 // import VueToast from 'vue-toast-notification';
 // import 'vue-toast-notification/dist/index.css';
 
@@ -18,3 +19,4 @@ const app = new Vue({
     // VueToast,
     store
 });
+

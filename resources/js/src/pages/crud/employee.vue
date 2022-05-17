@@ -10,6 +10,7 @@
             item-key="name"
             class="elevation-1"
             :search="search"
+            dense
           >
 
             <template v-slot:[`item.status`]="{ item }">
@@ -71,6 +72,7 @@
                                 <v-text-field
                                 v-model="payload.name"
                                 label="Employee name"
+                                dense
                                 :rules="[() => !!payload.name ||  'this field is required']"
                                 ref="name"
                                 :error-messages="errorMessages"
@@ -78,15 +80,28 @@
                             </v-col>
                           </v-row>
                           <v-row>
+                            <v-col>
+                              <v-text-field
+                              v-model="payload.email"
+                              label="Email"
+                              dense
+                              :rules="[() => !!payload.email ||  'this field is required']"
+                              ref="name"
+                              :error-messages="errorMessages"
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <v-row>
                             <v-col
-                                cols="24"
-                                sm="12"
-                                md="8"
+                                cols="12"
+                                sm="6"
+                                md="4"
                             >
                                 <v-text-field
-                                v-model="payload.email"
-                                label="Email"
-                                :rules="[() => !!payload.email ||  'this field is required']"
+                                v-model="payload.phone"
+                                label="Cellphone Number"
+                                dense
+                                :rules="[() => !!payload.phone ||  'this field is required']"
                                 ref="name"
                                 :error-messages="errorMessages"
                                 ></v-text-field>
@@ -96,22 +111,10 @@
                                 sm="6"
                                 md="4"
                             >
-                                <v-text-field
-                                v-model="payload.phone"
-                                label="Cellphone Number"
-                                :rules="[() => !!payload.phone ||  'this field is required']"
-                                ref="name"
-                                :error-messages="errorMessages"
-                                ></v-text-field>
-                            </v-col>
-                            <v-col
-                                cols="24"
-                                sm="12"
-                                md="8"
-                            >
                                 <v-select
                                 v-model="payload.position"
                                 :items="position"
+                                dense
                                 menu-props="auto"
                                 hide-details
                                 label="Select Position"
@@ -130,6 +133,7 @@
                                 v-model="payload.password"
                                 label="Password"
                                 type="password"
+                                dense
                                 ></v-text-field>
                             </v-col>
                           </v-row>
@@ -272,7 +276,6 @@
       addDialog(){
         this.formTitle = 'Add Employee'
         this.dialog = true
-        this.resetValidation();
       },
       
       editItem (id) {
@@ -298,6 +301,7 @@
       close () {
         this.payload= {}
         this.dialog = false
+        this.$refs.form.resetValidation();
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
@@ -349,14 +353,6 @@
           //console.log('Success');
           this.initialize();
         })
-      },
-
-      resetValidation() {
-        this.payload.name =''
-        this.payload.email = ''
-        this.payload.phone = ''
-        this.payload.position = ''
-        this.$refs.form.resetValidation();
       },
     },
   }

@@ -16,7 +16,6 @@ class Product extends Model
         'price',
         'reference',
         'stock',
-        'comment',
         'is_service',
         'category_id',
         'company_id',
@@ -31,7 +30,7 @@ class Product extends Model
     // }
     public function categories()
     {
-        return $this->belongsto(Category::class);
+        return $this->belongsto(Category::class, 'category_id', 'id');
     }
     public function images()
     {
