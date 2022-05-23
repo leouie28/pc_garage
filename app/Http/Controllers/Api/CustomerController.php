@@ -52,11 +52,9 @@ class CustomerController extends Controller
         $customer->phone = $request->phone;
         $customer->email = $request->email;
         $customer->qrcode = 'UB-'.substr(str_shuffle("0123456789"),0,7);
-        // QrCode::size(400)->format('png')->generate($customer,'../storage/app/public/qrimages/' . $cust);
-        // $customers = Customer::where('id', $customer->id)->get();
         // $customer->companies()->attach($user->company_id);
         if(!Storage::exists(storage_path('app/public/qrimages/'.$customer->qrcode.'.png'))){
-            QrCode::size(400)->format('png')->generate($customer->qrcode, storage_path('app/public/qrimages/'.$customer->qrcode.'.png'));
+            QrCode::size(400)->format('png')->generate($customer, storage_path('app/public/qrimages/'.$customer->qrcode.'.png'));
         }
         $customer->qrimage ='../storage/app/public/qrimages/'.$customer->qrcode. '.png';
         $customer->save();

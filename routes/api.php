@@ -42,6 +42,7 @@ Route::group(['middleware'=>['auth:api']],function(){
     //Customer
     Route::get('customers',[CustomerController::class, 'index']);
     Route::get('customer-show/{id}',[CustomerController::class, 'show']);
+    //insert customer w/ QR Code
     Route::post('customer/store',[CustomerController::class,'store']);
 
     //Order
