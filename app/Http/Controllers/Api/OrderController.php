@@ -22,10 +22,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        // $user = Auth::user();
-        // $order = Order::where('employee_id', $user->id)->with(['payments', 'customers', 'employees'])->get();
-
-        // return response($order,200);
+       
     }
     public function confirmedOrder($id) //Confirmed Order in the Cart
     {
@@ -86,7 +83,7 @@ class OrderController extends Controller
         $order->payment_id = $paymentId;
         $order->save();
         $order->update(['status' => 1,]);
-        // $order->order_product()->update(['status' => 1]);
+
 
         return response($payment,200);
     }
@@ -110,10 +107,7 @@ class OrderController extends Controller
      */
     public function show(Order $order, $id)
     {
-        // $user = Auth::user();
-        // $order = Order::where('customer_id', $id)->with(['payments', 'customers', 'employees'])->get();
- 
-        // return response($order,200);
+
     }
 
     /**
