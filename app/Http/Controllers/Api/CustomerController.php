@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Company;
 use App\Models\Customer;
+use App\Models\Order;
+use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -56,22 +58,19 @@ class CustomerController extends Controller
         $user = Auth::user();
         return Customer::find($id);
     }
-    public function customerOrders(Request $request, $id)
+    public function customerOrders(Request $request)
     {
         $user = Auth::user();
+        $order = Order::where('employee_id', $user->id)->with(['order_product' => function($opp){
+            return $opp->where('status', 0);},
+        'customers' => function ($oop){
+            return $oop->whereHas('orders');
+        }])->get();
+        // $order_product = OrderProduct::where('status', 0)->with('orders', function ($que) use($user){
+        //     return $que->where('employee_id', $user->id);
+        // })->get();
 
-        $customer = Customer::with(['orders' =>function($qu) use($user){
-            return $qu->where('employee_id', $user->id)->whereHas('order_product', function($op){
-                return $op->where('status', 0);});
-        },'orders.order_product' =>function($que){
-            return $que->with(['products','options']);
-        }])->find($id);
-        $order = Order::where('customer_id', $id)->whereHas('order_product', function($op){
-            return $op->where('status', 0);
-        })->get();
-        $customer['total'] = $order->sum('total');
-        $customer['totalItem'] = $order->count();
-        return response($customer, 200);
+        return ($order);
     }
     /**
      * Update the specified resource in storage.

@@ -34,6 +34,11 @@ Route::group(['middleware'=>['auth:api']],function(){
     Route::post('update-profile',[ProfileController::class,'updateProfile']);
     Route::post('changepassword',[ProfileController::class,'changePassword']);
     Route::post('logout',[AuthController::class,'logout']);
+    
+    //Forgot Password
+    Route::any('request_otp',[AuthController::class, 'requestOtp']);
+    Route::post('verify_otp',[AuthController::class, 'verifyOtp']);
+    Route::post('new_password',[AuthController::class, 'newPassword']);
 
     //Product
     Route::get('products',[ProductController::class, 'index']);
@@ -43,10 +48,11 @@ Route::group(['middleware'=>['auth:api']],function(){
 
     //Customer
     Route::get('customers',[CustomerController::class, 'index']);
+    Route::get('customerorders',[CustomerController::class,'customerOrders']);
     Route::get('customer-show/{id}',[CustomerController::class, 'show']);
     Route::post('customer/store',[CustomerController::class,'store']);
 
-    //Order
+    //Order//
     Route::get('orders',[OrderController::class,'index']);
     Route::get('order-show/{id}',[OrderController::class,'show']);
 
@@ -57,19 +63,17 @@ Route::group(['middleware'=>['auth:api']],function(){
     Route::post('addtocart',[CartController::class,'store']);
     Route::post('updatecart/{id}',[CartController::class,'update']);
 
-    //Payment
-    // Route::post('payment/{id}',[PaymentController::class,'store']);
-
-    //Order Product
-    Route::get('customerorders/{id}',[OrderProductController::class,'customerOrders']);
-    Route::get('deleteorder/{id}',[OrderProductController::class,'destroy']);
+    //Order Product//
+    // Route::get('customerorders/{id}',[OrderProductController::class,'customerOrders']);
+    // Route::get('deleteorder/{id}',[OrderProductController::class,'destroy']);
     Route::get('orderproduct',[OrderProductController::class,'index']);
-    Route::get('orderproduct/{id}',[OrderProductController::class,'show']);
+    Route::get('orderproduct/paid',[OrderProductController::class,'displayPaid']);
+    Route::get('orderproduct/pending',[OrderProductController::class,'displayPending']);
+    // Route::get('orderproduct/{id}',[OrderProductController::class,'show']);
     Route::get('toprepared',[OrderProductController::class,'toPrepared']);
     Route::post('confirmedorder/{id}',[OrderProductController::class,'confirmedOrder']);
     Route::post('markprepared/{id}',[OrderProductController::class,'markPrepared']);
-    Route::post('orderproduct/store',[OrderProductController::class,'store']);
+    // Route::post('orderproduct/store',[OrderProductController::class,'store']);
     Route::post('paymentorder/{id}',[OrderProductController::class,'payment']);
-    Route::post('updateorder/{id}',[OrderProductController::class,'update']);
-    // Route::get('orders',[OrderController::class,'index']);
+    // Route::post('updateorder/{id}',[OrderProductController::class,'update']);
 });

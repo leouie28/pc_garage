@@ -15,7 +15,6 @@ class CreateOrderProductTable extends Migration
     {
         Schema::create('order_product', function (Blueprint $table) {
             $table->id();
-            $table->boolean('status')->default(0);
             $table->integer('quantity')->default(1);
             $table->double('price');
             $table->boolean('prepared')->default(0);

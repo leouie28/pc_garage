@@ -15,8 +15,8 @@ class EmployeeSeeder extends Seeder
     public function run()
     {
         Employee::create([
-            'name' =>'rence',
-            'email' =>'test@gmail.com',
+            'name' =>'Margielyn Bronola',
+            'email' =>'margiebronola21@gmail.com',
             'password' =>bcrypt('123456'),//password
             'phone' => '09512318472',
             'position' => 'Waiter',

@@ -19,6 +19,7 @@ class Employee extends Authenticatable
         'phone',
         'position',
         'status',
+        'otp',
         'company_id',
     ];
     protected $hidden = [

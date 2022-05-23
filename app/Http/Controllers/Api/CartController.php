@@ -30,7 +30,7 @@ class CartController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request) // Add orders to cart
     {
         $user = Auth::user();
 
@@ -60,7 +60,7 @@ class CartController extends Controller
      * @param  \App\Models\Cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function show(Cart $cart, $id)
+    public function show(Cart $cart, $id) // Display cart by customer ID
     {
         $user = Auth::user();
         $customer = Customer::with(['carts' => function($qqq){
@@ -79,7 +79,7 @@ class CartController extends Controller
      * @param  \App\Models\Cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cart $cart, $id)
+    public function update(Request $request, Cart $cart, $id)//Update order quantity of the product in the cart
     {
         $cart = Cart::find($id);
         $product = Product::find($cart->product_id);
@@ -101,7 +101,7 @@ class CartController extends Controller
      * @param  \App\Models\Cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cart $cart, $id)
+    public function destroy(Cart $cart, $id) // Delete order in the cart
     {
         $cart = Cart::find($id);
         if($cart->status == 1){

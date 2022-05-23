@@ -22,6 +22,7 @@ class CreateEmployeesTable extends Migration
             $table->string('image')->nullable();
             $table->enum('position', ['Chef', 'Cashier', 'Waiter']);
             $table->boolean('status')->default(0);
+            $table->string('otp')->nullable();
             $table->unsignedBigInteger('company_id');
             $table->timestamps();
         });
