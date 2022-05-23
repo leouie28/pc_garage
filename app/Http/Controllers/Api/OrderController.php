@@ -21,17 +21,7 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         $order = Order::where('employee_id', $user->id)->with(['payments', 'customers', 'employees'])->get();
-        /*
-        $product = DB::table('products')
-        ->join("images", "products.id", "=", "images.product_id")
-        ->select(
-            "products.id", 
-            "products.name",
-            "products.description",
-            "products.price",
-            "images.filename as image_filename")
-        ->get();
-        */
+
         return response($order,200);
     }
 
@@ -56,7 +46,7 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         $order = Order::where('customer_id', $id)->with(['payments', 'customers', 'employees'])->get();
-        // $total = $this->buyDetails()->sum(DB::raw('quantity * price'));
+ 
         return response($order,200);
     }
 

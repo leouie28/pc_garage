@@ -24,7 +24,6 @@ class CustomerController extends Controller
         ->first();
 
         return response($company,200);
-       
     }
 
     /**
@@ -61,15 +60,10 @@ class CustomerController extends Controller
     public function customerOrders(Request $request)
     {
         $user = Auth::user();
-        $order = Order::where('employee_id', $user->id)->with(['order_product' => function($opp){
-            return $opp->where('status', 0);},
-        'customers' => function ($oop){
+        $order = Order::where('employee_id', $user->id)->with('order_product')
+        ->with('customers', function ($oop){
             return $oop->whereHas('orders');
-        }])->get();
-        // $order_product = OrderProduct::where('status', 0)->with('orders', function ($que) use($user){
-        //     return $que->where('employee_id', $user->id);
-        // })->get();
-
+        })->get();
         return ($order);
     }
     /**

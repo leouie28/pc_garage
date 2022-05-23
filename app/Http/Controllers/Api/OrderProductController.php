@@ -22,7 +22,7 @@ class OrderProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index() // Display all Orders
     {
         $user = Auth::user();
 
@@ -30,16 +30,8 @@ class OrderProductController extends Controller
         ->whereDate('created_at', \Carbon\Carbon::today())->get();
 
         return response($order, 200);
-
-        // $customer = Customer::whereHas('orders', function($qu) use($user){
-        //     return $qu->where('employee_id', $user->id)->whereHas('order_product');
-        // })->with('orders', function($quu){
-        //     return $quu->whereHas('order_product');
-        // })->whereDate('created_at', \Carbon\Carbon::today())->get();
-
-        // return response($customer, 200);
     }
-    public function displayPending()
+    public function displayPending() //display pending Orders
     {
         $user = Auth::user();
 
@@ -58,7 +50,7 @@ class OrderProductController extends Controller
 
         // return response($customer, 200);
     }
-    public function displayPaid()
+    public function displayPaid() //display paid Orders
     {
         $user = Auth::user();
 
@@ -66,16 +58,6 @@ class OrderProductController extends Controller
         ->whereDate('created_at', \Carbon\Carbon::today())->get();
 
         return response($order, 200);
-
-        // $customer = Customer::whereHas('orders', function($qu) use($user){
-        //     return $qu->where('employee_id', $user->id)->whereHas('order_product', function($op){
-        //         return $op->where('status', 1);});
-        // })->with('orders', function($quu){
-        //     return $quu->with('order_product')->whereHas('order_product', function($op){
-        //         return $op->where('status', 1);});
-        // })->whereDate('created_at', \Carbon\Carbon::today())->get();
-
-        // return response($customer, 200);
     }
     public function confirmedOrder($id) //Confirmed Order in the Cart
     {
@@ -281,7 +263,6 @@ class OrderProductController extends Controller
         
         $order->payment_id = $paymentId;
         $order->save();
-
         $order->update(['status' => 1,]);
         // $order->order_product()->update(['status' => 1]);
 
