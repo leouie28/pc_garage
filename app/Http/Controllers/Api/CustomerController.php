@@ -59,12 +59,10 @@ class CustomerController extends Controller
     }
     public function customerOrders(Request $request)
     {
-        $user = Auth::user();
-        $order = Order::where('employee_id', $user->id)->with('order_product')
-        ->with('customers', function ($oop){
-            return $oop->whereHas('orders');
-        })->get();
-        return ($order);
+        // $user = Auth::user();
+        // $order = Order::where('employee_id', $user->id)->with('customers', 'order_product')
+        // ->get();
+        // return ($order);
     }
     /**
      * Update the specified resource in storage.

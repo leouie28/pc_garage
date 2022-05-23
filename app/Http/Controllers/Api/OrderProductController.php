@@ -39,16 +39,6 @@ class OrderProductController extends Controller
         ->whereDate('created_at', \Carbon\Carbon::today())->get();
 
         return response($order, 200);
-
-        // $customer = Customer::whereHas('orders', function($qu) use($user){
-        //     return $qu->where('employee_id', $user->id)->whereHas('order_product', function($op){
-        //         return $op->where('status', 0);});
-        // })->with('orders', function($quu){
-        //     return $quu->with('order_product')->whereHas('order_product', function($op){
-        //         return $op->where('status', 0);});
-        // })->whereDate('created_at', \Carbon\Carbon::today())->get();
-
-        // return response($customer, 200);
     }
     public function displayPaid() //display paid Orders
     {

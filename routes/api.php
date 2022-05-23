@@ -48,7 +48,7 @@ Route::group(['middleware'=>['auth:api']],function(){
 
     //Customer
     Route::get('customers',[CustomerController::class, 'index']);
-    Route::get('customerorders',[CustomerController::class,'customerOrders']);
+    // Route::get('customerorders',[CustomerController::class,'customerOrders']);
     Route::get('customer-show/{id}',[CustomerController::class, 'show']);
     Route::post('customer/store',[CustomerController::class,'store']);
 
