@@ -56,7 +56,7 @@ class ProfileController extends Controller
                 'phone'=>$request->phone,
             ]);
 
-            return response()->json('Update Profile Successfuly', 200);
+        return response()->json('Update Profile Successfuly', 200);
 
     }
     public function changePassword(Request $request){
@@ -73,8 +73,8 @@ class ProfileController extends Controller
             'data'    => $validator->errors()
         ], 404);
         
-
         $employee=$request->user();
+
         if(Hash::check($request->old_password, $employee->password)){
             $employee->update([
                 'password'=>Hash::make($request->password)
@@ -84,10 +84,6 @@ class ProfileController extends Controller
         else{ 
             return response()->json(['message' => 'Old Password Doest Not Match'], 404);
         }
-
-    }
-    public function resetPassword()
-    {
 
     }
 }
