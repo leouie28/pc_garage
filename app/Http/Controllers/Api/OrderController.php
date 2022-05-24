@@ -83,7 +83,6 @@ class OrderController extends Controller
         $order->payment_id = $paymentId;
         $order->save();
         $order->update(['status' => 1,]);
-        // $order->order_product()->update(['status' => 1]);
 
         return response($payment,200);
     }
@@ -103,7 +102,6 @@ class OrderController extends Controller
         $order->payment_id = $paymentId;
         $order->save();
         $order->update(['status' => 1,]);
-        // $order->order_product()->update(['status' => 1]);
 
         return response($payment,200);
     }

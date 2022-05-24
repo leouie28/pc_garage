@@ -48,7 +48,6 @@ Route::group(['middleware'=>['auth:api']],function(){
 
     //Customer
     Route::get('customers',[CustomerController::class, 'index']);
-    // Route::get('customerorders',[CustomerController::class,'customerOrders']);
     Route::get('customer-show/{id}',[CustomerController::class, 'show']);
     Route::post('customer/store',[CustomerController::class,'store']);
 
@@ -65,17 +64,10 @@ Route::group(['middleware'=>['auth:api']],function(){
     Route::post('updatecart/{id}',[CartController::class,'update']);
 
     //Order Product//
-    // Route::get('customerorders/{id}',[OrderProductController::class,'customerOrders']);
-    // Route::get('deleteorder/{id}',[OrderProductController::class,'destroy']);
     Route::get('orderproduct',[OrderProductController::class,'index']);
     Route::get('orderproduct/paid',[OrderProductController::class,'displayPaid']);
     Route::get('orderproduct/pending',[OrderProductController::class,'displayPending']);
     Route::get('orderDisplay/{id}',[OrderProductController::class,'displayP']);
-    // Route::get('orderproduct/{id}',[OrderProductController::class,'show']);
     Route::get('toprepared',[OrderProductController::class,'toPrepared']);
-    // Route::post('confirmedorder/{id}',[OrderProductController::class,'confirmedOrder']);
     Route::post('markprepared/{id}',[OrderProductController::class,'markPrepared']);
-    // Route::post('orderproduct/store',[OrderProductController::class,'store']);
-    // Route::post('paymentorder/{id}',[OrderProductController::class,'payment']);
-    // Route::post('updateorder/{id}',[OrderProductController::class,'update']);
 });
