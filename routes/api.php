@@ -56,8 +56,6 @@ Route::group(['middleware'=>['auth:api']],function(){
     Route::post('confirmedorder/{id}',[OrderController::class,'confirmedOrder']);
     Route::post('paymentorder/{id}',[OrderController::class,'payment']);
     Route::post('payOrder/{id}',[OrderController::class,'payOrder']);
-    // Route::get('orders',[OrderController::class,'index']);
-    // Route::get('order-show/{id}',[OrderController::class,'show']);
 
     //Cart
     Route::get('cart',[CartController::class,'index']);
