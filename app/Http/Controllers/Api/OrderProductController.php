@@ -26,8 +26,10 @@ class OrderProductController extends Controller
     {
         $user = Auth::user();
 
-        $order = Order::where('employee_id', $user->id)->with('customers', 'order_product')
-        ->whereDate('created_at', \Carbon\Carbon::today())->get();
+        $order = Order::where('employee_id', $user->id)->with('payments')->with('customers')
+        ->with('order_product', function($opp){
+            return $opp->with('products');
+        })->whereDate('created_at', \Carbon\Carbon::today())->get();
 
         return response($order, 200);
     }
@@ -49,42 +51,53 @@ class OrderProductController extends Controller
 
         return response($order, 200);
     }
-    public function confirmedOrder($id) //Confirmed Order in the Cart
+    public function displayP($id) //display paid Orders
     {
         $user = Auth::user();
-        $emp = $user->id;
-        $customer = Customer::find($id);
-        $cart = Cart::where('customer_id', $id)->where('status', 0)->get();
-        $cusTotal = $cart->sum('total');
-        $qtyCount = $cart->sum('quantity');
 
-        
-        $order = Order::create([
-            'total' => $cusTotal,
-            'order_qty' => $qtyCount,
-            'customer_id' => $id,
-            'employee_id' => $emp,
-        ]);
-        foreach ($cart as $c) {
-        $orderId = $order->id;
-        $order_product = OrderProduct::create([
-            'quantity' => $c->quantity,
-            'price' => $c->price,
-            'product_id' => $c->product_id,
-            'comment' => $c->comment,
-            'order_id' => $orderId,
-        ]);
-        $qty = $order_product->quantity;
-        $prod = $order_product->product_id;
-        $product = Product::find($prod);
-        $product->decrement('stock', $qty);
-        
-        $c->update([
-            'status'=> 1,
-        ]);
+        $order = Order::where('employee_id', $user->id)->where('status', 0)->with('customers')
+        ->with('order_product', function($opp){
+            return $opp->with('products');
+        })->whereDate('created_at', \Carbon\Carbon::today())->find($id);
+
+        return response($order, 200);
     }
+    public function confirmedOrder($id) //Confirmed Order in the Cart
+    {
+    //     $user = Auth::user();
+    //     $emp = $user->id;
+    //     $customer = Customer::find($id);
+    //     $cart = Cart::where('customer_id', $id)->where('status', 0)->get();
+    //     $cusTotal = $cart->sum('total');
+    //     $qtyCount = $cart->sum('quantity');
 
-        return response()->json('Confirmed Order');
+        
+    //     $order = Order::create([
+    //         'total' => $cusTotal,
+    //         'order_qty' => $qtyCount,
+    //         'customer_id' => $id,
+    //         'employee_id' => $emp,
+    //     ]);
+    //     foreach ($cart as $c) {
+    //     $orderId = $order->id;
+    //     $order_product = OrderProduct::create([
+    //         'quantity' => $c->quantity,
+    //         'price' => $c->price,
+    //         'product_id' => $c->product_id,
+    //         'comment' => $c->comment,
+    //         'order_id' => $orderId,
+    //     ]);
+    //     $qty = $order_product->quantity;
+    //     $prod = $order_product->product_id;
+    //     $product = Product::find($prod);
+    //     $product->decrement('stock', $qty);
+        
+    //     $c->update([
+    //         'status'=> 1,
+    //     ]);
+    // }
+
+    //     return response()->json('Confirmed Order');
     }
     public function toPrepared() //Display Order to Prepared
     {
@@ -231,32 +244,32 @@ class OrderProductController extends Controller
     }
     public function payment(Request $request, $id) // Payment of the Order Product
     {
-        $user = Auth::user();
+        // $user = Auth::user();
 
-        $customer = Customer::with(['orders' =>function($qu) use($user){
-            return $qu->where('employee_id', $user->id)->whereHas('order_product', function($op){
-                return $op->where('status', 0);});
-        },'orders.order_product' =>function($que){
-            return $que->with(['products','options']);
-        }])->find($id);
+        // $customer = Customer::with(['orders' =>function($qu) use($user){
+        //     return $qu->where('employee_id', $user->id)->whereHas('order_product', function($op){
+        //         return $op->where('status', 0);});
+        // },'orders.order_product' =>function($que){
+        //     return $que->with(['products','options']);
+        // }])->find($id);
 
-        $order = Order::where('customer_id', $id)->whereHas('order_product', function($op){
-            return $op->where('status', 0);
-        })->first();
+        // $order = Order::where('customer_id', $id)->whereHas('order_product', function($op){
+        //     return $op->where('status', 0);
+        // })->first();
 
-        $payment = new Payment();
-        $payment->paid = $request->paid;
-        $payment->change = $request->paid - $order->total;
-        $payment->save();
-        $paymentId = $payment->id;
-        $payment['total'] = $order->total;
+        // $payment = new Payment();
+        // $payment->paid = $request->paid;
+        // $payment->change = $request->paid - $order->total;
+        // $payment->save();
+        // $paymentId = $payment->id;
+        // $payment['total'] = $order->total;
         
-        $order->payment_id = $paymentId;
-        $order->save();
-        $order->update(['status' => 1,]);
-        // $order->order_product()->update(['status' => 1]);
+        // $order->payment_id = $paymentId;
+        // $order->save();
+        // $order->update(['status' => 1,]);
+        // // $order->order_product()->update(['status' => 1]);
 
-        return response($payment,200);
+        // return response($payment,200);
     }
 
     /**

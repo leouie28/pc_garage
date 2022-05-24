@@ -20,7 +20,7 @@ class Order extends Model
     ];
     public function payments()
     {
-        return $this->belongsto(Payment::class);
+        return $this->belongsto(Payment::class, 'payment_id', 'id');
     }
     public function customers()
     {
