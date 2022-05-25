@@ -52,10 +52,10 @@ class OrderController extends Controller
         $prod = $order_product->product_id;
         $product = Product::find($prod);
         $product->decrement('stock', $qty);
-        
-        $c->update([
-            'status'=> 1,
-        ]);
+        // $c->update([
+        //     'status'=> 1,
+        // ]);
+        $c->delete();
     }
 
         return response()->json('Confirmed Order');

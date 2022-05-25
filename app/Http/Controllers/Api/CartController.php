@@ -85,14 +85,14 @@ class CartController extends Controller
         $product = Product::find($cart->product_id);
         
         if($cart->status == 1){
-            return response()->json('Cannot Proceeed!! This Order in the cart is already confirmed', 404);
+            return response()->json('Cannot Proceeed!! This Order in the cart is already confirmed.', 404);
         }
         if( ($request->quantity > $product->stock ) ) {
-            return response()->json('Quantity Exceeds Stock!!', 404);
+            return response()->json(' Cannot Proceeed!! Quantity Exceeds Stock.', 404);
         }
         $cart->update(['quantity' => $request->quantity]);
 
-        return response()->json('Cart Updated Successfuly', 200);
+        return response()->json('Cart Order Updated Successfuly', 200);
     }
 
     /**
@@ -105,10 +105,10 @@ class CartController extends Controller
     {
         $cart = Cart::find($id);
         if($cart->status == 1){
-            return response()->json('Cannot Proceeed!! This Order is already paid', 404);
+            return response()->json('Cannot Proceeed!! This Order is already confirmed', 404);
         }
         $cart->delete();
 
-        return response()->json('Cart Deleted', 200);
+        return response()->json('Cart Order Deleted', 200);
     }
 }
