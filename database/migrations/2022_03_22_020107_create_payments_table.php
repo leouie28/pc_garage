@@ -17,7 +17,7 @@ class CreatePaymentsTable extends Migration
             $table->id();
             $table->string('payment_method')->default('Cash');
             $table->double('paid');
-            $table->double('change')->default(0);
+            $table->double('change');
             $table->timestamps();
         });
     }
