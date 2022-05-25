@@ -18,14 +18,6 @@
               <v-icon v-else color="error">mdi-account-clock</v-icon>
             </template>
 
-            <template v-slot:[`item.product_id`]="{ item }">
-              <span>{{ item.products.name }}</span>
-            </template>
-
-            <template v-slot:[`item.option_id`]="{ item }">
-              <span>{{ item.options.name }}</span>
-            </template>
-
             <template v-slot:[`item.customer`]="{ item }">
               <span>{{ item.orders.customers.name }}</span>
             </template>
@@ -48,7 +40,7 @@
               <v-toolbar
                   flat
               >
-                <v-toolbar-title>Order_Products</v-toolbar-title>
+                <v-toolbar-title>Orders</v-toolbar-title>
                 <v-divider
                   class="mx-4"
                   inset
@@ -107,9 +99,6 @@
         },
         { text: 'Status', align: 'center', value: 'status' },
         { text: 'Quantity', align: 'center', value: 'quantity', sortable: false },
-        { text: 'Price', align: 'center', value: 'price', sortable: false },
-        { text: 'Product', align: 'center', value: 'product_id', sortable: false },
-        { text: 'Option', align: 'center', value: 'option_id', sortable: false },
         { text: 'Customer', align: 'center', value: 'customer', sortable: false },
         { text: 'Total', align: 'center', value: 'total', sortable: false },
         { text: 'Action', align: 'center', value: 'actions', sortable: false },

@@ -7,15 +7,14 @@
       dark
       app
     >
-        <v-img src="" class="mt-3 pa-4">
+        <v-img src="" class="mt-1 pa-3">
             <div class="text-center">
                 <v-avatar
-                class="mb-3"
+                class="mb-1"
                 color="grey darken-1"
                 size="64"
                 >
                 </v-avatar>
-                <div>@user</div>
             </div>
         </v-img>
       <v-divider></v-divider>
@@ -59,6 +58,8 @@ export default {
             ['mdi-face-agent', 'Employees', 'employee'],
             ['mdi-account-group', 'Customers', 'customer'],
             ['mdi-briefcase', 'Products', 'product'],
+            ['mdi-scale', 'Variations', 'variation'],
+            ['mdi-playlist-plus', 'Options', 'option'],
             ['mdi-format-list-checks', 'Orders', 'order'],
             ['mdi-credit-card-outline', 'Payments', 'payment'],
             // ['mdi-logout', 'Logout'],

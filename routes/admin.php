@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OptionController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\VariationController;
 use App\Http\Controllers\OrderProductController;
 use App\Http\Controllers\Backoffice\AuthController;
 
@@ -37,6 +39,18 @@ Route::group(['middleware'=>['auth:admin']],function(){
     Route::put('product/updateStatus/{id}', [ProductController::class, 'updateStatus']);
     Route::get('product/showImage/{id}', [ProductController::class, 'showImage']);
     Route::get('product/service/', [ProductController::class, 'service']);
+
+    //Variation section
+    Route::get('variation', [VariationController::class, 'index']);
+    Route::post('variation/create', [VariationController::class, 'store']);
+    Route::put('variation/update/{id}', [VariationController::class, 'update']);
+    Route::delete('variation/destroy/{id}', [VariationController::class, 'destroy']);
+
+    //Option section
+    Route::get('option', [OptionController::class, 'index']);
+    Route::post('option/create', [OptionController::class, 'store']);
+    Route::put('option/update/{id}', [OptionController::class, 'update']);
+    Route::delete('option/destroy/{id}', [OptionController::class, 'destroy']);
 
     //OderProduct section
     Route::get('orderProduct', [OrderProductController::class, 'index']);

@@ -31,6 +31,16 @@ export default [
         name: 'product'
     },
     {
+        path: '/variation',
+        component: () => import('../pages/crud/variation.vue'),
+        name: 'variation'
+    },
+    {
+        path: '/option',
+        component: () => import('../pages/crud/option.vue'),
+        name: 'option'
+    },
+    {
         path: '/order',
         component: () => import('../pages/crud/order.vue'),
         name: 'order'
