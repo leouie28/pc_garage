@@ -81,16 +81,21 @@ class CartController extends Controller
      */
     public function update(Request $request, Cart $cart, $id)//Update order quantity of the product in the cart
     {
-        $cart = Cart::find($id);
+        $cart = Cart::where('status', 0)->find($id);
         $product = Product::find($cart->product_id);
         
-        if($cart->status == 1){
+        if(!$cart){
             return response()->json('Cannot Proceeed!! This Order in the cart is already confirmed.', 404);
         }
         if( ($request->quantity > $product->stock ) ) {
             return response()->json(' Cannot Proceeed!! Quantity Exceeds Stock.', 404);
         }
+        if(!empty($request->quantity)){
         $cart->update(['quantity' => $request->quantity]);
+        }
+        if(!empty($request->comment)){
+        $cart->update(['comment' => $request->comment]);
+        }
 
         return response()->json('Cart Order Updated Successfuly', 200);
     }
@@ -103,9 +108,9 @@ class CartController extends Controller
      */
     public function destroy(Cart $cart, $id) // Delete order in the cart
     {
-        $cart = Cart::find($id);
-        if($cart->status == 1){
-            return response()->json('Cannot Proceeed!! This Order is already confirmed', 404);
+        $cart = Cart::where('status', 0)->find($id);
+        if(!$cart){
+            return response()->json('Cannot Proceeed!! This Order is already confirmed or Been Deleted', 404);
         }
         $cart->delete();
 

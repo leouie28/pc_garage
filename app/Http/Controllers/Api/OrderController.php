@@ -65,13 +65,12 @@ class OrderController extends Controller
         $user = Auth::user();
 
         $customer = Customer::with(['orders' =>function($qu) use($user){
-            return $qu->where('employee_id', $user->id)->whereHas('order_product', function($op){
-                return $op->where('status', 0);});
+            return $qu->where('employee_id', $user->id)->whereHas('order_product');
         },'orders.order_product' =>function($que){
-            return $que->with(['products','options']);
+            return $que->with('products');
         }])->find($id);
 
-        $order = Order::where('customer_id', $id)->where('status', 0)->whereHas('order_product')->first();
+        $order = Order::where('customer_id', $id)->where('status', 0)->whereHas('order_product')->latest()->first();
 
         $payment = new Payment();
         $payment->paid = $request->paid;
