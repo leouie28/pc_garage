@@ -21,3 +21,4 @@ Route::resource('companies','App\Http\Controllers\CompanyController');
 Route::resource('category','App\Http\Controllers\CategoryController');
 Route::resource('employees','App\Http\Controllers\EmployeeController');
 Route::resource('order_product','App\Http\Controllers\OrderProductController');
+Route::resource('payment','App\Http\Controllers\PaymentController');

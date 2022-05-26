@@ -17,13 +17,13 @@
       <v-toolbar flat>
 
         <v-toolbar-title>Category</v-toolbar-title> 
-          
            <v-divider
                   class="mx-4"
                   inset
                   vertical
                 ></v-divider>
-                   
+                    <v-spacer></v-spacer>
+                <v-col sm="3">
                 <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
@@ -32,13 +32,13 @@
         chips
         clearable
         solo
+        dense
         
       >
          
       </v-text-field>
+                </v-col>
                    
-                    <v-spacer></v-spacer>
-
              <v-btn
                   color="primary"
                   class="mx-5 bg-primary d-inline-block"
@@ -97,8 +97,10 @@
     
     </v-toolbar>  
     </template>
-        <template v-slot:[`item.created_at`]>  
-               
+   
+        <template v-slot:[`item.created_at`]="{ item }">  
+        {{ moment(item.created_at).format("MMM Do YYYY")  }}
+              <!-- {{ moment(item.created_at).format("ll")  }} -->
                  </template>     
       <template v-slot:[`item.cat_act`]="{ item }">
               <v-icon

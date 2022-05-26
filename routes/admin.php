@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderProductController;
 use App\Http\Controllers\Backoffice\AuthController;
 use App\Http\Controllers\Backoffice\ImageController;
 use App\Http\Controllers\Backoffice\CustomerController;
+use App\Http\Controllers\PaymentController;
 
 Route::post('login',[AuthController::class, 'adminLogin'])->name('adminLogin');
 Route::get('checkadmin',[AuthController::class,'checkAdmin'])->name('checkAdmin');
@@ -18,7 +19,6 @@ Route::group(['middleware'=>['auth:admin']],function(){
     Route::get('logout',[AuthController::class,'adminLogout']);
 
     //Search section
-    Route::get('search', [SearchController::class, 'index']);
 
     //Company section
     Route::get('company', [CompanyController::class, 'index']);
@@ -47,6 +47,11 @@ Route::group(['middleware'=>['auth:admin']],function(){
     Route::put('category/update/{id}', [CategoryController::class, 'update']);
     Route::delete('category/destroy/{id}', [CategoryController::class, 'destroy']);
 
+     //Payment
+    Route::get('payment', [PaymentController::class, 'index']);
+    Route::post('payment/create', [PaymentController::class, 'store']);
+    Route::put('payment/update/{id}', [PaymentController::class, 'update']);
+    Route::delete('payment/destroy/{id}', [PaymentController::class, 'destroy']);
 });
 
 
@@ -72,7 +77,6 @@ Route::group( ['prefix' => 'admin','middleware' => ['auth:company-api','scopes:c
     // Route::post('logout',[AuthController::class,'logout']);
     // Route::post('logout',[AuthController::class,'adminLogout']);
     Route::post('customer/store',[CustomerController::class,'store']);
-    Route::post('image/store',[ImageController::class,'store']);
     //Route::get('dashboard',[LoginController::class, 'adminDashboard']);
 });
 

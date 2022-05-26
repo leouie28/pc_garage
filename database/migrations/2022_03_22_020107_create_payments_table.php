@@ -15,7 +15,9 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->enum('payment_method', ['Cash', 'ATM']);
+            $table->string('payment_method')->default('Cash');
+            $table->double('paid');
+            $table->double('change')->nullable();
             $table->timestamps();
         });
     }
