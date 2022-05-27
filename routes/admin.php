@@ -9,6 +9,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\Backoffice\AuthController;
+use App\Http\Controllers\PaymentController;
 
 Route::post('login',[AuthController::class, 'adminLogin'])->name('adminLogin');
 Route::get('checkadmin',[AuthController::class,'checkAdmin'])->name('checkAdmin');
@@ -58,7 +59,19 @@ Route::group(['middleware'=>['auth:admin']],function(){
     //Category Section
     Route::get('category', [CategoryController::class, 'index']);
 
+    //Category
+    Route::get('category', [CategoryController::class, 'index']);
+    Route::post('category/create', [CategoryController::class, 'store']);
+    Route::put('category/update/{id}', [CategoryController::class, 'update']);
+    Route::delete('category/destroy/{id}', [CategoryController::class, 'destroy']);
+
+     //Payment
+    Route::get('payment', [PaymentController::class, 'index']);
+    Route::post('payment/create', [PaymentController::class, 'store']);
+    Route::put('payment/update/{id}', [PaymentController::class, 'update']);
+    Route::delete('payment/destroy/{id}', [PaymentController::class, 'destroy']);
 });
+
 
 /*
 Route::post('admin/login',[AuthController::class,'login']);

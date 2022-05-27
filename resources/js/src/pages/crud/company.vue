@@ -402,8 +402,8 @@
   .dashboard{
       padding: 10px;
       border-radius: 10px;
-      border: 1px solid rgb(235, 235, 235);
-      box-shadow: 1px 5px 5px #ccc;
+      /* border: 1px solid rgb(235, 235, 235);
+      box-shadow: 1px 5px 5px #ccc; */
   }
 
   /* .hide-header {

@@ -22,6 +22,17 @@ class CategoryController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+        return Category::view();
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -30,6 +41,17 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //
+
+        $ValidateData = $request->validate([
+            'name' => 'required|unique:categories',
+        ]);
+        $user = Auth::user();
+         $category = new Category([
+             'name'=>$request->name,
+             'company_id'=>$user->id,
+          ]);
+          $category->save();
+          return response()->json($category,200);
     }
 
     /**
@@ -39,6 +61,17 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
+    {
+        //aaa
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
     {
         //
     }
@@ -53,6 +86,15 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         //
+
+        $ValidateData = $request->validate([
+            'name' => 'required|unique:categories',
+        ]);
+
+        $update = Category::find($id);
+        $input = $request->all();
+        $update->update($input);
+        return response()->json('Company successfully updated');
     }
 
     /**
@@ -64,5 +106,8 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         //
+        $category = Category::find($id);
+        $category->delete();
+        return response()->json('Company successfully deleted');
     }
 }
