@@ -19,6 +19,14 @@ class Customer extends Model
     }
     public function companies()
     {
-        return $this->belongsToMany(Company::class, 'company_customer');
+        return $this->belongsToMany(Company::class, 'company_customer')->withTimestamps();
     }
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+    // public function users()
+    // {
+    //     return $this->belongsToMany(User::class, 'company_customer'); //changes
+    // }
 }

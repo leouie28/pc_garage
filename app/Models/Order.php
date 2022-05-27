@@ -11,14 +11,21 @@ class Order extends Model
     protected $table = 'orders';
     protected $fillable = [
 
+        'status',
         'total',
+        'order_qty',
         'payment_id',
+        'option_id',
         'customer_id',
         'employee_id'        
     ];
     public function payments()
     {
-        return $this->belongsto(Payment::class);
+        return $this->belongsto(Payment::class, 'payment_id', 'id');
+    }
+    public function options()
+    {
+        return $this->belongsto(Option::class, 'option_id', 'id');
     }
     public function customers()
     {
@@ -33,5 +40,9 @@ class Order extends Model
         return $this->belongsToMany(Product::class, 'order_product')
             ->withPivot('quantity', 'price')
             ->withTimestamps();
+    }
+    public function order_product()
+    {
+        return $this->hasMany(OrderProduct::class);
     }
 }

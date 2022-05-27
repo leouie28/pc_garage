@@ -13,8 +13,8 @@
             dense
           >
 
-            <template v-slot:[`item.variation_id`]="{ item }">
-              <span>{{ item.variations.name }}</span>
+            <template v-slot:[`item.addprice`]="{ item }">
+              <span>₱ {{ item.addprice }}.00</span>
             </template>
 
             <template v-slot:top>
@@ -78,9 +78,9 @@
                           </v-row>
                           <v-row>
                             <v-col
-                              cols="12"
-                              sm="6"
-                              md="4"
+                              cols="18"
+                              sm="9"
+                              md="6"
                             >
                               <v-text-field
                               v-model="payload.addprice"
@@ -93,9 +93,9 @@
                               ></v-text-field>
                             </v-col>
                             <v-col
-                              cols="12"
-                              sm="6"
-                              md="4"
+                              cols="18"
+                              sm="9"
+                              md="6"
                             >
                               <v-text-field
                               v-model="payload.stock"
@@ -106,23 +106,6 @@
                               ref="name"
                               :error-messages="errorMessages"
                               ></v-text-field>
-                            </v-col>
-                            <v-col
-                              cols="12"
-                              sm="6"
-                              md="4"
-                            >
-                              <v-select
-                              :items="variations"
-                              v-model="payload.variation_id"
-                              item-value="id" 
-                              item-text="name"
-                              label="Variation"
-                              dense
-                              :rules="[() => !!payload.variation_id ||  'this field is required']"
-                              ref="name"
-                              :error-messages="errorMessages"
-                              ></v-select>
                             </v-col>
 
                           </v-row>
@@ -206,12 +189,10 @@
         { text: 'Name', value: 'name' },
         { text: 'Add Price', align: 'center', value: 'addprice', sortable: false },
         { text: 'Stock', align: 'center', value: 'stock', sortable: false },
-        { text: 'Variation', value: 'variation_id' },
         { text: 'Actions', align: 'center', value: 'actions', sortable: false },
       ],
       valid: '',
       options: [],
-      variations: [],
       payload:{},
       search: '',
       editedIndex: -1,
@@ -233,11 +214,7 @@
 
     watch: {
       dialog (val) {
-        if(val) {
-          axios.get('/admin/variation').then(({data}) => {
-            this.variations = data;
-          })
-        }
+        val || this.close()
       },
 
       dialogDelete (val) {
@@ -254,7 +231,7 @@
       initialize () {
         axios.get('/admin/option').then(({data}) => {
           this.options = data;
-          console.log(this.options)
+          //console.log(this.options)
         })
       },
 
@@ -271,7 +248,6 @@
       
       editItem (id) {
         axios.put('/admin/option/update'+id).then(({data}) => {
-          console.log('Success');
           this.initialize();
         })
       },
@@ -283,7 +259,6 @@
 
       deleteItemConfirm (id) {
         axios.delete('/admin/option/destroy/'+this.payload.id, this.payload).then(({data}) => {
-          console.log('Success');
           this.initialize();
           this.dialogDelete = false
         })

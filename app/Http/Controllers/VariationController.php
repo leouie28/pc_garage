@@ -9,9 +9,7 @@ class VariationController extends Controller
 {
     public function index()
     {
-        $variation = Variation::with('products')->get();
-
-        return response()->json($variation, 200);
+        return Variation::get();
     }
 
     public function create()
@@ -27,7 +25,6 @@ class VariationController extends Controller
 
         $variation = new Variation([
             'name' => $request->name,
-            'product_id' => $request->product_id,
         ]);
         $variation->save();
  

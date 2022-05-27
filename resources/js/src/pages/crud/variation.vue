@@ -12,11 +12,6 @@
             :search="search"
             dense
           >
-
-            <template v-slot:[`item.product_id`]="{ item }">
-              <span>{{ item.products.name }}</span>
-            </template>
-
             <template v-slot:top>
               <v-toolbar
                   flat
@@ -75,22 +70,6 @@
                                 :error-messages="errorMessages"
                                 ></v-text-field>
                             </v-col>
-                          </v-row>
-                          <v-row>
-                            <v-col>
-                              <v-select
-                              :items="products"
-                              v-model="payload.product_id"
-                              item-value="id" 
-                              item-text="name"
-                              label="Product"
-                              dense
-                              :rules="[() => !!payload.product_id ||  'this field is required']"
-                              ref="name"
-                              :error-messages="errorMessages"
-                              ></v-select>
-                            </v-col>
-
                           </v-row>
                         </v-form>
                       </v-container>
@@ -170,12 +149,10 @@
           value: 'id',
         },
         { text: 'Name', value: 'name' },
-        { text: 'Product', value: 'product_id' },
         { text: 'Actions', align: 'center', value: 'actions', sortable: false },
       ],
       valid: '',
       variations: [],
-      products: [],
       payload:{},
       search: '',
       editedIndex: -1,
@@ -193,11 +170,7 @@
 
     watch: {
       dialog (val) {
-        if(val) {
-          axios.get('/admin/product').then(({data}) => {
-            this.products = data;
-          })
-        }
+        val || this.close()
       },
 
       dialogDelete (val) {

@@ -19,7 +19,7 @@
               > mdi-image-multiple</v-icon>
             </template>
 
-            <template v-slot:[`item.is_service`]="{ item }">
+            <!-- <template v-slot:[`item.is_service`]="{ item }">
               <v-btn icon @click="updateStatus(item.id)">
                 <v-icon  v-if="item.is_service" color="success" > mdi-check-circle-outline</v-icon>
                 <v-icon v-else color="error">mdi-cancel </v-icon>
@@ -29,6 +29,10 @@
             <template v-slot:[`item.category_id`]="{ item }">
               <span>{{ item.categories.name }}</span>
             </template>
+
+            <template v-slot:[`item.variation_id`]="{ item }">
+              <span>{{ item.variations.name }}</span>
+            </template> -->
 
             <template v-slot:top>
               <v-toolbar
@@ -46,42 +50,10 @@
                   md="2"
                   sm="2"
                 >
-                  <v-select
-                    :items="service"
-                    item-text="text"
-                    item-value="value"
-                    hide-details
-                    label="Is Service"
-                    clearable
-                    solo
-                    dense
-                    filter
-                    @change="isService()"
-                  ></v-select>
-                </v-col>
-                <v-col
-                  cols="3"
-                  md="2"
-                  sm="2"
-                >
-                  <v-autocomplete
-                    label="Category"
-                    clearable
-                    solo
-                    dense
-                    single-line
-                    hide-details
-                  ></v-autocomplete>
-                </v-col>
-                <v-col
-                  cols="3"
-                  md="2"
-                  sm="2"
-                >
                 <v-text-field
                   v-model="search"
                   append-icon="mdi-magnify"
-                  label="Search All"
+                  label="Search"
                   single-line
                   hide-details
                 ></v-text-field>
@@ -134,6 +106,18 @@
                             </v-col>
                           </v-row>
                           <v-row>
+                            <v-col>
+                              <v-text-field
+                              v-model="payload.reference"
+                              label="Reference"
+                              dense
+                              :rules="[() => !!payload.reference ||  'this field is required']"
+                              ref="name"
+                              :error-messages="errorMessages"
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <v-row>
                             <v-col
                               cols="18"
                               sm="9"
@@ -156,20 +140,6 @@
                               md="6"
                             >
                               <v-text-field
-                              v-model="payload.reference"
-                              label="Reference"
-                              dense
-                              :rules="[() => !!payload.reference ||  'this field is required']"
-                              ref="name"
-                              :error-messages="errorMessages"
-                              ></v-text-field>
-                            </v-col>
-                            <v-col
-                              cols="18"
-                              sm="9"
-                              md="6"
-                            >
-                              <v-text-field
                               v-model="payload.stock"
                               label="Stock"
                               type="number"
@@ -179,7 +149,7 @@
                               :error-messages="errorMessages"
                               ></v-text-field>
                             </v-col>
-                            <v-col
+                            <!-- <v-col
                               cols="18"
                               sm="9"
                               md="6"
@@ -196,6 +166,23 @@
                               :error-messages="errorMessages"
                               ></v-select>
                             </v-col>
+                            <v-col
+                              cols="18"
+                              sm="9"
+                              md="6"
+                            >
+                              <v-select
+                              :items="variations"
+                              v-model="payload.variation_id"
+                              item-value="id" 
+                              item-text="name"
+                              label="Variation"
+                              dense
+                              :rules="[() => !!payload.variation_id ||  'this field is required']"
+                              ref="name"
+                              :error-messages="errorMessages"
+                              ></v-select>
+                            </v-col> -->
                           </v-row>
                           <v-row>
                             <v-col>
@@ -242,7 +229,7 @@
 
                 <v-dialog v-model="dialogDelete" max-width="390px">
                   <v-card>
-                      <v-card-title class="text-h5">Are you sure you want to delete this company?</v-card-title>
+                      <v-card-title class="text-h5">Are you sure you want to delete this product?</v-card-title>
                       <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
@@ -324,20 +311,15 @@
         { text: 'Price', align: 'center', value: 'price', sortable: false },
         { text: 'Reference', align: 'center', value: 'reference', sortable: false },
         { text: 'Stock', align: 'center', value: 'stock', sortable: false },
-        { text: 'Is Service', align: 'center', value: 'is_service', sortable: false },
-        { text: 'Category', align: 'center', value: 'category_id', sortable: false },
+        // { text: 'Is Service', align: 'center', value: 'is_service', sortable: false },
+        // { text: 'Category', align: 'center', value: 'category_id', sortable: false },
+        // { text: 'Variation', align: 'center', value: 'variation_id', sortable: false },
         { text: 'Actions', align: 'center', value: 'actions', sortable: false },
       ],
-      service: [
-        {text: 'isService', value: 'isService',
-        render: {
-          filter: 'isService'
-        }},
-      ],
-      
       valid: '',
       products: [],
       categories: [],
+      variations: [],
       payload:{},
       image:{},
       search: '',
@@ -351,6 +333,7 @@
         stock: 0,
         is_service: 0,
         category_id: '',
+        variation_id: '',
       },
       defaultItem: {
         name: '',
@@ -360,6 +343,7 @@
         stock: 0,
         is_service: 0,
         category_id: '',
+        variation_id: '',
       },
       formTitle:"Add Product",
       errorMessages:'',
@@ -372,6 +356,9 @@
         if(val) {
           axios.get('/admin/category').then(({data}) => {
             this.categories = data;
+          })
+          axios.get('/admin/variation').then(({data}) => {
+            this.variations = data;
           })
         }
       },
@@ -393,7 +380,6 @@
       initialize () {
         axios.get('/admin/product').then(({data}) => {
           this.products = data;
-          //console.log(this.products)
         })
       },
 
@@ -411,7 +397,6 @@
       editItem (id) {
         axios.put('/admin/product/update'+id).then(({data}) => {
           this.initialize();
-          console.log(this.payload)
         })
       },
 
@@ -463,10 +448,6 @@
           axios.put('/admin/product/update/'+this.payload.id, this.payload).then(({data}) => {
             this.initialize()
             this.close()
-          }).catch(error => {
-            if(error.response.data.errors.name) {
-              alert(error.response.data.errors.name)
-            }
           })
         } else {
           axios.post('/admin/product/create', this.payload).then(({data}) => {
@@ -478,10 +459,6 @@
             }
 
             this.close()
-          }).catch(error => {
-            if(error.response.data.errors.name) {
-              alert(error.response.data.errors.name)
-            }
           })
         }
       },

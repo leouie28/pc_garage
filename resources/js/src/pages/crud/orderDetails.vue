@@ -1,106 +1,91 @@
 <template>
-<v-card>
-    <v-card-title>PRODUCT DETAILS</v-card-title>
-    <v-card-text>
-        <v-container>
-            <v-form ref="form">
-                <v-row dense>
-                    <v-col>
-                        <span><b>Name: </b></span>
-                        <span>{{ details.products.name }}</span>
-                    </v-col>
-                    <v-col>
-                        <span><b>Price: </b></span>
-                        <span>{{ details.products.price }}</span>
-                    </v-col>
-                </v-row>
-                <v-row dense>
-                    <v-col>
-                        <span><b>Reference: </b></span>
-                        <span>{{ details.products.reference }}</span>
-                    </v-col>
-                    <v-col>
-                        <span><b>Category: </b></span>
-                        <span>{{ details.products.reference }}</span>
-                    </v-col>
-                </v-row>
-                <v-row dense>
-                    <v-col>
-                        <span><b>Descrition: </b></span>
-                        <span>{{ details.products.description }}</span>
-                    </v-col>
-                </v-row>
-            </v-form>
-        </v-container>
-    </v-card-text>
-    <v-card-title>OPTION DETAILS</v-card-title>
-    <v-card-text>
-        <v-container>
-            <v-form ref="form">
-                <v-row dense>
-                    <v-col>
-                        <span><b>Name: </b></span>
-                        <span>{{ details.options.name }}</span>
-                    </v-col>
-                </v-row>
-                <v-row dense>
-                    <v-col>
-                        <span><b>Price: </b></span>
-                        <span>{{ details.options.addprice }}</span>
-                    </v-col>
-                </v-row>
-                <v-row dense>
-                    <v-col>
-                        <span><b>Variation: </b></span>
-                        <span>{{ details.options.variations.name }}</span>
-                    </v-col>
-                </v-row>
-            </v-form>
-        </v-container>
-    </v-card-text>
-    <v-card-title>CUSTOMER INFORMATION</v-card-title>
-    <v-card-text>
-        <v-container>
-            <v-form ref="form">
-                <v-row dense>
-                    <v-col>
-                        <span><b>Name: </b></span>
-                        <span>{{ details.orders.customers.name }}</span>
-                    </v-col>
-                </v-row>
-                <v-row dense>
-                    <v-col>
-                        <span><b>Phone: </b></span>
-                        <span>{{ details.orders.customers.phone }}</span>
-                    </v-col>
-                </v-row>
-                <v-row dense>
-                    <v-col>
-                        <span><b>Email: </b></span>
-                        <span>{{ details.orders.customers.email }}</span>
-                    </v-col>
-                </v-row>
-            </v-form>
-        </v-container>
-    </v-card-text>
-    <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-            text
-            color="red darken-1"
-            @click="close"
-        >
-            Close
-        </v-btn>
-    </v-card-actions>
-</v-card>
+<div>
+    <v-card>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn icon>
+                <v-icon
+                color="red darken-1"
+                @click="close"
+                >
+                mdi-close-circle
+                </v-icon>
+            </v-btn>
+        </v-card-actions>
+    </v-card>
+    <v-row>
+      <v-col lg="12">
+        <v-card rounded="24" elevation="2">
+
+          <v-data-table
+            :headers="headers"
+            :items="details"
+            item-key="name"
+            class="elevation-1"
+            dense
+          >
+
+            <template v-slot:[`item.prepared`]="{ item }">
+              <v-icon v-if="item.prepared" color="success">mdi-check-circle</v-icon>
+              <v-icon v-else color="error">mdi-close-circle</v-icon>
+            </template>
+
+            <template v-slot:[`item.product_id`]="{ item }">
+              <span><h3>{{ item.products.name }}</h3></span>
+            </template>
+
+            <!-- <template v-slot:[`item.option_id`]="{ item }">
+              <span><h3>{{ item.options.name }}</h3></span>
+            </template> -->
+
+            <template v-slot:[`item.quantity`]="{ item }">
+              <span><h3>{{ item.quantity }}</h3></span>
+            </template>
+
+            <template v-slot:[`item.price`]="{ item }">
+              <span><h3>₱ {{ item.price }}.00</h3></span>
+            </template>
+
+            <template v-slot:top>
+              <v-toolbar
+                  flat
+              >
+                <v-toolbar-title>Order Details</v-toolbar-title>
+                <v-divider
+                  class="mx-4"
+                  inset
+                  vertical
+                ></v-divider>
+              </v-toolbar>
+            </template>
+
+          </v-data-table>
+        </v-card>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
 export default {
+    data: () => ({
+        headers: [
+        { text: 'Product', value: 'product_id', sortable: false },
+        { text: 'Quantity', align: 'center', value: 'quantity', sortable: false },
+        { text: 'Price', value: 'price', sortable: false },
+        // { text: 'Option', align: 'center', value: 'option_id', sortable: false },
+        { text: 'Comment', value: 'comment', sortable: false },
+        { text: 'Prepared', align: 'center', value: 'prepared', sortable: false },
+
+      ],
+      products: [],
+      options: [],
+    }),
+
     props:{
         details:{}
     },
+
     methods: {
         close () {
             this.$emit("close")

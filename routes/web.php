@@ -22,5 +22,5 @@ Route::resource('employees','App\Http\Controllers\EmployeeController');
 Route::resource('products','App\Http\Controllers\ProductController');
 Route::resource('variations','App\Http\Controllers\VariationController');
 Route::resource('options','App\Http\Controllers\OptionController');
-Route::resource('order_product','App\Http\Controllers\OrderProductController');
+Route::resource('orders','App\Http\Controllers\OrderController');
 Route::resource('categories','App\Http\Controllers\CategoryController');

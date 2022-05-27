@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OptionController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProductController;
@@ -38,7 +39,6 @@ Route::group(['middleware'=>['auth:admin']],function(){
     Route::delete('product/destroy/{id}', [ProductController::class, 'destroy']);
     Route::put('product/updateStatus/{id}', [ProductController::class, 'updateStatus']);
     Route::get('product/showImage/{id}', [ProductController::class, 'showImage']);
-    Route::get('product/service/', [ProductController::class, 'service']);
 
     //Variation section
     Route::get('variation', [VariationController::class, 'index']);
@@ -52,8 +52,9 @@ Route::group(['middleware'=>['auth:admin']],function(){
     Route::put('option/update/{id}', [OptionController::class, 'update']);
     Route::delete('option/destroy/{id}', [OptionController::class, 'destroy']);
 
-    //OderProduct section
-    Route::get('orderProduct', [OrderProductController::class, 'index']);
+    //Oder section
+    Route::get('order', [OrderController::class, 'index']);
+    Route::get('order/{id}/details', [OrderController::class, 'getOrderDetails']);
 
     //Category Section
     Route::get('category', [CategoryController::class, 'index']);

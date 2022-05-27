@@ -9,9 +9,7 @@ class OptionController extends Controller
 {
     public function index()
     {
-        $option = Option::with('variations')->get();
-
-        return response()->json($option, 200);
+        return Option::get();
     }
 
     public function create()
@@ -21,15 +19,14 @@ class OptionController extends Controller
 
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'name' => 'required|unique:options',
-        // ]);
+        $request->validate([
+            'name' => 'required|unique:options',
+        ]);
 
         $option = new Option([
             'name' => $request->name,
             'addprice' => $request->addprice,
             'stock' => $request->stock,
-            'variation_id' => $request->variation_id,
         ]);
         $option->save();
  
@@ -38,9 +35,9 @@ class OptionController extends Controller
 
     public function update(Request $request, $id)
     {
-        // $request->validate([
-        //     'name' => 'required|unique:options,name,'.$id,
-        // ]);
+        $request->validate([
+            'name' => 'required|unique:options,name,'.$id,
+        ]);
 
         $option = Option::find($id);
         $input = $request->all();

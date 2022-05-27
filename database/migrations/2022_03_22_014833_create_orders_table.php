@@ -19,6 +19,7 @@ class CreateOrdersTable extends Migration
             $table->double('total');
             $table->integer('order_qty')->default(1);
             $table->unsignedBigInteger('payment_id')->nullable();
+            //$table->unsignedBigInteger('option_id')->nullable();
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('employee_id');
             $table->timestamps();

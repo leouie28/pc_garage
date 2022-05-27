@@ -6,7 +6,7 @@
 
           <v-data-table
             :headers="headers"
-            :items="orderproducts"
+            :items="orders"
             item-key="name"
             class="elevation-1"
             :search="search"
@@ -14,16 +14,20 @@
           >
 
             <template v-slot:[`item.status`]="{ item }">
-              <v-icon  v-if="item.status" color="success" > mdi-account-check</v-icon>
+              <v-icon v-if="item.status" color="success">mdi-account-check</v-icon>
               <v-icon v-else color="error">mdi-account-clock</v-icon>
             </template>
 
-            <template v-slot:[`item.customer`]="{ item }">
-              <span>{{ item.orders.customers.name }}</span>
+            <template v-slot:[`item.customer_id`]="{ item }">
+              <span>{{ item.customers.name }}</span>
+            </template>
+
+            <template v-slot:[`item.employee_id`]="{ item }">
+              <span>{{ item.employees.name }}</span>
             </template>
 
             <template v-slot:[`item.total`]="{ item }">
-              <span><h3>₱ {{ item.orders.total }}.00</h3></span>
+              <span><h3>₱ {{ item.total }}.00</h3></span>
             </template>
 
             <template v-slot:[`item.actions`]="{ item }">
@@ -48,9 +52,9 @@
                 ></v-divider>
                 <v-spacer></v-spacer>
                 <v-col
-                  cols="6"
-                  md="3"
-                  sm="4"
+                  cols="3"
+                  md="2"
+                  sm="2"
                 >
                 <v-text-field
                   v-model="search"
@@ -67,7 +71,7 @@
             <v-dialog
               v-model="show_details"
               persistent
-              max-width="500px"
+              max-width="50%"
             >
               <order-details
                 :details="details"
@@ -98,16 +102,15 @@
           value: 'id',
         },
         { text: 'Status', align: 'center', value: 'status' },
-        { text: 'Quantity', align: 'center', value: 'quantity', sortable: false },
-        { text: 'Customer', align: 'center', value: 'customer', sortable: false },
+        { text: 'Quantity', align: 'center', value: 'order_qty', sortable: false },
+        { text: 'Customer', align: 'center', value: 'customer_id', sortable: false },
+        { text: 'Employee', align: 'center', value: 'employee_id', sortable: false },
         { text: 'Total', align: 'center', value: 'total', sortable: false },
         { text: 'Action', align: 'center', value: 'actions', sortable: false },
 
       ],
-      orderproducts: [],
-      products: [],
       orders: [],
-      options: [],
+      products: [],
       search: '',
       show_details: false,
       details:{}
@@ -119,16 +122,16 @@
 
     methods: {
       initialize () {
-        axios.get('/admin/orderProduct').then(({data}) => {
-          this.orderproducts = data;
-          //console.log(this.orderproducts, 'test')
+        axios.get('/admin/order').then(({data}) => {
+          this.orders = data;
         })
       },
 
       view_details(item) {
-        this.show_details = true;
-        this.details = item;
-        //console.log(this.details)
+        axios.get(`/admin/order/${item.id}/details`).then(({data}) => {
+          this.show_details = true;
+          this.details = data;
+        })
       }
     },
   }

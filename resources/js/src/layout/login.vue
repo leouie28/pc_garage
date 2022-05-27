@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-main>
-            <v-container class="fill-height">
+            <v-container class="fill-height" style="max-width:1000px">
                 <v-row align="center" justify="center">
                     <v-col cols="12" sm="8" md="8">
                         <v-card class="elevation-12">

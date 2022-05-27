@@ -16,18 +16,16 @@ class Product extends Model
         'price',
         'reference',
         'stock',
+        'comment',
         'is_service',
         'category_id',
+        'variation_id',
         'company_id',
     ];
     public function companies()
     {
         return $this->belongsto(Company::class);
     }
-    // public function users()
-    // {
-    //     return $this->belongsto(User::class); //changes
-    // }
     public function categories()
     {
         return $this->belongsto(Category::class, 'category_id', 'id');
@@ -44,6 +42,10 @@ class Product extends Model
     }
     public function variations()
     {
-        return $this->hasmany(Variation::class);
+        return $this->belongsto(Variation::class, 'variation_id', 'id');
+    }
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
     }
 }
