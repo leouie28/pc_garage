@@ -1,0 +1,25 @@
+version: "3"
+
+networks:
+  UB:
+
+services:
+  nginx:
+    image: nginx:stable
+    container_name: UB_nginx
+    restart: always
+    volumes:
+      - ./:/var/www/html
+      - ./development/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - UB
+
+  php:
+    build:
+      context: .
+      dockerfile: development/Dockerfile
+    container_name: UB_php
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - UB

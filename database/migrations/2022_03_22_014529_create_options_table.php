@@ -18,7 +18,6 @@ class CreateOptionsTable extends Migration
             $table->double('addprice');
             $table->integer('stock');
             $table->string('name');
-            $table->unsignedBigInteger('variation_id');
             $table->timestamps();
             
         });

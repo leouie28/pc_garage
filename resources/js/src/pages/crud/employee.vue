@@ -10,6 +10,7 @@
             item-key="name"
             class="elevation-1"
             :search="search"
+            dense
           >
 
             <template v-slot:[`item.status`]="{ item }">
@@ -29,6 +30,12 @@
                   inset
                   vertical
                 ></v-divider>
+                <v-spacer></v-spacer>
+                <v-col
+                  cols="6"
+                  md="3"
+                  sm="4"
+                >
                 <v-text-field
                   v-model="search"
                   append-icon="mdi-magnify"
@@ -37,7 +44,7 @@
                   single-line
                   hide-details
                 ></v-text-field>
-                <v-spacer></v-spacer>
+                </v-col>
                 <v-btn
                   color="primary"
                   dark
@@ -59,12 +66,13 @@
 
                     <v-card-text>
                       <v-container>
-                        <v-form ref="form">
+                        <v-form ref="form" v-model="valid" lazy-validation>
                           <v-row>
                             <v-col>
                                 <v-text-field
                                 v-model="payload.name"
                                 label="Employee name"
+                                dense
                                 :rules="[() => !!payload.name ||  'this field is required']"
                                 ref="name"
                                 :error-messages="errorMessages"
@@ -72,15 +80,28 @@
                             </v-col>
                           </v-row>
                           <v-row>
+                            <v-col>
+                              <v-text-field
+                              v-model="payload.email"
+                              label="Email"
+                              dense
+                              :rules="[() => !!payload.email ||  'this field is required']"
+                              ref="name"
+                              :error-messages="errorMessages"
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <v-row>
                             <v-col
-                                cols="24"
-                                sm="12"
-                                md="8"
+                                cols="12"
+                                sm="6"
+                                md="4"
                             >
                                 <v-text-field
-                                v-model="payload.email"
-                                label="Email"
-                                :rules="[() => !!payload.email ||  'this field is required']"
+                                v-model="payload.phone"
+                                label="Cellphone Number"
+                                dense
+                                :rules="[() => !!payload.phone ||  'this field is required']"
                                 ref="name"
                                 :error-messages="errorMessages"
                                 ></v-text-field>
@@ -90,22 +111,10 @@
                                 sm="6"
                                 md="4"
                             >
-                                <v-text-field
-                                v-model="payload.phone"
-                                label="Cellphone Number"
-                                :rules="[() => !!payload.phone ||  'this field is required']"
-                                ref="name"
-                                :error-messages="errorMessages"
-                                ></v-text-field>
-                            </v-col>
-                            <v-col
-                                cols="24"
-                                sm="12"
-                                md="8"
-                            >
                                 <v-select
                                 v-model="payload.position"
                                 :items="position"
+                                dense
                                 menu-props="auto"
                                 hide-details
                                 label="Select Position"
@@ -124,6 +133,7 @@
                                 v-model="payload.password"
                                 label="Password"
                                 type="password"
+                                dense
                                 ></v-text-field>
                             </v-col>
                           </v-row>
@@ -141,7 +151,7 @@
                           Cancel
                       </v-btn>
                       <v-btn
-                          color="blue darken-1"
+                          color="green darken-1"
                           text
                           @click="save"
                       >
@@ -158,7 +168,7 @@
                       <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                      <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                      <v-btn color="red darken-1" text @click="deleteItemConfirm">OK</v-btn>
                       <v-spacer></v-spacer>
                       </v-card-actions>
                   </v-card>
@@ -171,12 +181,14 @@
               <v-icon
                   small
                   class="mr-2"
+                  color="green darken-1"
                   @click="editDialog(item)"
               >
                   mdi-pencil
               </v-icon>
               <v-icon
                   small
+                  color="red darken-1"
                   @click="deleteItem(item)"
               >
                   mdi-delete
@@ -212,6 +224,7 @@
       position: [
           'Chef', 'Cashier', 'Waiter',
       ],
+      valid: '',
       employees: [],
       payload:{},
       search: '',
@@ -257,7 +270,7 @@
       editDialog(item){
         this.dialog = true
         this.formTitle = 'Edit Eployee'
-        this.payload = item
+        this.payload = JSON.parse(JSON.stringify(item))
       },
 
       addDialog(){
@@ -288,6 +301,7 @@
       close () {
         this.payload= {}
         this.dialog = false
+        this.$refs.form.resetValidation();
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
@@ -335,8 +349,8 @@
       },
       
       updateStatus(id){
-        axios.put('/admin/updateStatus/'+id).then(({data}) => {
-          console.log('Success');
+        axios.put('/admin/employee/updateStatus/'+id).then(({data}) => {
+          //console.log('Success');
           this.initialize();
         })
       },

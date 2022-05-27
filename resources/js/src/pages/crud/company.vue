@@ -10,6 +10,7 @@
             item-key="name"
             class="elevation-1"
             :search="search"
+            dense
           >
 
             <!-- <template v-slot:[`item.address`]="{ item }">
@@ -42,6 +43,20 @@
                   hide-details
                 ></v-text-field>
                 <v-spacer></v-spacer>
+                <v-col
+                  cols="6"
+                  md="3"
+                  sm="4"
+                >
+                <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  class="mr-4"
+                  single-line
+                  hide-details
+                ></v-text-field>
+                </v-col>
                 <v-btn
                   color="primary"
                   dark
@@ -63,12 +78,13 @@
 
                     <v-card-text>
                       <v-container>
-                        <v-form ref="form">
+                        <v-form ref="form" v-model="valid" lazy-validation>
                           <v-row>
                             <v-col>
                                 <v-text-field
                                 v-model="payload.name"
                                 label="Company name"
+                                dense
                                 :rules="[() => !!payload.name ||  'this field is required']"
                                 ref="name"
                                 :error-messages="errorMessages"
@@ -76,80 +92,84 @@
                             </v-col>
                           </v-row>
                           <v-row>
-                            <v-col
-                                cols="24"
-                                sm="12"
-                                md="8"
-                            >
-                                <v-text-field
-                                v-model="payload.email"
-                                label="Email"
-                                :rules="[() => !!payload.email ||  'this field is required']"
-                                ref="name"
-                                :error-messages="errorMessages"
-                                ></v-text-field>
+                            <v-col>
+                              <v-text-field
+                              v-model="payload.email"
+                              label="Email"
+                              dense
+                              :rules="[() => !!payload.email ||  'this field is required']"
+                              ref="name"
+                              :error-messages="errorMessages"
+                              ></v-text-field>
                             </v-col>
+                          </v-row>
+                          <v-row>
                             <v-col
-                                cols="12"
-                                sm="6"
-                                md="4"
+                                cols="18"
+                                sm="9"
+                                md="6"
                             >
                                 <v-text-field
                                 v-model="payload.phone"
                                 label="Cellphone Number"
+                                dense
                                 :rules="[() => !!payload.phone ||  'this field is required']"
                                 ref="name"
                                 :error-messages="errorMessages"
                                 ></v-text-field>
                             </v-col>
                             <v-col
-                                cols="12"
-                                sm="6"
-                                md="4"
+                                cols="18"
+                                sm="9"
+                                md="6"
                             >
                                 <v-text-field
                                 v-model="payload.barangay"
                                 label="Barangay"
+                                dense
                                 :rules="[() => !!payload.barangay ||  'this field is required']"
                                 ref="name"
                                 :error-messages="errorMessages"
                                 ></v-text-field>
                             </v-col>
                             <v-col
-                                cols="12"
-                                sm="6"
-                                md="4"
+                                cols="18"
+                                sm="9"
+                                md="6"
                             >
                                 <v-text-field
                                 v-model="payload.city"
                                 label="City"
+                                dense
                                 :rules="[() => !!payload.city ||  'this field is required']"
                                 ref="name"
                                 :error-messages="errorMessages"
                                 ></v-text-field>
                             </v-col>
                             <v-col
-                                cols="12"
-                                sm="6"
-                                md="4"
+                                cols="18"
+                                sm="9"
+                                md="6"
                             >
                                 <v-text-field
                                 v-model="payload.province"
                                 label="Province"
+                                dense
                                 :rules="[() => !!payload.province ||  'this field is required']"
                                 ref="name"
                                 :error-messages="errorMessages"
                                 ></v-text-field>
                             </v-col>
                             <v-col
-                                cols="12"
-                                sm="6"
-                                md="4"
+                                cols="18"
+                                sm="9"
+                                md="6"
                             >
                                 <v-text-field
                                 v-model="payload.password"
                                 label="Password"
                                 type="password"
+                                dense
                                 ></v-text-field>
                             </v-col>
                           </v-row>
@@ -167,7 +187,7 @@
                           Cancel
                       </v-btn>
                       <v-btn
-                          color="blue darken-1"
+                          color="green darken-1"
                           text
                           @click="save"
                       >
@@ -184,7 +204,7 @@
                       <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                      <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                      <v-btn color="red darken-1" text @click="deleteItemConfirm">OK</v-btn>
                       <v-spacer></v-spacer>
                       </v-card-actions>
                   </v-card>
@@ -197,12 +217,14 @@
               <v-icon
                   small
                   class="mr-2"
+                  color="green darken-1"
                   @click="editDialog(item)"
               >
                   mdi-pencil
               </v-icon>
               <v-icon
                   small
+                  color="red darken-1"
                   @click="deleteItem(item)"
               >
                   mdi-delete
@@ -241,6 +263,7 @@
         // {value: 'barangay', class: 'hide' },
         // {value: 'barangay', class: 'hide' },
       ],
+      valid: '',
       companies: [],
       payload:{},
       search: '',
@@ -270,32 +293,6 @@
         val || this.closeDelete()
       },
     },
-    
-    // computed: {
-    //   headers () {
-    //     let q = 'hide-header'
-    //     return [
-    //       {
-    //       text: 'ID',
-    //       align: 'center',
-    //       sortable: false,
-    //       value: 'id',
-    //     },
-    //     { text: 'Name', value: 'name' },
-    //     { text: 'Email', align: 'center', value: 'email', sortable: false },
-    //     { text: 'Phone No.', align: 'center', value: 'phone', sortable: false },
-    //     //{ text: 'Address', align: 'center', value: 'address', sortable: false },
-    //     { text: 'Barangay', align: 'center', value: 'barangay', sortable: false },
-    //     { text: 'City', align: 'center', value: 'city', sortable: false },
-    //     { text: 'Province', align: 'center', value: 'province', sortable: false },
-    //     { text: 'Status', align: 'center', value: 'status', sortable: false },
-    //     { text: 'Actions', align: 'center', value: 'actions', sortable: false },
-    //     {hiddenvalue: 'barangay' },
-    //     {hiddenvalue: 'city' },
-    //     {hiddenvalue: 'province' },
-    //     ]
-    //   }
-    // },
 
     created () {
       //this.$toast.success('Successfully updated client status', {position: 'bottom'});
@@ -312,7 +309,7 @@
       editDialog(item){
         this.dialog = true
         this.formTitle = 'Edit Company'
-        this.payload = item
+        this.payload = JSON.parse(JSON.stringify(item))
       },
 
       addDialog(){
@@ -322,7 +319,6 @@
       
       editItem (id) {
         axios.put('/admin/company/update'+id).then(({data}) => {
-          console.log('Success');
           this.initialize();
         })
       },
@@ -334,7 +330,6 @@
 
       deleteItemConfirm (id) {
         axios.delete('/admin/company/destroy/'+this.payload.id, this.payload).then(({data}) => {
-          console.log('Success');
           this.initialize();
           this.dialogDelete = false
         })
@@ -343,6 +338,7 @@
       close () {
         this.payload= {}
         this.dialog = false
+        this.$refs.form.resetValidation();
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
@@ -365,7 +361,9 @@
             this.close()
             // this.$toast.success('successfully updated!', {position:'bottom'})
           }).catch(error => {
-            if(error.response.data.errors.email) {
+            if(error.response.data.errors.name) {
+              alert(error.response.data.errors.name)
+            } else if(error.response.data.errors.email) {
               alert(error.response.data.errors.email)
             } else if (error.response.data.errors.phone) {
               alert(error.response.data.errors.phone)
@@ -378,20 +376,21 @@
             this.initialize()
             this.close()
           }).catch(error => {
-              if(error.response.data.errors.email) {
-                alert(error.response.data.errors.email)
-              } else if (error.response.data.errors.phone) {
-                alert(error.response.data.errors.phone)
-              } else if (error.response.data.errors.password) {
-                alert(error.response.data.errors.password)
-              }
-            })
+            if(error.response.data.errors.name) {
+              alert(error.response.data.errors.name)
+            } else if(error.response.data.errors.email) {
+              alert(error.response.data.errors.email)
+            } else if (error.response.data.errors.phone) {
+              alert(error.response.data.errors.phone)
+            } else if (error.response.data.errors.password) {
+              alert(error.response.data.errors.password)
+            }
+          })
         }
       },
       
       updateStatus(id){
-        axios.put('/admin/updateStatus/'+id).then(({data}) => {
-          console.log('Success');
+        axios.put('/admin/company/updateStatus/'+id).then(({data}) => {
           this.initialize();
         })
       },

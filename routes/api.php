@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Backoffice\CAAuthController;
+use App\Http\Controllers\Api\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,13 +20,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 */
-//adminCompany
-Route::post('/adminLogin',[CAAuthController::class,'adminLogin']);
-Route::group(['middleware'=>['auth:api']],function(){
-    Route::post('adminLogout',[CAAuthController::class,'adminLogout']);
-});
-
 Route::post('/login',[AuthController::class,'login']);
 Route::group(['middleware'=>['auth:api']],function(){
+    //Route::post('change',[ProfileController::class,'changePassword']);
     Route::post('logout',[AuthController::class,'logout']);
 });

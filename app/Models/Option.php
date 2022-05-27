@@ -11,11 +11,14 @@ class Option extends Model
     protected $fillable=[
       'addprice',
       'stock',
-      'name',
-      'variation_id',  
+      'name',  
     ];
-    public function variations()
+    public function orders()
     {
-        return $this->belongsto(Variation::class);
+        return $this->hasMany(Order::class);
+    }
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
     }
 }

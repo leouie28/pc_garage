@@ -7,11 +7,12 @@
     >
       <v-app-bar-nav-icon @click="$emit('handDrawer')"></v-app-bar-nav-icon>
       <!-- <v-toolbar-title>Your Buisness</v-toolbar-title>
-      <v-spacer />
-      <v-col lg="6" cols="12">
-        <v-form class="mt-5">
+      <v-spacer /> -->
+      <v-spacer></v-spacer>
+      <!-- <v-col lg="6" cols="12" class="mt-5 mr-5">
+        <v-form class="mt-5 mr-5">
           <v-text-field
-          rounded
+          v-model="keyword"
           outlined
           dense
           placeholder="Search Here"
@@ -19,13 +20,25 @@
           color="success"
           light
           background-color="#fff"
+          @keydown.enter="$emit('search', keyword)"
           >
           </v-text-field>
         </v-form>
-      </v-col>
-      <v-spacer></v-spacer>
+      </v-col> -->
 
-      <v-menu offset-y>
+      <!-- <v-btn
+        color="success"
+        elevation="2"
+        icon
+        large
+        outlined
+        style="background-color:#fff"
+        @click="$router.push({name: 'globalsearch'})"
+      >
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn> -->
+
+      <!-- <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <span v-bind="attrs" v-on="on" style="cursor:pointers;" class="mx-5 mr-10">
             <v-badge offset-x="10" offset-y="10" color="red" content="5">

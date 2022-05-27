@@ -21,6 +21,7 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'name' => 'required|unique:companies',
             'email' => 'required|email|unique:companies',
             'phone' => 'required|regex:/(09)[0-9]{9}/',
             'password' => 'required|min:8',
@@ -37,7 +38,7 @@ class CompanyController extends Controller
         ]);
         $company->save();
  
-        return response()->json('Company successfully added');
+        return response()->json($company, 200);
     }
 
     public function show($id)
@@ -53,6 +54,7 @@ class CompanyController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
+            'name' => 'required|unique:companies,name,'.$id,
             'email' => 'required|email|unique:companies,email,'.$id,
             'phone' => 'required|regex:/(09)[0-9]{9}/',
             'password' => 'min:8',
@@ -69,7 +71,7 @@ class CompanyController extends Controller
 
         $company->update($input);
  
-        return response()->json('Company successfully updated');
+        return response()->json($company, 200);
     }
 
     public function destroy($id)
@@ -77,7 +79,7 @@ class CompanyController extends Controller
         $company = Company::find($id);
         $company->delete();
  
-        return response()->json('Company successfully deleted');
+        return response()->json($company, 200);
     }
 
     public function updateStatus($id)
