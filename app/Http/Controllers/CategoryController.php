@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -14,7 +15,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return Category::get();
+        $user = Auth::user();
+        $category = Category::where('company_id',$user->id)->get();
+        return response()->json($category,200);
     }
 
     /**
@@ -41,11 +44,13 @@ class CategoryController extends Controller
         $ValidateData = $request->validate([
             'name' => 'required|unique:categories',
         ]);
+        $user = Auth::user();
          $category = new Category([
-             'name'=>$request->name
+             'name'=>$request->name,
+             'company_id'=>$user->id,
           ]);
           $category->save();
-          return response()->json('Category Successfully Added!');
+          return response()->json($category,200);
     }
 
     /**

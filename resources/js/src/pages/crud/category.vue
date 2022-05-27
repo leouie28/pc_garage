@@ -30,23 +30,18 @@
         placeholder="Search"
         hide-details
         chips
-        clearable
         solo
         dense
-        
       >
-         
       </v-text-field>
                 </v-col>
-                   
              <v-btn
                   color="primary"
-                  class="mx-5 bg-primary d-inline-block"
                   dark
-                  style="float: right;"
+                  class="mb-2"
                   @click="addDialog"
                 >
-                  Add Category
+                  Add Company
                 </v-btn>
 
                <v-dialog v-model="dialog" max-width="500px" persistent>

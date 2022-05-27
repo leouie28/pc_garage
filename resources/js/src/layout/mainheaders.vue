@@ -6,11 +6,7 @@
       dark
     >
       <v-app-bar-nav-icon @click="$emit('handDrawer')"></v-app-bar-nav-icon>
-      <v-container
-    fluid
-    style="height: 300px"
-  >
-    <v-row justify="center">
+      <v-spacer></v-spacer>
       <v-menu
         bottom
         min-width="200px"
@@ -63,11 +59,8 @@
           </v-list-item-content>
         </v-card>
       </v-menu>
-    </v-row>
-  </v-container>
       <!-- <v-toolbar-title>Your Buisness</v-toolbar-title>
       <v-spacer /> -->
-      <v-spacer></v-spacer>
 
       <!-- <v-col lg="6" cols="12" class="mt-5 mr-5">
         <v-form class="mt-5 mr-5">
