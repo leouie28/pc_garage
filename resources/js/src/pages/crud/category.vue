@@ -24,16 +24,13 @@
                 ></v-divider>
                     <v-spacer></v-spacer>
                 <v-col sm="3">
-                <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        placeholder="Search"
-        hide-details
-        chips
-        solo
-        dense
-      >
-      </v-text-field>
+                 <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  class="mr-4"
+                  hide-details
+                ></v-text-field>
                 </v-col>
              <v-btn
                   color="primary"
