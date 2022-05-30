@@ -22,6 +22,7 @@ class CreateProductsTable extends Migration
             $table->integer('stock');
             $table->boolean('is_service')->default(0);
             $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('variation_id');
             $table->unsignedBigInteger('company_id');
             $table->timestamps();
            

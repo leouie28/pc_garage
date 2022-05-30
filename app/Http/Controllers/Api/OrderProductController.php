@@ -27,7 +27,7 @@ class OrderProductController extends Controller
 
         $order = Order::where('employee_id', $user->id)->with('payments')->with('customers')
         ->with('order_product', function($opp){
-            return $opp->with('products');
+            return $opp->with('products', 'products.images');
         })->whereDate('created_at', \Carbon\Carbon::today())->get();
 
         return response($order, 200);
@@ -89,6 +89,17 @@ class OrderProductController extends Controller
         ]);
 
         return response()->json('Order Prepared',200);
+    }
+    public function orderToprepare($id) //Order to Prepared by Customer
+    {
+        $user = Auth::user();
+        $customer = Customer::with(['orders' =>function($qu) use($user){
+            return $qu->where('employee_id', $user->id);
+        },'orders.order_product' =>function($que){
+            return $que->where('prepared', 0)->with(['products','options']);
+        }])->find($id);
+
+        return response()->json($customer,200);
     }
 
     /**

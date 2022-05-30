@@ -49,7 +49,7 @@ class AuthController extends Controller
     }
     public function requestOtp(Request $request)
     {
-        $title = '[UBui] Sending OTP verification';
+        $title = '[Business Solution] Sending OTP verification';
         $otp = rand(1000,9999);
         Log::info("otp = ".$otp);
         $user = Employee::where('email','=',$request->email)->update(['otp' => $otp]);

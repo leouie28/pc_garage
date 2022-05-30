@@ -16,6 +16,7 @@ class Cart extends Model
         'price',
         'total',
         'product_id',
+        'option_id',
         'customer_id',
         'employee_id',
         'comment',
@@ -27,6 +28,10 @@ class Cart extends Model
     public function employees()
     {
         return $this->belongsto(Employee::class, 'employee_id', 'id');
+    }
+    public function options()
+    {
+        return $this->belongsto(Option::class, 'option_id', 'id');
     }
     public function products()
     {

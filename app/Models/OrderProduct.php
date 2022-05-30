@@ -26,8 +26,8 @@ class OrderProduct extends Model
     {
         return $this->belongsto(Product::class, 'product_id', 'id');
     }
-    // public function options()
-    // {
-    //     return $this->belongsto(Option::class, 'option_id', 'id');
-    // }
+    public function options()
+    {
+        return $this->belongsto(Option::class, 'option_id', 'id');
+    }
 }

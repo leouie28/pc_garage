@@ -19,6 +19,7 @@ class Product extends Model
         'comment',
         'is_service',
         'category_id',
+        'variation_id',
         'company_id',
     ];
     public function companies()
@@ -45,7 +46,7 @@ class Product extends Model
     }
     public function variations()
     {
-        return $this->hasmany(Variation::class);
+        return $this->belongsto(Variation::class, 'variation_id', 'id');
     }
     public function cart()
     {

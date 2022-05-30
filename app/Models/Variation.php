@@ -11,14 +11,9 @@ class Variation extends Model
     protected $fillable= [
 
         'name',
-        'product_id',
     ];
-    public function options()
-    {
-        return $this->hasmany(Option::class);
-    }
     public function products()
     {
-        return $this->belongsto(Product::class);
+        return $this->hasmany(Product::class);
     }
 }

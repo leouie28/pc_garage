@@ -27,6 +27,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 */
 Route::post('/login',[AuthController::class,'login']);
+//Forgot Password
+Route::any('request_otp',[AuthController::class, 'requestOtp']);
+Route::post('verify_otp',[AuthController::class, 'verifyOtp']);
+Route::post('new_password',[AuthController::class, 'newPassword']);
+
 Route::group(['middleware'=>['auth:api']],function(){
     //Employee Profile
     Route::get('employeedetails',[ProfileController::class,'employeeDetails']);
@@ -34,11 +39,6 @@ Route::group(['middleware'=>['auth:api']],function(){
     Route::post('update-profile',[ProfileController::class,'updateProfile']);
     Route::post('changepassword',[ProfileController::class,'changePassword']);
     Route::post('logout',[AuthController::class,'logout']);
-    
-    //Forgot Password
-    Route::any('request_otp',[AuthController::class, 'requestOtp']);
-    Route::post('verify_otp',[AuthController::class, 'verifyOtp']);
-    Route::post('new_password',[AuthController::class, 'newPassword']);
 
     //Product
     Route::get('products',[ProductController::class, 'index']);
@@ -68,6 +68,7 @@ Route::group(['middleware'=>['auth:api']],function(){
     Route::get('orderproduct/paid',[OrderProductController::class,'displayPaid']);
     Route::get('orderproduct/pending',[OrderProductController::class,'displayPending']);
     Route::get('orderDisplay/{id}',[OrderProductController::class,'displayP']);
+    Route::get('ordertoprepared/{id}',[OrderProductController::class,'orderToprepare']);
     Route::get('toprepared',[OrderProductController::class,'toPrepared']);
     Route::post('markprepared/{id}',[OrderProductController::class,'markPrepared']);
 });

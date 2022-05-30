@@ -18,13 +18,11 @@ class OptionSeeder extends Seeder
             'addprice' =>'50',
             'stock' =>'100',
             'name' =>'Cheese',
-            'variation_id' =>'1',
         ]);
         Option::create([
             'addprice' =>'50',
             'stock' =>'75',
             'name' =>'Ube',
-            'variation_id' =>'1',
         ]);
     }
 }
