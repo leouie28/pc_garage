@@ -1,8 +1,8 @@
 <template>
   <v-app v-if="!isfetching">
     <div v-if="isAuth">
-      <main-headers @handDrawer="drawer = !drawer"></main-headers>
-      <sidebar :drawer="drawer" @logout="logout"></sidebar>
+      <main-headers @handDrawer="drawer = !drawer" @logout="logout"></main-headers>
+      <sidebar :drawer="drawer"></sidebar>
       <v-main>
         <v-container
           class="py-8 px-6"
