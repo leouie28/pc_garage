@@ -26,5 +26,29 @@ class OrderSeeder extends Seeder
             'customer_id' =>'2',
             'employee_id' =>'1',
         ]);
+        Order::create([
+            'total' =>'100',
+            'payment_id' =>'1',
+            'customer_id' =>'1',
+            'employee_id' =>'1',
+        ]);
+        Order::create([
+            'total' =>'90',
+            'payment_id' =>'2',
+            'customer_id' =>'2',
+            'employee_id' =>'2',
+        ]);
+        Order::create([
+            'total' =>'100',
+            'payment_id' =>'1',
+            'customer_id' =>'1',
+            'employee_id' =>'1',
+        ]);
+        Order::create([
+            'total' =>'150',
+            'payment_id' =>'1',
+            'customer_id' =>'2',
+            'employee_id' =>'2',
+        ]);
     }
 }

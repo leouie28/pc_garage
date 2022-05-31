@@ -19,8 +19,10 @@ class CreateEmployeesTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone');
-            $table->enum('position', ['Chef', 'Cahsier', 'Waiter']);
+            $table->string('image')->nullable();
+            $table->enum('position', ['Chef', 'Cashier', 'Waiter']);
             $table->boolean('status')->default(0);
+            $table->string('otp')->nullable();
             $table->unsignedBigInteger('company_id');
             $table->timestamps();
         });

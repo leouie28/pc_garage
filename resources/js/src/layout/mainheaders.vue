@@ -6,12 +6,66 @@
       dark
     >
       <v-app-bar-nav-icon @click="$emit('handDrawer')"></v-app-bar-nav-icon>
+      <v-spacer></v-spacer>
+      <v-menu
+        bottom
+        min-width="200px"
+        rounded
+        offset-y
+      >
+        <template v-slot:activator="{ on }">
+          <v-btn
+            icon
+            x-large
+            v-on="on"
+          >
+            <v-avatar
+              color="brown"
+              size="48"
+            >
+              <span class="white--text text-h5">{{ user.initials }}</span>
+            </v-avatar>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-list-item-content class="justify-center">
+            <div class="mx-auto text-center">
+              <v-avatar
+                color="brown"
+              >
+                <span class="white--text text-h5">{{ user.initials }}</span>
+              </v-avatar>
+              <h3>{{ user.fullName }}</h3>
+              <p class="text-caption mt-1">
+                {{ user.email }}
+              </p>
+              <v-divider class="my-3"></v-divider>
+              <v-btn
+                depressed
+                rounded
+                text
+              >
+                Edit Account
+              </v-btn>
+              <v-divider class="my-3"></v-divider>
+              <v-btn
+                depressed
+                rounded
+                text
+              >
+                Disconnect
+              </v-btn>
+            </div>
+          </v-list-item-content>
+        </v-card>
+      </v-menu>
       <!-- <v-toolbar-title>Your Buisness</v-toolbar-title>
-      <v-spacer />
-      <v-col lg="6" cols="12">
-        <v-form class="mt-5">
+      <v-spacer /> -->
+
+      <!-- <v-col lg="6" cols="12" class="mt-5 mr-5">
+        <v-form class="mt-5 mr-5">
           <v-text-field
-          rounded
+          v-model="keyword"
           outlined
           dense
           placeholder="Search Here"
@@ -19,13 +73,25 @@
           color="success"
           light
           background-color="#fff"
+          @keydown.enter="$emit('search', keyword)"
           >
           </v-text-field>
         </v-form>
-      </v-col>
-      <v-spacer></v-spacer>
+      </v-col> -->
 
-      <v-menu offset-y>
+      <!-- <v-btn
+        color="success"
+        elevation="2"
+        icon
+        large
+        outlined
+        style="background-color:#fff"
+        @click="$router.push({name: 'globalsearch'})"
+      >
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn> -->
+
+      <!-- <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <span v-bind="attrs" v-on="on" style="cursor:pointers;" class="mx-5 mr-10">
             <v-badge offset-x="10" offset-y="10" color="red" content="5">
@@ -77,26 +143,12 @@
 <script>
   export default {
     data: () => ({
-      items: [
-        { header: 'Today' },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          title: 'Brunch this weekend?',
-          subtitle: `<span class="text--primary">Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-          subtitle: `<span class="text--primary">to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.`,
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-          title: 'Oui oui',
-          subtitle: '<span class="text--primary">Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?',
-        },
-      ],
+       user: {
+        initials: 'JD',
+        fullName: 'John Doe',
+        email: 'john.doe@doe.com',
+      },
+     
     }),
   }
 </script>

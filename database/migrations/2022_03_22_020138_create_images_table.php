@@ -18,7 +18,6 @@ class CreateImagesTable extends Migration
             $table->string('filename')->nullable();
             $table->unsignedBigInteger('product_id');
             $table->timestamps();
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
     }
 

@@ -8,9 +8,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Mail;
-use  Illuminate\Support\Facades\Log;
-use App\Mail\sendEmail;
 
 class AuthController extends Controller
 {
@@ -33,7 +30,7 @@ class AuthController extends Controller
         }
         if(Hash::check($request->password,$employee->password)){
             $token = $employee->createToken('accessToken')->accessToken;
-            $data['created_at'] = $employee->created_at;
+            $data = $employee;
             $data['accesstoken'] = $token;
             return response()->json($data, 200);
         } 
@@ -45,69 +42,5 @@ class AuthController extends Controller
     {
         auth()->guard('api')->user()->token()->revoke();
         return response()->json(['Logout Success'], 200); 
-    }
-
-    public function requestOtp(Request $request)
-    {
-        $title = '[UBui] Sending OTP verification';
-        $otp = rand(1000,9999);
-        Log::info("otp = ".$otp);
-        $user = Employee::where('email','=',$request->email)->update(['otp' => $otp]);
-        
-        if($user){
-
-        $mail_details = [
-            'subject' => 'Reset Password OTP',
-            'body' => 'Your OTP is : '. $otp
-        ];
-       
-         $send = Mail::to($request->email)->send(new sendEmail($title, $mail_details));
-         if(empty($send)){
-            return response(["status" => 200, "message" => "OTP sent successfully"]);
-         }
-         else{
-            return response(["status" => 401, 'message' => 'sent failed']);
-        }
-        }
-        else{
-            return response(["status" => 404, 'message' => 'Invalid']);
-        }
-    }
-
-    public function verifyOtp(Request $request)
-    {
-        $user  = Employee::where([['email','=',$request->email],['otp','=',$request->otp]])->first();
-        if($user){
-            // auth()->login($user, true);
-            Employee::where('email','=',$request->email)->update(['otp' => 0]);
-            $employee = Employee::where('email', $request->email)->first();
-            if($employee){
-                $data['id'] = $employee->id;
-                $data['email'] = $employee->email;
-                return response()->json($data, 200);
-               
-            }
-            // $accessToken = auth()->user()->createToken('authToken')->accessToken;
-
-            // return response(["status" => 200, "message" => "Success", 'user' => auth()->user(), 'access_token' => $accessToken]);
-
-        }
-        else{
-            return response(["status" => 401, 'message' => 'Invalid']);
-        }
-    }
-    
-    public function newPassword(Request $request)
-    {
-        if($request->password == $request->confirmpass){
-
-            $newPass = Employee::where('email', $request->email)->update('password', $request->password);
-            if($newPass){
-                return response(["message" => 'new password successful']);
-            }
-        }
-        else {
-            return response(["message" => 'password does not match!']);
-        }
     }
 }

@@ -79,4 +79,6 @@ Route::group(['middleware'=>['auth:api']],function(){
     // Route::post('orderproduct/store',[OrderProductController::class,'store']);
     // Route::post('paymentorder/{id}',[OrderProductController::class,'payment']);
     // Route::post('updateorder/{id}',[OrderProductController::class,'update']);
+    //Route::post('change',[ProfileController::class,'changePassword']);
+    Route::post('logout',[AuthController::class,'logout']);
 });

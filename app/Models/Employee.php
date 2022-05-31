@@ -30,7 +30,7 @@ class Employee extends Authenticatable
     }
     public function orders()
     {
-        return $this->hasMany(Order::class);
+        return $this->hasmany(Order::class);
     }
     
 }

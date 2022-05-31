@@ -14,10 +14,16 @@ class OptionSeeder extends Seeder
     public function run()
     {
         Option::create([
-            'addprice'=>'100',
-            'stock'=>'50',
-            'name'=>'Cake',
-            'variation_id'=>'1',  
+            'addprice' =>'50',
+            'stock' =>'100',
+            'name' =>'Cheese',
+            'variation_id' =>'1',
+        ]);
+        Option::create([
+            'addprice' =>'50',
+            'stock' =>'75',
+            'name' =>'Ube',
+            'variation_id' =>'1',
         ]);
     }
 }

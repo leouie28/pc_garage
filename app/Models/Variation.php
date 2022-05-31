@@ -9,12 +9,10 @@ class Variation extends Model
 {
     use HasFactory;
     protected $fillable= [
-
         'name',
-        'product_id',
     ];
-    public function options()
+    public function products()
     {
-        return $this->hasmany(Option::class);
+        return $this->hasmany(Product::class);
     }
 }
