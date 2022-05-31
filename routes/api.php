@@ -65,9 +65,12 @@ Route::group(['middleware'=>['auth:api']],function(){
 
     //Order Product//
     Route::get('orderproduct',[OrderProductController::class,'index']);
+    Route::get('paidOrders',[OrderProductController::class,'allPaid']);
     Route::get('orderproduct/paid',[OrderProductController::class,'displayPaid']);
     Route::get('orderproduct/pending',[OrderProductController::class,'displayPending']);
-    Route::get('orderDisplay/{id}',[OrderProductController::class,'displayP']);
+    Route::get('orderPending/{id}',[OrderProductController::class,'pendingbyId']);
+    Route::get('orderPaid/{id}',[OrderProductController::class,'paidbyId']);
+    Route::get('displayOrder/{id}',[OrderProductController::class,'displayOrder']);
     Route::get('ordertoprepared/{id}',[OrderProductController::class,'orderToprepare']);
     Route::get('toprepared',[OrderProductController::class,'toPrepared']);
     Route::post('markprepared/{id}',[OrderProductController::class,'markPrepared']);

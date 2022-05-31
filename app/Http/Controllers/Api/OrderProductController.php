@@ -43,7 +43,7 @@ class OrderProductController extends Controller
 
         return response($order, 200);
     }
-    public function displayPaid() //display paid Orders
+    public function displayPaid() //display todays paid Orders
     {
         $user = Auth::user();
 
@@ -54,13 +54,47 @@ class OrderProductController extends Controller
 
         return response($order, 200);
     }
-    public function displayP($id) //display pending Orders by id
+    public function allPaid() //display all paid Orders
     {
         $user = Auth::user();
 
-        $order = Order::where('employee_id', $user->id)->where('status', 0)->with('customers')
+        $order = Order::where('employee_id', $user->id)
+        ->where('status', 1)->with('customers', 'order_product')
+        ->get();
+
+        return response($order, 200);
+    }
+    public function pendingbyId($id) //display pending Orders by id
+    {
+        $user = Auth::user();
+
+        $order = Order::where('employee_id', $user->id)->where('status', 0)->with('payments')->with('customers')
         ->with('order_product', function($opp){
-            return $opp->with('products');
+            return $opp->with('products', 'products.images');
+        })->whereDate('created_at', \Carbon\Carbon::today())
+        ->find($id);
+
+        return response($order, 200);
+    }
+    public function paidbyId($id) //display pending Orders by id
+    {
+        $user = Auth::user();
+
+        $order = Order::where('employee_id', $user->id)->where('status', 1)->with('payments')->with('customers')
+        ->with('order_product', function($opp){
+            return $opp->with('products', 'products.images');
+        })->whereDate('created_at', \Carbon\Carbon::today())
+        ->find($id);
+
+        return response($order, 200);
+    }
+    public function displayOrder($id) //display all Orders by id
+    {
+        $user = Auth::user();
+
+        $order = Order::where('employee_id', $user->id)->with('payments')->with('customers')
+        ->with('order_product', function($opp){
+            return $opp->with('products', 'products.images');
         })->whereDate('created_at', \Carbon\Carbon::today())
         ->find($id);
 
@@ -94,9 +128,9 @@ class OrderProductController extends Controller
     {
         $user = Auth::user();
         $customer = Customer::with(['orders' =>function($qu) use($user){
-            return $qu->where('employee_id', $user->id);
+            return $qu->where('employee_id', $user->id)->whereDate('created_at', \Carbon\Carbon::today());
         },'orders.order_product' =>function($que){
-            return $que->where('prepared', 0)->with(['products','options']);
+            return $que->where('prepared', 0)->whereDate('created_at', \Carbon\Carbon::today())->with(['products','options']);
         }])->find($id);
 
         return response()->json($customer,200);
