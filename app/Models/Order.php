@@ -37,12 +37,6 @@ class Order extends Model
     }
     public function products()
     {
-<<<<<<< HEAD
-        return $this->belongsToMany(Product::class)
-            ->withPivot('quantity', 'price')
-            ->withTimestamps();
-    }
-=======
         return $this->belongsToMany(Product::class, 'order_product')
             ->withPivot('quantity', 'price')
             ->withTimestamps();
@@ -51,5 +45,4 @@ class Order extends Model
     {
         return $this->hasMany(OrderProduct::class);
     }
->>>>>>> 80280264c60493fd11dce7dbda2ba5cbc8ee75bf
 }
