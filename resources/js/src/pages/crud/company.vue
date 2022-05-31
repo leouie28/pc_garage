@@ -34,14 +34,6 @@
                   inset
                   vertical
                 ></v-divider>
-                <v-text-field
-                  v-model="search"
-                  append-icon="mdi-magnify"
-                  label="Search"
-                  class="mr-4"
-                  single-line
-                  hide-details
-                ></v-text-field>
                 <v-spacer></v-spacer>
                 <v-col
                   cols="6"

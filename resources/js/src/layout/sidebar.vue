@@ -36,14 +36,6 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-      <template v-slot:append>
-            <div class="pa-2">
-                <v-btn @click="logout" block color="#89ABB5" style="font-size: 14px">
-                    <v-icon dense>mdi-logout</v-icon>
-                    Logout
-                </v-btn>
-            </div>
-        </template>
     </v-navigation-drawer>
 </template>
 
@@ -57,20 +49,15 @@ export default {
             ['mdi-view-dashboard-outline', 'Dashboard', 'dashboards'],
             ['mdi-face-agent', 'Employees', 'employee'],
             ['mdi-account-group', 'Customers', 'customer'],
-            ['mdi-box', 'Category', 'category'],
+            // ['mdi-food-variant', 'Category', 'category'],
             ['mdi-briefcase', 'Products', 'product'],
             // ['mdi-scale', 'Variations', 'variation'],
             // ['mdi-playlist-plus', 'Options', 'option'],
             ['mdi-format-list-checks', 'Orders', 'order'],
             ['mdi-credit-card-outline', 'Payments', 'payment'],
-            // ['mdi-logout', 'Logout'],
+             //['mdi-logout', 'Logout'],
           ],
         }
-    },
-    methods:{
-      logout(){
-          this.$emit('logout');
-      },
     },
     computed: {
       getUrl(){

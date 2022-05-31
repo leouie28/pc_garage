@@ -38,7 +38,6 @@ Route::group(['middleware'=>['auth:admin']],function(){
     Route::put('product/update/{id}', [ProductController::class, 'update']);
     Route::delete('product/destroy/{id}', [ProductController::class, 'destroy']);
     Route::put('product/updateStatus/{id}', [ProductController::class, 'updateStatus']);
-    Route::get('product/showImage/{id}', [ProductController::class, 'showImage']);
 
     //Variation section
     Route::get('variation', [VariationController::class, 'index']);
