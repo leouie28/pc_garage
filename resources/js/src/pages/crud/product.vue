@@ -19,6 +19,10 @@
               > mdi-image-multiple</v-icon>
             </template>
 
+            <template v-slot:[`item.price`]="{ item }">
+              <span>₱ {{ item.price }}.00</span>
+            </template>
+
             <!-- <template v-slot:[`item.is_service`]="{ item }">
               <v-btn icon @click="updateStatus(item.id)">
                 <v-icon  v-if="item.is_service" color="success" > mdi-check-circle-outline</v-icon>
@@ -186,13 +190,6 @@
                           </v-row>
                           <v-row>
                             <v-col>
-                              <!-- <v-img
-                                height="236"
-                                width="200"
-                                @click="triggerUpload"
-                                :contain="true"
-                                :src="payload.image_base64?payload.image_base64:defualt_image"
-                              ></v-img> -->
                               <input
                                   ref="file_input"
                                   type='file' class="hidden upload-box" 
@@ -239,7 +236,7 @@
                   </v-card>
                 </v-dialog>
 
-                <v-dialog v-model="showImageDialog" max-width="250px">
+                <v-dialog v-model="showImageDialog" max-width="400px">
                   <v-card>
                     <v-card-actions>
                       <v-spacer></v-spacer>
@@ -256,8 +253,10 @@
                     <v-card-text>
                     <v-img
 
-                      height="236"
+                      height="250px"
+                      width="400px"
                       :contain="true"
+                      :src="images"
 
                     ></v-img>
                     </v-card-text>
@@ -321,7 +320,6 @@
       categories: [],
       variations: [],
       payload:{},
-      image:{},
       search: '',
       category: [],
       editedIndex: -1,
@@ -349,6 +347,7 @@
       errorMessages:'',
       defualt_image:'',
       invalid: false,
+      images:''
     }),
 
     watch: {
@@ -469,13 +468,9 @@
         })
       },
 
-      showImage(id){
-        axios.get('/admin/product/showImage'+id).then(({data}) => {
-          // console.log(this.products)
-          // return
-          this.showImageDialog = true
-          this.initialize()
-        })
+      showImage(item){
+        this.showImageDialog = true
+        this.images = item.images[0].filename
       },
 
       triggerUpload() {

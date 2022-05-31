@@ -23,17 +23,18 @@
                   vertical
                 ></v-divider>
                     <v-spacer></v-spacer>
-                <v-col sm="3">
+                <v-col
+                  cols="3"
+                  md="2"
+                  sm="2"
+                >
                 <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        placeholder="Search"
-        hide-details
-        chips
-        solo
-        dense
-      >
-      </v-text-field>
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  single-line
+                  hide-details
+                ></v-text-field>
                 </v-col>
              <v-btn
                   color="primary"
@@ -41,7 +42,7 @@
                   class="mb-2"
                   @click="addDialog"
                 >
-                  Add Company
+                  Add Category
                 </v-btn>
 
                <v-dialog v-model="dialog" max-width="500px" persistent>
@@ -101,12 +102,14 @@
               <v-icon
                   small
                   class="mr-2"
+                  color="green darken-1"
                   @click="editDialog(item)"
               >
                   mdi-pencil
               </v-icon>
               <v-icon
                   small
+                  color="red darken-1"
                   @click="deleteItem(item)"
               >
                   mdi-delete

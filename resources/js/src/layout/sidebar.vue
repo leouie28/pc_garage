@@ -57,7 +57,7 @@ export default {
             ['mdi-view-dashboard-outline', 'Dashboard', 'dashboards'],
             ['mdi-face-agent', 'Employees', 'employee'],
             ['mdi-account-group', 'Customers', 'customer'],
-            ['mdi-box', 'Category', 'category'],
+            // ['mdi-food-variant', 'Category', 'category'],
             ['mdi-briefcase', 'Products', 'product'],
             // ['mdi-scale', 'Variations', 'variation'],
             // ['mdi-playlist-plus', 'Options', 'option'],

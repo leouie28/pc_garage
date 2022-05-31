@@ -93,12 +93,4 @@ class ProductController extends Controller
         $product->update(['is_service'=>  !$product->is_service]);
         return  $product;
     }
-
-    public function showImage($id)
-    {
-        $product = Product::find($id);
-        $image = Image::where('product_id', $product->id)->find($id);
-
-        return response()->json($image, 200);
-    }
 }
