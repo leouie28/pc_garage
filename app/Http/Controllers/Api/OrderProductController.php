@@ -58,9 +58,10 @@ class OrderProductController extends Controller
     {
         $user = Auth::user();
 
-        $order = Order::where('employee_id', $user->id)
-        ->where('status', 1)->with('customers', 'order_product')
-        ->get();
+        $order = Order::where('employee_id', $user->id)->where('status', 1)->with('payments')->with('customers')
+        ->with('order_product', function($opp){
+            return $opp->with('products', 'products.images');
+        })->orderBy('created_at', 'DESC')->get();
 
         return response($order, 200);
     }
@@ -107,7 +108,7 @@ class OrderProductController extends Controller
             return $q->where('employee_id', $user->id);
         })->with(['products' => function($pp){
             return $pp->with('images');
-        }, 'orders'])->get();
+        }, 'orders'])->orderBy('created_at', 'ASC')->get();
 
         return response($orderProduct,200);
     }

@@ -65,7 +65,7 @@ Route::group(['middleware'=>['auth:api']],function(){
 
     //Order Product//
     Route::get('orderproduct',[OrderProductController::class,'index']);
-    Route::get('paidOrders',[OrderProductController::class,'allPaid']);
+    Route::get('displayAll/Paid',[OrderProductController::class,'allPaid']);
     Route::get('orderproduct/paid',[OrderProductController::class,'displayPaid']);
     Route::get('orderproduct/pending',[OrderProductController::class,'displayPending']);
     Route::get('orderPending/{id}',[OrderProductController::class,'pendingbyId']);
