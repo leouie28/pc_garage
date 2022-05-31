@@ -7,7 +7,15 @@
       dark
       app
     >
-        <v-img :src="require('/storage/app/public/White.png')" class="mt-1 pa-3 logo">
+        <v-img src="" class="mt-1 pa-3">
+            <div class="text-center">
+                <v-avatar
+                class="mb-1"
+                color="grey darken-1"
+                size="64"
+                >
+                </v-avatar>
+            </div>
         </v-img>
       <v-divider></v-divider>
 
@@ -63,9 +71,5 @@ export default {
 <style scope> 
 .active {
   background-color: #00564c !important;
-}
-.logo {
-  object-fit: cover;
-  margin: 0 20px;
 }
 </style>
