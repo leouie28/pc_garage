@@ -22,7 +22,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-       
+        //
     }
     public function confirmedOrder($id) //Confirmed Order in the Cart
     {
@@ -52,10 +52,10 @@ class OrderController extends Controller
         $prod = $order_product->product_id;
         $product = Product::find($prod);
         $product->decrement('stock', $qty);
-        
-        $c->update([
-            'status'=> 1,
-        ]);
+        // $c->update([
+        //     'status'=> 1,
+        // ]);
+        $c->delete();
     }
 
         return response()->json('Confirmed Order');
@@ -65,13 +65,12 @@ class OrderController extends Controller
         $user = Auth::user();
 
         $customer = Customer::with(['orders' =>function($qu) use($user){
-            return $qu->where('employee_id', $user->id)->whereHas('order_product', function($op){
-                return $op->where('status', 0);});
+            return $qu->where('employee_id', $user->id)->whereHas('order_product');
         },'orders.order_product' =>function($que){
-            return $que->with(['products','options']);
+            return $que->with('products');
         }])->find($id);
 
-        $order = Order::where('customer_id', $id)->where('status', 0)->whereHas('order_product')->first();
+        $order = Order::where('customer_id', $id)->where('status', 0)->whereHas('order_product')->latest()->first();
 
         $payment = new Payment();
         $payment->paid = $request->paid;
@@ -84,6 +83,24 @@ class OrderController extends Controller
         $order->save();
         $order->update(['status' => 1,]);
 
+        return response($payment,200);
+    }
+    public function payOrder(Request $request, $id) // Payment of the Order Product
+    {
+        $user = Auth::user();
+
+        $order = Order::where('employee_id', $user->id)->where('status', 0)->find($id);
+
+        $payment = new Payment();
+        $payment->paid = $request->paid;
+        $payment->change = $request->paid - $order->total;
+        $payment->save();
+        $paymentId = $payment->id;
+        $payment['total'] = $order->total;
+        
+        $order->payment_id = $paymentId;
+        $order->save();
+        $order->update(['status' => 1,]);
 
         return response($payment,200);
     }
@@ -107,7 +124,7 @@ class OrderController extends Controller
      */
     public function show(Order $order, $id)
     {
-
+        //
     }
 
     /**

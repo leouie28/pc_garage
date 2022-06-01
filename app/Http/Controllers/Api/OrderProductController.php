@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
-use App\Models\Option;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Cart;
@@ -26,10 +25,10 @@ class OrderProductController extends Controller
     {
         $user = Auth::user();
 
-        $order = Order::where('employee_id', $user->id)->with('customers')->with('order_product', function($opp){
-            return $opp->with('products');
-        })
-        ->whereDate('created_at', \Carbon\Carbon::today())->get();
+        $order = Order::where('employee_id', $user->id)->with('payments')->with('customers')
+        ->with('order_product', function($opp){
+            return $opp->with('products', 'products.images');
+        })->whereDate('created_at', \Carbon\Carbon::today())->get();
 
         return response($order, 200);
     }
@@ -37,32 +36,71 @@ class OrderProductController extends Controller
     {
         $user = Auth::user();
 
-        $order = Order::where('employee_id', $user->id)->where('status', 0)->with('customers', 'order_product')
-        ->whereDate('created_at', \Carbon\Carbon::today())->get();
+        $order = Order::where('employee_id', $user->id)->where('status', 0)
+        ->with('customers', 'order_product')
+        ->whereDate('created_at', \Carbon\Carbon::today())
+        ->get();
 
         return response($order, 200);
     }
-    public function displayPaid() //display paid Orders
+    public function displayPaid() //display todays paid Orders
     {
         $user = Auth::user();
 
-        $order = Order::where('employee_id', $user->id)->where('status', 1)->with('customers', 'order_product')
-        ->whereDate('created_at', \Carbon\Carbon::today())->get();
+        $order = Order::where('employee_id', $user->id)
+        ->where('status', 1)->with('customers', 'order_product')
+        ->whereDate('created_at', \Carbon\Carbon::today())
+        ->get();
 
         return response($order, 200);
     }
-    public function displayP($id) //display paid Orders
+    public function allPaid() //display all paid Orders
     {
         $user = Auth::user();
 
-        $order = Order::where('employee_id', $user->id)->where('status', 0)->with('customers')
+        $order = Order::where('employee_id', $user->id)->where('status', 1)->with('payments')->with('customers')
         ->with('order_product', function($opp){
-            return $opp->with('products');
-        })->whereDate('created_at', \Carbon\Carbon::today())->find($id);
+            return $opp->with('products', 'products.images');
+        })->orderBy('created_at', 'DESC')->get();
 
         return response($order, 200);
     }
-  
+    public function pendingbyId($id) //display pending Orders by id
+    {
+        $user = Auth::user();
+
+        $order = Order::where('employee_id', $user->id)->where('status', 0)->with('payments')->with('customers')
+        ->with('order_product', function($opp){
+            return $opp->with('products', 'products.images');
+        })->whereDate('created_at', \Carbon\Carbon::today())
+        ->find($id);
+
+        return response($order, 200);
+    }
+    public function paidbyId($id) //display pending Orders by id
+    {
+        $user = Auth::user();
+
+        $order = Order::where('employee_id', $user->id)->where('status', 1)->with('payments')->with('customers')
+        ->with('order_product', function($opp){
+            return $opp->with('products', 'products.images');
+        })->whereDate('created_at', \Carbon\Carbon::today())
+        ->find($id);
+
+        return response($order, 200);
+    }
+    public function displayOrder($id) //display all Orders by id
+    {
+        $user = Auth::user();
+
+        $order = Order::where('employee_id', $user->id)->with('payments')->with('customers')
+        ->with('order_product', function($opp){
+            return $opp->with('products', 'products.images');
+        })->whereDate('created_at', \Carbon\Carbon::today())
+        ->find($id);
+
+        return response($order, 200);
+    }
     public function toPrepared() //Display Order to Prepared
     {
         $user = Auth::user();
@@ -70,7 +108,7 @@ class OrderProductController extends Controller
             return $q->where('employee_id', $user->id);
         })->with(['products' => function($pp){
             return $pp->with('images');
-        }, 'orders'])->get();
+        }, 'orders'])->orderBy('created_at', 'ASC')->get();
 
         return response($orderProduct,200);
     }
@@ -87,6 +125,17 @@ class OrderProductController extends Controller
 
         return response()->json('Order Prepared',200);
     }
+    public function orderToprepare($id) //Order to Prepared by Customer
+    {
+        $user = Auth::user();
+        $customer = Customer::with(['orders' =>function($qu) use($user){
+            return $qu->where('employee_id', $user->id)->whereDate('created_at', \Carbon\Carbon::today());
+        },'orders.order_product' =>function($que){
+            return $que->where('prepared', 0)->whereDate('created_at', \Carbon\Carbon::today())->with(['products','options']);
+        }])->find($id);
+
+        return response()->json($customer,200);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -96,7 +145,7 @@ class OrderProductController extends Controller
      */
     public function store(Request $request)
     {
-      
+        //
     }
 
     /**
@@ -107,7 +156,7 @@ class OrderProductController extends Controller
      */
     public function show(Request $request, $id)
     {
-
+        //
     }
     public function customerOrders(Request $request, $id) // Display Orders by Customer ID
     {
@@ -138,11 +187,8 @@ class OrderProductController extends Controller
      */
     public function update(Request $request, OrderProduct $orderProduct, $id)
     {
-
-       
-
+        //
     }
-    
 
     /**
      * Remove the specified resource from storage.
@@ -152,6 +198,6 @@ class OrderProductController extends Controller
      */
     public function destroy(OrderProduct $orderProduct, $id)
     {
-
+        //
     }
 }

@@ -8,8 +8,11 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\VariationController;
-use App\Http\Controllers\Backoffice\AuthController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\Backoffice\AuthController;
+// use App\Http\Controllers\Backoffice\CustomerController;
+use App\Http\Controllers\Backoffice\ImageController;
+// use App\Http\Controllers\Backoffice\ProductController;
 
 Route::post('login',[AuthController::class, 'adminLogin'])->name('adminLogin');
 Route::get('checkadmin',[AuthController::class,'checkAdmin'])->name('checkAdmin');
@@ -85,4 +88,3 @@ Route::group(['middleware'=>['auth:web']],function(){
 //     // Route::post('sadminLogout',[AuthController::class,'sadminLogout']);
 //     // Route::post('logout',[AuthController::class,'adminLogout']);
 // });
-

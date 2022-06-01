@@ -19,6 +19,7 @@ class Employee extends Authenticatable
         'phone',
         'position',
         'status',
+        'otp',
         'company_id',
     ];
     protected $hidden = [
@@ -28,6 +29,10 @@ class Employee extends Authenticatable
     {
         return $this->belongsto(Company::class);
     }
+    // public function users()
+    // {
+    //     return $this->belongsto(User::class); //changes
+    // }
     public function orders()
     {
         return $this->hasmany(Order::class);

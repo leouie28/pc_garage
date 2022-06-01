@@ -13,7 +13,7 @@ class Option extends Model
       'stock',
       'name',  
     ];
-    public function orders()
+    public function order_product()
     {
         return $this->hasMany(Order::class);
     }

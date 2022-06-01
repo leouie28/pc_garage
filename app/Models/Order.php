@@ -23,10 +23,6 @@ class Order extends Model
     {
         return $this->belongsto(Payment::class, 'payment_id', 'id');
     }
-    public function options()
-    {
-        return $this->belongsto(Option::class, 'option_id', 'id');
-    }
     public function customers()
     {
         return $this->belongsto(Customer::class, 'customer_id', 'id');

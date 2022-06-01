@@ -26,6 +26,10 @@ class Product extends Model
     {
         return $this->belongsto(Company::class);
     }
+    // public function users()
+    // {
+    //     return $this->belongsto(User::class); //changes
+    // }
     public function categories()
     {
         return $this->belongsto(Category::class, 'category_id', 'id');

@@ -4,26 +4,25 @@ namespace App\Http\Controllers\Backoffice;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Company;
+use App\Models\Customer;
 
 class CustomerController extends Controller
 {
     public function index()
     {
-        return (new Customer)->searchable();
+        $customer = Customer::all();
+        return response()->json($customer);
     }
 
     public function store(Request $request)
     {
-        $customer = new Customer();
-        $customer->name = $request->name;
-        $customer->phone = $request->phone;
-        $customer->email = $request->email;
-        $cus = $customer->save();
-        if($cus){
-            return back()->with('success', 'You have registered successfuly');
-        }else{
-            return back()->with('fail', 'Something Went Wrong');
-        }
+
+        //to add data in pivot
+        $customer = Customer::find(10);
+        $customer->companies()->attach(2);
+
+        return 'Success';
 
     }
     public function delete($id)

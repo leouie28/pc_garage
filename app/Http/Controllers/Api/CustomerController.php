@@ -4,13 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Company;
 use App\Models\Customer;
-// use App\Models\Company;
 use App\Models\Order;
-use BaconQrCode\Common\ErrorCorrectionLevel;
+use App\Models\OrderProduct;
 use Illuminate\Http\Request;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Illuminate\Support\Facades\Storage;
 
 class CustomerController extends Controller
 {
@@ -21,21 +19,11 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        // $user = Auth::user();
-        //  $company = Company::where('id', $user->company_id)->with('customers')
-        // ->first();
+        $user = Auth::user();
+         $company = Company::where('id', $user->company_id)->with('customers')
+        ->first();
 
-        // return response($company,200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response($company,200);
     }
 
     /**
@@ -51,21 +39,16 @@ class CustomerController extends Controller
         $customer->name = $request->name;
         $customer->phone = $request->phone;
         $customer->email = $request->email;
-        $customer->qrcode = 'UB-'.substr(str_shuffle("0123456789"),0,7);
-        // $customer->companies()->attach($user->company_id);
-        if(!Storage::exists(storage_path('app/public/qrimages/'.$customer->qrcode.'.png'))){
-            QrCode::size(400)->format('png')->generate($customer, storage_path('app/public/qrimages/'.$customer->qrcode.'.png'));
-        }
-        $customer->qrimage ='../storage/app/public/qrimages/'.$customer->qrcode. '.png';
         $customer->save();
-        return response()->json($customer);
-       
+        $customer->companies()->attach($user->company_id);
+
+        return response()->json($customer, 200);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -73,26 +56,21 @@ class CustomerController extends Controller
         $user = Auth::user();
         return Customer::find($id);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function customerOrders(Request $request)
     {
-        //4
+        // $user = Auth::user();
+        // $order = Order::where('employee_id', $user->id)->with('customers', 'order_product')
+        // ->get();
+        // return ($order);
     }
-
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Customer $customer)
     {
         //
     }
@@ -100,10 +78,10 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Customer $customer)
     {
         //
     }

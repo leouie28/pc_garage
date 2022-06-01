@@ -34,5 +34,15 @@ class CompanySeeder extends Seeder
             'password' =>bcrypt('123456'),//password
             'status' =>'0',
         ]);
+        Company::create([
+            'name' =>'Mang Inasal',
+            'email' =>'inasal@gmail.com',
+            'phone' => '09512118111',
+            'barangay' => 'awang',
+            'city' => 'calbayog',
+            'province' => 'samar',
+            'password' =>bcrypt('123456'),//password
+            'status' =>'0',
+        ]);
     }
 }

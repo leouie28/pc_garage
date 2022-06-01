@@ -11,6 +11,8 @@ class Payment extends Model
 
     protected $fillable =[
         'payment_method',
+        'paid',
+        'change',
     ];
     public function orders()
     {

@@ -16,6 +16,6 @@ class Image extends Model
 
     public function products()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'id');/// related sa product table
+        return $this->belongsto(Product::class, 'product_id', 'id');
     }
 }

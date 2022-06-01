@@ -18,7 +18,7 @@ const app = new Vue({
     el: '#app',
     vuetify,
     router,
+    store,
     // VueToast,
-    store
 });
 Vue.prototype.moment = moment;

@@ -16,27 +16,21 @@ class VariationSeeder extends Seeder
     {
         Variation::create([
             'name' =>'Large',
-            'product_id' => '1',
         ]);
         Variation::create([
             'name' =>'Small',
-            'product_id' => '1',
         ]);
         Variation::create([
             'name' =>'Large',
-            'product_id' => '2',
         ]);
         Variation::create([
             'name' =>'Small',
-            'product_id' => '2',
         ]);
         Variation::create([
             'name' =>'Large',
-            'product_id' => '6',
         ]);
         Variation::create([
             'name' =>'Small',
-            'product_id' => '6',
         ]);
     }
 }

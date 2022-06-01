@@ -18,6 +18,11 @@ class CreateCompanyCustomerTable extends Migration
             $table->unsignedBigInteger('company_id');
             $table->unsignedBigInteger('customer_id');
             $table->timestamps();
+
+            $table->foreign('company_id')->references('id')->on('companies')
+                ->onDelete('cascade');
+            $table->foreign('customer_id')->references('id')->on('customers')
+                ->onDelete('cascade');
         });
     }
 
