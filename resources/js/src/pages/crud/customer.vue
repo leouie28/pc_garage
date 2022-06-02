@@ -87,7 +87,6 @@
       initialize () {
         axios.get('/admin/customer').then(({data}) => {
           this.company = data;
-          console.log(this.company)
         })
       },
     },
