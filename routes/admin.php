@@ -10,10 +10,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\VariationController;
-// use App\Http\Controllers\Backoffice\CustomerController;
 use App\Http\Controllers\Backoffice\AuthController;
 // use App\Http\Controllers\Backoffice\ImageController;
-// use App\Http\Controllers\Backoffice\ProductController;
 
 Route::post('login',[AuthController::class, 'adminLogin'])->name('adminLogin');
 Route::get('checkadmin',[AuthController::class,'checkAdmin'])->name('checkAdmin');
