@@ -27,7 +27,8 @@ class AuthController extends Controller
             'data'    => $validator->errors()
         ], 404);
 
-        $employee = Employee::where('email', $request->email)->first();  
+        $employee = Employee::where('email', $request->email)->where('status', 1)->first();
+        
         if(!$employee){
             return response()->json(['message' => 'Incorrect Credentials'], 404);
         }
