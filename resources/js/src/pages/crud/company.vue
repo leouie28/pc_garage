@@ -19,8 +19,8 @@
 
             <template v-slot:[`item.status`]="{ item }">
               <v-btn icon @click="updateStatus(item.id)">
-                <v-icon  v-if="item.status" color="success" > mdi-check</v-icon>
-                <v-icon v-else color="error">mdi-close </v-icon>
+                <v-icon  v-if="item.status" color="success" > mdi-account</v-icon>
+                <v-icon v-else color="error">mdi-account-off</v-icon>
               </v-btn>
             </template>
 

@@ -14,7 +14,7 @@
           >
 
             <template v-slot:[`item.status`]="{ item }">
-              <v-icon v-if="item.status" color="success">mdi-account-check</v-icon>
+              <v-icon v-if="item.status" color="success">mdi-account-cash</v-icon>
               <v-icon v-else color="error">mdi-account-clock</v-icon>
             </template>
 
