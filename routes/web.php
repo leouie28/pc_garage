@@ -20,6 +20,7 @@ Route::get('/{any?}', function () {
 Route::resource('companies','App\Http\Controllers\CompanyController');
 Route::resource('category','App\Http\Controllers\CategoryController');
 Route::resource('employees','App\Http\Controllers\EmployeeController');
+Route::resource('customers','App\Http\Controllers\CustomerController');
 Route::resource('products','App\Http\Controllers\ProductController');
 Route::resource('variations','App\Http\Controllers\VariationController');
 Route::resource('options','App\Http\Controllers\OptionController');

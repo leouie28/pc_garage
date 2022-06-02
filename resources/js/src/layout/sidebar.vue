@@ -45,8 +45,8 @@ export default {
     data: () => {
         return{
           links: [
-            ['mdi-domain', 'Companies', 'company'],
             ['mdi-view-dashboard-outline', 'Dashboard', 'dashboards'],
+            ['mdi-domain', 'Companies', 'company'],
             ['mdi-face-agent', 'Employees', 'employee'],
             ['mdi-account-group', 'Customers', 'customer'],
             // ['mdi-food-variant', 'Category', 'category'],
