@@ -33,10 +33,6 @@ class Company extends Authenticatable
     {
         return $this->hasmany(Product::class);
     }
-    public function categories()
-    {
-        return $this->hasmany(Category::class);
-    }
     public function customers()
     {
         return $this->belongsToMany(Customer::class, 'company_customer')->withTimestamps();

@@ -35,7 +35,6 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-
         $customer = new Customer();
         $customer->name = $request->name;
         $customer->phone = $request->phone;

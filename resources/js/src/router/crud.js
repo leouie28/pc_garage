@@ -7,6 +7,7 @@ export default [
     {
         path: '/company',
         component: () => import('../pages/crud/company.vue'),
+        meta: { requireAuth: true },
         name: 'company'
     },
     {
@@ -25,9 +26,24 @@ export default [
         name: 'customer'
     },
     {
+        path: '/category',
+        component: () => import('../pages/crud/category.vue'),
+        name: 'category'
+    },
+    {
         path: '/product',
         component: () => import('../pages/crud/product.vue'),
         name: 'product'
+    },
+    {
+        path: '/variation',
+        component: () => import('../pages/crud/variation.vue'),
+        name: 'variation'
+    },
+    {
+        path: '/option',
+        component: () => import('../pages/crud/option.vue'),
+        name: 'option'
     },
     {
         path: '/order',

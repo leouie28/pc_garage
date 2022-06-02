@@ -15,6 +15,7 @@ class Order extends Model
         'total',
         'order_qty',
         'payment_id',
+        'option_id',
         'customer_id',
         'employee_id'        
     ];

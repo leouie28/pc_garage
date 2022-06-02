@@ -18,3 +18,11 @@ Route::get('/{any?}', function () {
 })->where('any','.*');
 
 Route::resource('companies','App\Http\Controllers\CompanyController');
+Route::resource('category','App\Http\Controllers\CategoryController');
+Route::resource('employees','App\Http\Controllers\EmployeeController');
+Route::resource('products','App\Http\Controllers\ProductController');
+Route::resource('variations','App\Http\Controllers\VariationController');
+Route::resource('options','App\Http\Controllers\OptionController');
+Route::resource('orders','App\Http\Controllers\OrderController');
+Route::resource('categories','App\Http\Controllers\CategoryController');
+Route::resource('payment','App\Http\Controllers\PaymentController');
