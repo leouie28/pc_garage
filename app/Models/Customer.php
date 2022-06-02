@@ -25,6 +25,10 @@ class Customer extends Model
     {
         return $this->hasMany(Cart::class);
     }
+    public function company_customer()
+    {
+        return $this->hasMany(CompanyCustomer::class);
+    }
     // public function users()
     // {
     //     return $this->belongsToMany(User::class, 'company_customer'); //changes

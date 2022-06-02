@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
 use App\Models\Company;
+use App\Models\CompanyCustomer;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -18,11 +19,9 @@ class CustomerController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // $customer = Customer::with('companies')->get();
-         $company = Company::where('id', $user->company_id)->with('customers')
-        ->get();
+        $company_customer = CompanyCustomer::where('company_id', $user->id)->with('customers')->get();
 
-        return response($company,200);
+        return response()->json($company_customer, 200);
     }
 
     /**

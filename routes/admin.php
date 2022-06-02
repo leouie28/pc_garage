@@ -4,14 +4,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OptionController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\VariationController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\Backoffice\AuthController;
 // use App\Http\Controllers\Backoffice\CustomerController;
-use App\Http\Controllers\Backoffice\ImageController;
+use App\Http\Controllers\Backoffice\AuthController;
+// use App\Http\Controllers\Backoffice\ImageController;
 // use App\Http\Controllers\Backoffice\ProductController;
 
 Route::post('login',[AuthController::class, 'adminLogin'])->name('adminLogin');
@@ -34,6 +35,9 @@ Route::group(['middleware'=>['auth:admin']],function(){
     Route::put('employee/update/{id}', [EmployeeController::class, 'update']);
     Route::delete('employee/destroy/{id}', [EmployeeController::class, 'destroy']);
     Route::put('employee/updateStatus/{id}', [EmployeeController::class, 'updateStatus']);
+
+    //Customer Section
+    Route::get('customer', [CustomerController::class, 'index']);
 
     //Product Section
     Route::get('product', [ProductController::class, 'index']);
