@@ -90,16 +90,26 @@ class AuthController extends Controller
             // $accessToken = auth()->user()->createToken('authToken')->accessToken;
 
             // return response(["status" => 200, "message" => "Success", 'user' => auth()->user(), 'access_token' => $accessToken]);
-         
-           
         }
         else{
+
             return response(["status" => 401, 'message' => 'Invalid']);
         }
     }
     
     public function newPassword(Request $request)
     {
+        $validator = Validator::make($request->all(),
+        [
+            'password' => 'required|min:6',
+            'confirmpass' => 'required|same:password',
+        ]);
+        if($validator->fails())
+        return response()->json([
+            'message' => 'Validation Error',
+            'data'    => $validator->errors()
+        ], 404);
+
         if($request->password == $request->confirmpass){
 
             $employee = Employee::where('email', $request->email)->update([

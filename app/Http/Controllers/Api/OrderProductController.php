@@ -108,7 +108,7 @@ class OrderProductController extends Controller
             return $q->where('employee_id', $user->id);
         })->with(['products' => function($pp){
             return $pp->with('images');
-        }, 'orders'])->orderBy('created_at', 'ASC')->get();
+        }, 'orders'])->get();
 
         return response($orderProduct,200);
     }
