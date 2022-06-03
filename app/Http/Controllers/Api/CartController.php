@@ -83,7 +83,7 @@ class CartController extends Controller
     {
         $cart = Cart::where('status', 0)->find($id);
         $product = Product::find($cart->product_id);
-        
+
         if(!$cart){
             return response()->json('Cannot Proceeed!! This Order in the cart is already confirmed.', 404);
         }
@@ -92,6 +92,7 @@ class CartController extends Controller
         }
         if(!empty($request->quantity)){
         $cart->update(['quantity' => $request->quantity]);
+        $cart->update(['total' => $cart->price * $request->quantity]);
         }
         if(!empty($request->comment)){
         $cart->update(['comment' => $request->comment]);
