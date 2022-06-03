@@ -28,9 +28,8 @@ class AuthController extends Controller
         ], 404);
 
         $employee = Employee::where('email', $request->email)->where('status', 1)->first();
-        
         if(!$employee){
-            return response()->json(['message' => 'Incorrect Credentials'], 404);
+            return response()->json(['message' => 'Incorrect Credentials or Account has been disabled'], 404);
         }
         if(Hash::check($request->password,$employee->password)){
             $token = $employee->createToken('accessToken')->accessToken;
