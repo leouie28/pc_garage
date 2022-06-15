@@ -73,7 +73,7 @@ class PaymentController extends Controller
         $payment = Payment::find($id);
         $payment->update(['payment_method' => $request->payment_method]);
 
-        return response()->json('Cart Order Updated Successfuly', 200);
+        return response()->json('Payment Updated Successfuly', 200);
     }
 
     /**
