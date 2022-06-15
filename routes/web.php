@@ -17,6 +17,7 @@ Route::get('/{any?}', function () {
     return view('layouts.app');
 })->where('any','.*');
 
+Route::resource('dashboards','App\Http\Controllers\DashboardController');
 Route::resource('companies','App\Http\Controllers\CompanyController');
 Route::resource('category','App\Http\Controllers\CategoryController');
 Route::resource('employees','App\Http\Controllers\EmployeeController');

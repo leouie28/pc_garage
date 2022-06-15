@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\Backoffice\AuthController;
 // use App\Http\Controllers\Backoffice\ImageController;
@@ -19,6 +20,12 @@ Route::group(['middleware'=>['auth:admin']],function(){
 
     //Ngadi isulod an iyo routes
     Route::get('logout',[AuthController::class,'adminLogout']);
+
+    //Dashboard section
+    Route::get('dashboard/company', [DashboardController::class, 'indexCompany']);
+    Route::get('dashboard/employee', [DashboardController::class, 'indexEmployee']);
+    Route::get('dashboard/product', [DashboardController::class, 'indexProduct']);
+    Route::get('dashboard/customer', [DashboardController::class, 'indexCustomer']);
 
     //Company section
     Route::get('company', [CompanyController::class, 'index']);
