@@ -7,17 +7,18 @@
       dark
       app
     >
-        <v-img src="" class="mt-1 pa-3">
-            <div class="text-center">
-                <v-avatar
-                class="mb-1"
-                color="grey darken-1"
-                size="64"
-                >
-                </v-avatar>
-            </div>
-        </v-img>
-      <v-divider></v-divider>
+      <img src="./White.png" alt="ubi logo" style="margin-top: 10%; margin-left: 25%; margin-bottom:10%;" height="100" width="100" />
+      <!-- <v-img src="" class="mt-1 pa-3">
+          <div class="text-center">
+              <v-avatar
+              class="mb-1"
+              color="grey darken-1"
+              size="64"
+              >
+              </v-avatar>
+          </div>
+      </v-img> -->
+      <!-- <v-divider></v-divider> -->
 
       <v-list>
         <v-list-item
