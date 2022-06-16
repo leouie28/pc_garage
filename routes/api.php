@@ -52,12 +52,15 @@ Route::group(['middleware'=>['auth:api']],function(){
 
     //Order//
     Route::post('confirmedorder/{id}',[OrderController::class,'confirmedOrder']);
+    Route::post('confirmnocustomer',[OrderController::class,'confirmNocustomer']);
+    Route::post('orderproduct/store',[OrderController::class,'store']);
     Route::post('paymentorder/{id}',[OrderController::class,'payment']);
     Route::post('payOrder/{id}',[OrderController::class,'payOrder']);
-
+    
     //Cart
     Route::get('cart',[CartController::class,'index']);
     Route::get('cart/{id}',[CartController::class,'show']);
+    Route::get('cartnocustomer',[CartController::class,'showNoCustomer']);
     Route::get('deletecart/{id}',[CartController::class,'destroy']);
     Route::post('addtocart',[CartController::class,'store']);
     Route::post('updatecart/{id}',[CartController::class,'update']);
