@@ -71,6 +71,15 @@ class CartController extends Controller
 
         return response($customer ,200);
     }
+    public function showNoCustomer(Cart $cart) // Display cart by customer ID
+    {
+        $user = Auth::user();
+        $cart = Cart::where('employee_id', $user->id)->where('status', 0)
+        ->whereNull('customer_id')->with('products', 'products.images')->get();
+        $cart['total'] = $cart->sum('total');
+
+        return response($cart ,200);
+    }
 
     /**
      * Update the specified resource in storage.
@@ -81,7 +90,7 @@ class CartController extends Controller
      */
     public function update(Request $request, Cart $cart, $id)//Update order quantity of the product in the cart
     {
-        $cart = Cart::where('status', 0)->find($id);
+        $cart = Cart::where('status', 0)->with('products', 'products.images')->find($id);
         $product = Product::find($cart->product_id);
 
         if(!$cart){
@@ -98,7 +107,7 @@ class CartController extends Controller
         $cart->update(['comment' => $request->comment]);
         }
 
-        return response()->json('Cart Order Updated Successfuly', 200);
+        return response()->json($cart, 200);
     }
 
     /**
