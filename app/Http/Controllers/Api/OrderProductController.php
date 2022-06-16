@@ -93,12 +93,22 @@ class OrderProductController extends Controller
     {
         $user = Auth::user();
 
-        $order = Order::where('employee_id', $user->id)->with('payments')->with('customers')
+        $order = Order::where('employee_id', $user->id)->whereNull('customer_id')
+        ->with('payments')->with('customers')
         ->with('order_product', function($opp){
             return $opp->with('products', 'products.images');
         })->whereDate('created_at', \Carbon\Carbon::today())
         ->find($id);
+        if(!$order){
+            $order = Order::where('employee_id', $user->id)->whereNotNull('customer_id')
+            ->with('payments')->with('customers')
+            ->with('order_product', function($opp){
+                return $opp->with('products', 'products.images');
+            })->whereDate('created_at', \Carbon\Carbon::today())
+            ->find($id);
 
+            return response($order, 200);
+        }
         return response($order, 200);
     }
     public function toPrepared() //Display Order to Prepared

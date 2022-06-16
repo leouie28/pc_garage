@@ -60,6 +60,40 @@ class OrderController extends Controller
 
         return response()->json('Confirmed Order');
     }
+    public function confirmNocustomer() //Confirmed Order in the Cart
+    {
+        $user = Auth::user();
+        $emp = $user->id;
+        $cart = Cart::whereNull('customer_id')->where('status', 0)->latest()->first()->get();
+        $cartTotal = $cart->sum('total');
+        $cartQty = $cart->sum('quantity');
+        
+        $order = Order::create([
+            'total' =>  $cartTotal,
+            'order_qty' => $cartQty,
+            'employee_id' => $emp,
+        ]);
+        foreach ($cart as $c) {
+        $orderId = $order->id;
+        $order_product = OrderProduct::create([
+            'quantity' => $c->quantity,
+            'price' => $c->price,
+            'product_id' => $c->product_id,
+            'comment' => $c->comment,
+            'order_id' => $orderId,
+        ]);
+        $qty = $order_product->quantity;
+        $prod = $order_product->product_id;
+        $product = Product::find($prod);
+        $product->decrement('stock', $qty);
+        // $c->update([
+        //     'status'=> 1,
+        // ]);
+        $c->delete();
+    }
+
+        return response()->json('Confirmed Order');
+    }
     public function payment(Request $request, $id) // Payment of the Order Product
     {
         $user = Auth::user();
@@ -113,7 +147,44 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = Auth::user();
+
+        // $option_price = 0;
+        // if($request->option_id != null){
+        //     $option = Option::find($request->option_id);
+        //     $option_price = $option->addprice;
+        //     $q = $option->decrement('stock');
+        // }
+
+        $product = Product::find($request->product_id);
+        $product_price = $product->price;
+        $qty = $product->decrement('stock', $request['quantity']);
+
+        // $customer = Customer::find($id);
+        $order = new Order();
+        $order->total = $product_price * $request['quantity'];
+        $order->payment_id = $request->payment_id;
+        $order->customer_id = $request->customer_id;
+        // $order->customer_id = $customer->id;
+        $order->employee_id = $user->company_id;
+        $order->save();
+        $orderId = $order->id;
+
+        $order_product = new OrderProduct();
+        $order_product->quantity = $request->quantity;
+        $order_product->product_id = $request->product_id;
+        // $order_product->product_id = $product->id;
+        $order_product->price = $product->price;
+        $order_product->order_id = $orderId;
+        $order_product->option_id = $request->option_id;
+        $order_product->comment = $request->comment;
+        $order_product->save();
+
+        $order = Order::where('status', 0)->with('order_product', function($qqqq){
+            return $qqqq->with('products', 'products.images');
+        })->latest()->first();
+        
+        return response()->json($order, 200);
     }
 
     /**
