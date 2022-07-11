@@ -15,54 +15,14 @@ class CustomerSeeder extends Seeder
     public function run()
     {
         Customer::create([
-            'name' =>'rence',
-            'email' =>'test@gmail.com',
-            'phone' => '00000000000',
-        ]);
-        Customer::create([
-            'name' =>'jason',
-            'email' =>'employee@gmail.com',
-            'phone' => '11111111111',
-        ]);
-        Customer::create([
-            'name' =>'alexis',
-            'email' =>'test@gmail.com',
-            'phone' => '33333333333',
-        ]);
-        Customer::create([
-            'name' =>'kenneth',
-            'email' =>'employee@gmail.com',
-            'phone' => '09512318222',
-        ]);
-        Customer::create([
-            'name' =>'margie',
-            'email' =>'test@gmail.com',
-            'phone' => '09512318472',
-        ]);
-        Customer::create([
-            'name' =>'ariel',
-            'email' =>'employee@gmail.com',
-            'phone' => '09512318222',
-        ]);
-        Customer::create([
-            'name' =>'sean',
-            'email' =>'test@gmail.com',
-            'phone' => '09512318472',
-        ]);
-        Customer::create([
-            'name' =>'patrick',
-            'email' =>'employee@gmail.com',
-            'phone' => '09512318222',
-        ]);
-        Customer::create([
-            'name' =>'romnick',
-            'email' =>'employee@gmail.com',
-            'phone' => '09512318222',
-        ]);
-        Customer::create([
-            'name' =>'mark',
-            'email' =>'employee@gmail.com',
-            'phone' => '09512318222',
+            'first_name' => 'Customer',
+            'last_name' => 'LastName',
+            'birthday' => '2022-02-10',
+            'address' => 'Calbayog City',
+            'phone' => '0983743746',
+            'email' => 'customer@gmail.com',
+            'password' => bcrypt('123'),
+            'status' => true
         ]);
     }
 }
