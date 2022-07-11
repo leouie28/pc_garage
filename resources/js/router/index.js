@@ -1,8 +1,19 @@
 import Axios from 'axios'
 import Vue from 'vue'
 import Router from 'vue-router'
+import admin from './admin'
+import customer from './customer'
 
 Vue.use(Router)
+
+var links = ''
+
+if(localStorage.role=='admin'){
+  links = admin
+}else{
+  links = customer 
+}
+
 
 const router = new Router({
     mode: 'history',
@@ -12,6 +23,7 @@ const router = new Router({
     },
 
     routes: [
+      ...links,
 
         {
             path:'/login',
@@ -21,7 +33,7 @@ const router = new Router({
     ]
 })
 router.beforeEach((to, from, next) => {
-    Axios.get(`/admin/checkadmin`).then(({data})=>{
+    Axios.get(`/admin/check-auth`).then(({data})=>{
         if (to.matched.some(record => record.meta.requiresAuth)) {
           // this route requires auth, check if logged in
           // if not, redirect to login page.

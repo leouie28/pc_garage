@@ -11,7 +11,7 @@ import moment from 'moment';
 // import VueToast from 'vue-toast-notification';
 // import 'vue-toast-notification/dist/index.css';
 
-Vue.component('main-app', require('./layout/LandingPage').default);
+Vue.component('main-app', require('./layout/Main').default);
 // Vue.use(VueToast);
 
 const app = new Vue({

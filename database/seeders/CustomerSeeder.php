@@ -22,7 +22,7 @@ class CustomerSeeder extends Seeder
             'phone' => '0983743746',
             'email' => 'customer@gmail.com',
             'password' => bcrypt('123'),
-            'status' => true
+            'status' => true,
         ]);
     }
 }

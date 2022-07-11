@@ -56,9 +56,9 @@ return [
             'driver' => 'passport',
             'provider' => 'admins',
         ],
-        'company' => [
+        'customers' => [
             'driver' => 'session',
-            'provider' => 'companies',
+            'provider' => 'customers',
         ],
         'company-api' => [
             'driver' => 'passport',
@@ -92,27 +92,18 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
-        'employee' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Employee::class,
-        ],
-        'company' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Company::class,
-        ],
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
-        'employee' => [
+        'customers' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Employee::class,
+            'model' => App\Models\Customer::class,
         ],
-        'companies' => [
+        'Customer' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Company::class,
-        ],
-
+            'model' => App\Models\Customer::class,
+        ]
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -137,6 +128,12 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'admins',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'customers' => [
+            'provider' => 'customers',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
