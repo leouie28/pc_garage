@@ -4,7 +4,7 @@ mix.webpackConfig({
     resolve: {
         extensions: ['.js', '.vue', '.ts'],
         alias: {
-            '@': path.resolve(__dirname, 'resources/js/src')
+            '@': path.resolve(__dirname, 'resources/js')
         }
     },
     output: {

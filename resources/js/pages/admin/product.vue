@@ -32,11 +32,11 @@
                     ></v-text-field>
                 </v-col>
                 <v-btn
-                    color="primary"
-                    dark
-                    class="mb-2"
+                  color="success"
+                  @click="addNew"
                 >
-                    New Item
+                  Add Product
+                  <v-icon>mdi-plus</v-icon>
                 </v-btn>
             </v-toolbar>
             </template>
@@ -62,13 +62,28 @@
             </template>
         </v-data-table>
     </v-card>
+    <v-dialog
+      v-model="showForm"
+      persistent
+      max-width="600"
+    >
+      <product-form
+        @cancel="close"
+        @save="save"
+      >
+      </product-form>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import ProductForm from '../../components/admin/product/form.vue'
   export default {
+    components: {
+      ProductForm
+    },
     data: () => ({
-      dialog: false,
+      showForm: false,
       dialogDelete: false,
       products: [],
       selected: [],
@@ -79,6 +94,12 @@
           align: 'start',
           sortable: true,
           value: 'name',
+        },
+        {
+          text: 'Cover',
+          align: 'start',
+          sortable: true,
+          value: 'image',
         },
         {
           text: 'Name',
@@ -137,6 +158,19 @@
       },
       getProduct() {
 
+      },
+      save(payload) {
+        // console.log(payload,'afjalksjfskl')
+        axios.post(`/admin/product`, payload).then(({data})=>{
+          console.log(data)
+        })
+        this.showForm = false
+      },
+      addNew(){
+        this.showForm = true
+      },
+      close() {
+        this.showForm = false
       }
     },
   }

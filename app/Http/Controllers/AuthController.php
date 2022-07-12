@@ -40,8 +40,8 @@ class AuthController extends Controller
 
     public function checkAuth()
     {
-        $check = Auth::check();
-        if($check){
+        $auth = Auth::check();
+        if($auth){
             $check = Session::get('role');
         }else{
             $check = 0;

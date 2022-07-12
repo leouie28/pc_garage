@@ -8,4 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+
+    protected $fillable=[
+        'name',
+        'description',
+        'stocks'
+    ];
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    public function photos()
+    {
+        return $this->morphMany('App\Image', 'imagable');
+    }
 }
