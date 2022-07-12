@@ -10,13 +10,12 @@ class Image extends Model
     use HasFactory;
 
     protected $fillable=[
-        'imagable_id',
-        'imagable_type',
-        'file_name'
+        'file_name',
+        'product_id'
     ];
 
-    public function imagable()
+    public function product()
     {
-        return $this->morphTo();
+        return $this->belongsTo(Product::class);
     }
 }

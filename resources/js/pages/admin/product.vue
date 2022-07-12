@@ -15,32 +15,32 @@
             <v-toolbar
                 flat
             >
-                <v-toolbar-title>{{ title }}</v-toolbar-title>
-                <v-divider
-                class="mx-4"
-                inset
-                vertical
-                ></v-divider>
-                <v-spacer></v-spacer>
-                <v-col cols="6" md="3" sm="4">
-                    <v-text-field
-                        append-icon="mdi-magnify"
-                        label="Search"
-                        class="mr-4"
-                        single-line
-                        hide-details
-                    ></v-text-field>
-                </v-col>
-                <v-btn
-                  color="success"
-                  @click="addNew"
-                >
-                  Add Product
-                  <v-icon>mdi-plus</v-icon>
-                </v-btn>
+              <v-toolbar-title>{{ title }}</v-toolbar-title>
+              <v-divider
+              class="mx-4"
+              inset
+              vertical
+              ></v-divider>
+              <v-spacer></v-spacer>
+              <v-col cols="6" md="3" sm="4">
+                  <v-text-field
+                      append-icon="mdi-magnify"
+                      label="Search"
+                      class="mr-4"
+                      single-line
+                      hide-details
+                  ></v-text-field>
+              </v-col>
+              <v-btn
+                color="success"
+                @click="addNew"
+              >
+                Add Product
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
             </v-toolbar>
             </template>
-            <template v-slot:actions="{ item }">
+            <template v-slot:item.action="{ item }">
             <v-icon
                 small
                 class="mr-2"
@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import ProductForm from '../../components/admin/product/form.vue'
   export default {
     components: {
@@ -93,7 +94,7 @@ import ProductForm from '../../components/admin/product/form.vue'
           text: 'ID',
           align: 'start',
           sortable: true,
-          value: 'name',
+          value: 'id',
         },
         {
           text: 'Cover',
@@ -117,7 +118,7 @@ import ProductForm from '../../components/admin/product/form.vue'
           text: 'Stocks',
           align: 'start',
           sortable: true,
-          value: 'stock',
+          value: 'stocks',
         },
         {
           text: 'Sold',
@@ -129,7 +130,7 @@ import ProductForm from '../../components/admin/product/form.vue'
           text: 'Date Added',
           align: 'start',
           sortable: true,
-          value: 'stock',
+          value: 'created_at',
         },
         {
           text: 'Action',
@@ -148,19 +149,20 @@ import ProductForm from '../../components/admin/product/form.vue'
 
     },
 
-    created () {
+    created() {
       this.initialize()
     },
-
     methods: {
       initialize () {
-        
+        this.getProduct()
       },
       getProduct() {
-
+        axios.get(`/admin/product`).then(({data})=>{
+          this.products = data
+          console.log(data)
+        })
       },
       save(payload) {
-        // console.log(payload,'afjalksjfskl')
         axios.post(`/admin/product`, payload).then(({data})=>{
           console.log(data)
         })

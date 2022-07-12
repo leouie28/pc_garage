@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\ProductFilter;
+use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -14,7 +16,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        return Product::all();
     }
 
     /**
@@ -44,10 +46,14 @@ class ProductController extends Controller
 
         $product->categories()->attach($request->category);
         
-        $image = uploadImage(
+        $file = uploadImage(
             $request->image,
             'images/products/' . $product->id . '/'
         );
+        $image = Image::create([
+            'product_id' => $product->id,
+            'file_name' => $file
+        ]);
 
         return $product;
         

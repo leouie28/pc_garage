@@ -15,13 +15,18 @@ class Product extends Model
         'stocks'
     ];
 
+    protected $with = [
+        'categories',
+        'images'
+    ];
+
     public function categories()
     {
         return $this->belongsToMany(Category::class);
     }
 
-    public function photos()
+    public function images()
     {
-        return $this->morphMany('App\Image', 'imagable');
+        return $this->hasMany(Image::class, 'product_id');
     }
 }
