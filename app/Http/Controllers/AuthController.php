@@ -35,7 +35,7 @@ class AuthController extends Controller
         Session::put('role', $role);
         Session::put('user', $login);
 
-        return response(['user' => auth()->user()]);
+        return response(['user' => auth()->user(), 'role' => $role]);
     }
 
     public function checkAuth()

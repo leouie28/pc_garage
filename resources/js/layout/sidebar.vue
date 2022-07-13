@@ -12,7 +12,7 @@
         <v-list-item
           v-for="item in navs"
           :key="item.icon"
-          @click="$router.push({name: item.path}).catch(() => {})"
+          @click="$router.push({name: item.path})"
           :class="getUrl == item.path ? 'active' : '' "
         >
           <v-list-item-icon class="pl-3">
@@ -53,27 +53,27 @@ export default {
             {
               name: 'Dashboard',
               icon: 'mdi-view-dashboard-outline',
-              path: 'dashboard'
+              path: 'admin-dashboard'
             },
             {
               name: 'Products',
               icon: 'mdi-briefcase',
-              path: 'product'
+              path: 'admin-product'
             },
             {
               name: 'Orders',
               icon: 'mdi-format-list-checks',
-              path: 'order'
+              path: 'admin-order'
             },
             {
               name: 'Customers',
               icon: 'mdi-account-group',
-              path: 'customer'
+              path: 'admin-customer'
             },
             {
               name: 'Inventory',
               icon: 'mdi-nas',
-              path: 'inventory'
+              path: 'admin-inventory'
             },
           ],
           customer: [

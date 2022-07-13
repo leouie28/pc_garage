@@ -75,9 +75,16 @@ export default {
     methods: {
         login(){
         let payload = this.credential
-            axios.post(`/admin-api/login`,{...payload}).then(({data})=>{
+            axios.post(`/admin-api/login`,{...payload}).then( async({data})=>{
                 if(!data.error_message){
-                    this.$router.push({name:'dashboard'})
+                    console.log(data.role,"sdlksldksdllllsssssss")
+                    await localStorage.setItem('role', data.role)
+                    if(data.role=="admin"){
+                        console.log(data.role,"sdlksldksdllll")
+                        this.$router.push({name:'admin-dashboard'})
+                    }else{
+                        await this.$router.push({name:'product'})
+                    }
                 }else {
                     this.iserror = true
                     setTimeout(() => {

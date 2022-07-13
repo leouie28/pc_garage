@@ -16,7 +16,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::all();
+        return Product::withCount('orders')->get();
     }
 
     /**
@@ -41,6 +41,7 @@ class ProductController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'stocks' => $request->stocks,
+            'price' => $request->price,
         ]);
         $product->save();
 

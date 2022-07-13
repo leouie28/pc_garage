@@ -6,13 +6,13 @@ import customer from './customer'
 
 Vue.use(Router)
 
-var links = ''
+// var links = ''
 
-if(localStorage.role=='admin'){
-  links = admin
-}else{
-  links = customer 
-}
+// if(localStorage.role=='admin'){
+//   links = admin
+// }else{
+//   links = customer 
+// }
 
 
 const router = new Router({
@@ -23,30 +23,78 @@ const router = new Router({
     },
 
     routes: [
-      ...links,
-
-        {
-            path:'/login',
-            component: () => import('../layout/login.vue'),
-            name:'login'
-        }
+      {
+        path: '/admin/dashboard',
+        component: () => import('../pages/admin/dashboard.vue'),
+        name: 'admin-dashboard',
+        meta: { requireAuth: true },
+    },
+    {
+        path:'/admin/product',
+        component:() => import('../pages/admin/product.vue'),
+        name:'admin-product',
+        meta:{requireAuth:true},
+    },
+      ...customer,
+      {
+          path:'/login',
+          component: () => import('../layout/login.vue'),
+          name:'login'
+      }
     ]
 })
+
 router.beforeEach((to, from, next) => {
-    Axios.get(`/admin/check-auth`).then(({data})=>{
-        if (to.matched.some(record => record.meta.requiresAuth)) {
-          // this route requires auth, check if logged in
-          // if not, redirect to login page.
+    Axios.get(`/admin-api/check-auth`).then(({data})=>{
+        if(to.matched.some(record => record.meta.requireAuth)) {
           if (data) {
-            next()
+            if(localStorage.role == "admin"){
+              if(!to.path.includes('admin')){
+
+                Axios.get(`/admin-api/logout`).then(({data})=>{})
+                localStorage.role = '0'
+
+                next({
+                  name:'login',
+                  query: { redirect: to.fullPath }
+                });
+
+              }else{
+                next();
+              }
+            }
+            else if (localStorage.role == "customer"){
+              if(to.path.includes('admin')){
+
+                Axios.get(`/admin-api/logout`).then(({data})=>{})
+                localStorage.role = '0'
+
+                next({
+                  name:'login',
+                  query: { redirect: to.fullPath }
+                });
+
+              }else{
+                next();
+              }
+            }else{
+
+              next({
+                name:'login',
+                query: { redirect: to.fullPath }
+              });
+
+            }
           } else {
+
             next({
               name: 'login',
               query: { redirect: to.fullPath }
             })
+
           }
         } else {
-          next() // make sure to always call next()!
+          next()
         }
     })
   })
