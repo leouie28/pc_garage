@@ -5,7 +5,7 @@ import router from './router/index'
 import Vue from 'vue';
 // import { store } from "./src/plugins/store";
 import vuetify from './plugins/vuetify';
-// import "./src/mixins/index";
+import "./mixins/index";
 import moment from 'moment';
 
 // import VueToast from 'vue-toast-notification';
