@@ -16,7 +16,7 @@
                         required
                         ></v-text-field>
                     </v-col>
-                    <v-col md="9" cols="12">
+                    <v-col cols="12">
                         <v-autocomplete
                         chips
                         deletable-chips
@@ -32,7 +32,19 @@
                         multiple
                         ></v-autocomplete>
                     </v-col>
-                    <v-col md="3" cols="12">
+                    <v-col md="6" cols="12">
+                        <v-text-field
+                        label="Price*"
+                        dense
+                        v-model="payload.price"
+                        type="number"
+                        filled
+                        min="1"
+                        hide-details=""
+                        required
+                        ></v-text-field>
+                    </v-col>
+                    <v-col md="6" cols="12">
                         <v-text-field
                         label="Stocks*"
                         dense
@@ -71,7 +83,7 @@
                         color="secondary"
                         @click="$emit('cancel')"
                     >
-                        Close
+                        Cancel
                     </v-btn>
                     <v-btn
                         class="mx-2"
@@ -101,6 +113,7 @@ export default {
             name: '',
             category: [],
             stocks: 1,
+            price: '',
             description: '',
             image: null
         }

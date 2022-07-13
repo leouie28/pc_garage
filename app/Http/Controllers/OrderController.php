@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Filters\ProductFilter;
-use App\Models\Image;
-use App\Models\Product;
+use App\Models\Order;
 use Illuminate\Http\Request;
+use OrderProduct;
 
-class ProductController extends Controller
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +15,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::all();
+        return Order::all();
     }
 
     /**
@@ -37,27 +36,19 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = new Product([
-            'name' => $request->name,
-            'description' => $request->description,
-            'stocks' => $request->stocks,
-            'price' => $request->price,
-        ]);
-        $product->save();
-
-        $product->categories()->attach($request->category);
-        
-        $file = uploadImage(
-            $request->image,
-            'images/products/' . $product->id . '/'
-        );
-        $image = Image::create([
-            'product_id' => $product->id,
-            'file_name' => $file
+        $order = new Order([
+            'total' => $request->total,
+            'note' => $request->note,
+            'status' => $request->status,
+            'arrival' => $request->arrival,
+            'customer_id' => $request->customer,
         ]);
 
-        return $product;
-        
+        $order->save();
+
+        $order->products()->attach($request->product, ['quantity' => $request->quantity]);
+ 
+        return $order;
     }
 
     /**

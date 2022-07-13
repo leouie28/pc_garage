@@ -4,10 +4,9 @@
         <v-data-table
             :headers="headers"
             :single-select="false"
-            :items="products"
+            :items="customers"
             item-key="name"
             multi-sort
-            sort-by="calories"
         >
             <template v-slot:top>
             <v-toolbar
@@ -39,26 +38,7 @@
             </v-toolbar>
             </template>
             <template v-slot:[`item.name`]="{ item }">
-                <v-avatar size="35" tile style="border: 1px solid #ccc;">
-                  <img
-                    alt="image"
-                    :src="'/images/products/'+item.id+'/'+item.images[0].file_name"
-                  />
-                </v-avatar>
-                <span class="pa-2 font-weight-bold"> {{ item.name }} </span>
-            </template>
-            <template v-slot:[`item.category`]="{ item }">
-              <v-chip
-                v-for="category in item.categories"
-                :key="category.id"
-                small
-                :color="category.color"
-                class="mr-1">
-                {{ category.name }}
-              </v-chip>
-            </template>
-            <template v-slot:[`item.price`]="{ item }">
-              &#8369; {{ item.price }}
+                {{ item.first_name }} {{ item.last_name }}
             </template>
             <template v-slot:[`item.action`]="{ item }">
             <v-icon
@@ -106,9 +86,9 @@ import ProductForm from '../../components/admin/product/form.vue'
     data: () => ({
       showForm: false,
       dialogDelete: false,
-      products: [],
+      customers: [],
       selected: [],
-      title: 'Products',
+      title: 'Customers',
       headers: [
         {
           text: 'ID',
@@ -123,31 +103,31 @@ import ProductForm from '../../components/admin/product/form.vue'
           value: 'name',
         },
         {
-          text: 'Category',
+          text: 'Birthday',
           align: 'start',
           sortable: true,
-          value: 'category',
+          value: 'birthday',
         },
         {
-          text: 'Description',
+          text: 'Address',
           align: 'start',
           sortable: true,
-          value: 'description',
+          value: 'address',
         },
         {
-          text: 'Price',
+          text: 'Phone',
           align: 'start',
           sortable: true,
-          value: 'price',
+          value: 'phone',
         },
         {
-          text: 'Stocks',
+          text: 'Email',
           align: 'start',
           sortable: true,
-          value: 'stocks',
+          value: 'email',
         },
         {
-          text: 'Sold',
+          text: 'Orders',
           align: 'start',
           sortable: true,
           value: 'orders_count',
@@ -183,8 +163,8 @@ import ProductForm from '../../components/admin/product/form.vue'
         this.getProduct()
       },
       getProduct() {
-        axios.get(`/admin-api/product`).then(({data})=>{
-          this.products = data
+        axios.get(`/admin-api/customer`).then(({data})=>{
+          this.customers = data
           console.log(data)
         })
       },
@@ -194,7 +174,6 @@ import ProductForm from '../../components/admin/product/form.vue'
         })
         this.initialize()
         this.showForm = false
-        this.payload = null
       },
       addNew(){
         this.showForm = true

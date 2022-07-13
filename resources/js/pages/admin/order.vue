@@ -4,10 +4,9 @@
         <v-data-table
             :headers="headers"
             :single-select="false"
-            :items="products"
+            :items="orders"
             item-key="name"
             multi-sort
-            sort-by="calories"
         >
             <template v-slot:top>
             <v-toolbar
@@ -38,28 +37,9 @@
               </v-btn>
             </v-toolbar>
             </template>
-            <template v-slot:[`item.name`]="{ item }">
-                <v-avatar size="35" tile style="border: 1px solid #ccc;">
-                  <img
-                    alt="image"
-                    :src="'/images/products/'+item.id+'/'+item.images[0].file_name"
-                  />
-                </v-avatar>
-                <span class="pa-2 font-weight-bold"> {{ item.name }} </span>
-            </template>
-            <template v-slot:[`item.category`]="{ item }">
-              <v-chip
-                v-for="category in item.categories"
-                :key="category.id"
-                small
-                :color="category.color"
-                class="mr-1">
-                {{ category.name }}
-              </v-chip>
-            </template>
-            <template v-slot:[`item.price`]="{ item }">
-              &#8369; {{ item.price }}
-            </template>
+            <!-- <template v-slot:[`item.name`]="{ item }">
+                {{ item.first_name }} {{ item.last_name }}
+            </template> -->
             <template v-slot:[`item.action`]="{ item }">
             <v-icon
                 small
@@ -98,7 +78,7 @@
 
 <script>
 import moment from 'moment';
-import ProductForm from '../../components/admin/product/form.vue'
+import ProductForm from '../../components/admin/order/form.vue'
   export default {
     components: {
       ProductForm
@@ -106,9 +86,9 @@ import ProductForm from '../../components/admin/product/form.vue'
     data: () => ({
       showForm: false,
       dialogDelete: false,
-      products: [],
+      orders: [],
       selected: [],
-      title: 'Products',
+      title: 'Orders',
       headers: [
         {
           text: 'ID',
@@ -117,46 +97,40 @@ import ProductForm from '../../components/admin/product/form.vue'
           value: 'id',
         },
         {
-          text: 'Name',
+          text: 'Customer',
           align: 'start',
           sortable: true,
-          value: 'name',
+          value: 'customer',
         },
         {
-          text: 'Category',
+          text: 'Product',
           align: 'start',
           sortable: true,
-          value: 'category',
+          value: 'product',
         },
         {
-          text: 'Description',
-          align: 'start',
-          sortable: true,
-          value: 'description',
-        },
-        {
-          text: 'Price',
-          align: 'start',
-          sortable: true,
-          value: 'price',
-        },
-        {
-          text: 'Stocks',
-          align: 'start',
-          sortable: true,
-          value: 'stocks',
-        },
-        {
-          text: 'Sold',
-          align: 'start',
-          sortable: true,
-          value: 'orders_count',
-        },
-        {
-          text: 'Date Added',
+          text: 'Date Order',
           align: 'start',
           sortable: true,
           value: 'created_at',
+        },
+        {
+          text: 'Arrival',
+          align: 'start',
+          sortable: true,
+          value: 'arrival',
+        },
+        {
+          text: 'Total',
+          align: 'start',
+          sortable: true,
+          value: 'total',
+        },
+        {
+          text: 'Status',
+          align: 'start',
+          sortable: true,
+          value: 'status',
         },
         {
           text: 'Action',
@@ -180,21 +154,21 @@ import ProductForm from '../../components/admin/product/form.vue'
     },
     methods: {
       initialize () {
-        this.getProduct()
+        this.getOrder()
       },
-      getProduct() {
-        axios.get(`/admin-api/product`).then(({data})=>{
-          this.products = data
+      getOrder() {
+        axios.get(`/admin-api/order`).then(({data})=>{
+          this.orders = data
           console.log(data)
         })
       },
       save(payload) {
-        axios.post(`/admin-api/product`, payload).then(({data})=>{
+        console.log(payload)
+        axios.post(`/admin-api/order`, payload).then(({data})=>{
           console.log(data)
         })
         this.initialize()
         this.showForm = false
-        this.payload = null
       },
       addNew(){
         this.showForm = true

@@ -124,7 +124,10 @@ export default {
       },
     },
     watch: {
-
+      drawer(val){
+        console.log(val)
+        return val
+      }
     }
 }
 </script>
