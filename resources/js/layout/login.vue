@@ -39,7 +39,7 @@
                                         </div>
                                         <div class="text-center my-3">
                                             OR<br>
-                                            <span>Create Account</span>
+                                            <span @click="$router.push({name:'register'})" class="signup-btn">Create Account</span>
                                         </div>
                                         <br>
                                     </v-col>
@@ -75,15 +75,15 @@ export default {
     methods: {
         login(){
         let payload = this.credential
-            axios.post(`/admin-api/login`,{...payload}).then( async({data})=>{
+            axios.post(`/admin-api/login`,{...payload}).then(({data})=>{
                 if(!data.error_message){
                     console.log(data.role,"sdlksldksdllllsssssss")
-                    await localStorage.setItem('role', data.role)
+                    localStorage.setItem('role', data.role)
                     if(data.role=="admin"){
                         console.log(data.role,"sdlksldksdllll")
                         this.$router.push({name:'admin-dashboard'})
                     }else{
-                        await this.$router.push({name:'product'})
+                        this.$router.push({name:'product'})
                     }
                 }else {
                     this.iserror = true
@@ -102,3 +102,8 @@ export default {
     }
 };
 </script>
+<style lang="scss" scoped>
+    .signup-btn{
+        cursor: pointer;
+    }
+</style>

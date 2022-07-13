@@ -14,7 +14,11 @@
             </div>
             <Loading v-else></Loading>
         </div>
-        <Login v-else></Login>
+        <div  v-if="!isAuth && !loading">
+            <!-- <Register></Register>
+            <Login ></Login> -->
+            <router-view></router-view>
+        </div>
     </v-app>
 </template>
 
@@ -23,38 +27,47 @@ import Login from "./login.vue";
 import Header from "./header.vue";
 import Loading from "./loading.vue";
 import Sidebar from "./sidebar.vue";
+import Register from "../components/signup.vue"
 export default {
     components: {
     Login,
     Header,
     Loading,
-    Sidebar
+    Sidebar,
+    Register
 },
-    data() {
-        return {
-            drawer: true,
-            login: false,
-            isAuth: false,
-            fetching: true,
-            loading: false
-        };
-    },
-    mounted(){
-      // this.checkAuth()
+data() {
+    return {
+        drawer: true,
+        login: false,
+        isAuth: false,
+        fetching: true,
+        loading: false,
+    };
+},
+mounted(){
+    console.log(this.to)
+    // this.checkAuth()
   },
   methods:{
     checkAuth(){
-      axios.get(`/admin-api/check-auth`).then(({data})=>{
-          this.isAuth = data
-          this.fetching = false
-      })
+        this.loading = true
+        axios.get(`/admin-api/check-auth`).then(({data})=>{
+            this.isAuth = data
+            this.fetching = false
+        }).finally(()=>{
+            this.loading = false
+        })
     },
     logout(){
+        this.loading = true
         axios.get(`/admin-api/logout`).then(({data})=>{
             this.isAuth = false
             this.$router.push({name:'login'})
+            localStorage.role = '0'
+        }).finally(()=>{
+            this.loading = false
         })
-        localStorage.role = '0'
 
     },
     // load(){

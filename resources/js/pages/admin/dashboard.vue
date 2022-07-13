@@ -3,16 +3,15 @@
         <h1>Hello</h1>
     </div>
 </template>
-<!-- 
 <script>
 export default {
-    data() {
+    data(){
         return{
 
         }
     },
-    mounted() {
-        console.log('afafa')
+    mounted(){
+        console.log(this.$route)
     }
 }
-</script> -->
+</script>

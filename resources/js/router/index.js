@@ -23,23 +23,17 @@ const router = new Router({
     },
 
     routes: [
-      {
-        path: '/admin/dashboard',
-        component: () => import('../pages/admin/dashboard.vue'),
-        name: 'admin-dashboard',
-        meta: { requireAuth: true },
-    },
-    {
-        path:'/admin/product',
-        component:() => import('../pages/admin/product.vue'),
-        name:'admin-product',
-        meta:{requireAuth:true},
-    },
+      ...admin,
       ...customer,
       {
           path:'/login',
           component: () => import('../layout/login.vue'),
           name:'login'
+      },
+      {
+          path:'/register',
+          component: () => import('../components/signup.vue'),
+          name:'register'
       }
     ]
 })
@@ -94,7 +88,10 @@ router.beforeEach((to, from, next) => {
 
           }
         } else {
-          next()
+          console.log("dsksjdksjdksjdj")
+          next(
+            {query: { redirect: to.fullPath }}
+          )
         }
     })
   })
