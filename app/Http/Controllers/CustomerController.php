@@ -100,7 +100,8 @@ class CustomerController extends Controller
   {
     $customer = new Customer();
     if ($request->image_base64) {
-      $customer->avatar;
+      $file = uploadImage($request->image_base64,'images/customer/');
+      $customer->avatar = $file;
     }
     $customer->first_name = $request->first_name;
     $customer->last_name =  $request->last_name;
