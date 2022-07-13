@@ -16,7 +16,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::all();
+        return (new ProductFilter)->searchable();
+        // return Product::withCount('orders')->get();
     }
 
     /**
