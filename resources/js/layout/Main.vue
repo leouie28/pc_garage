@@ -50,31 +50,31 @@ export default {
       })
     },
     logout(){
-        axios.get(`/admin/logout`).then(({data})=>{
+        axios.get(`/admin-api/logout`).then(({data})=>{
             this.isAuth = false
             this.$router.push({name:'login'})
         })
         localStorage.role = '0'
 
     },
-    load(){
-      this.loading = true
-      console.log(this.loading, 'loading')
-      setTimeout(() => {
-          this.loading = false
-      }, 2500);
-      setTimeout(() => {
-          location.reload()
-      }, 2000);
-    },
+    // load(){
+    //   this.loading = true
+    //   console.log(this.loading, 'loading')
+    //   setTimeout(() => {
+    //       this.loading = false
+    //   }, 2500);
+    //   setTimeout(() => {
+    //       location.reload()
+    //   }, 2000);
+    // },
   },
   watch:{
-    isAuth(val) {
-      if(val){
-        localStorage.role = val
-        console.log(val)
-      }
-    },
+    // isAuth(val) {
+    //   if(val){
+    //     localStorage.role = val
+    //     console.log(val)
+    //   }
+    // },
     $route (to, from){
         this.checkAuth()
     },

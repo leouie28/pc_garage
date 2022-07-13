@@ -92,7 +92,7 @@
     //     })
     //   },
       editItem (id) {
-        axios.put('/admin/userprofile/update'+id).then(({data}) => {
+        axios.put('/admin-api/userprofile/update'+id).then(({data}) => {
           console.log('Success');
           this.initialize();
         })

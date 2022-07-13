@@ -1,14 +1,14 @@
 export default [
     {
-        path: '/dashboard',
+        path: '/admin/dashboard',
         component: () => import('../pages/admin/dashboard.vue'),
+        name: 'admin-dashboard',
         meta: { requireAuth: true },
-        name: 'dashboard'
     },
     {
-        path: '/product',
+        path: '/admin/product',
         component: () => import('../pages/admin/product.vue'),
+        name: 'admin-product',
         meta: { requireAuth: true },
-        name: 'product'
     },
 ]

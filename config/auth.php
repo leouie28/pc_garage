@@ -38,36 +38,12 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'Admin',
-        ],
-        'api' => [
-            'driver' => 'passport',
-            'provider' => 'employee',
-        ],
-        'company-api' => [
-            'driver' => 'passport',
-            'provider' => 'company',
+            'provider' => 'customers',
         ],
         'admin' => [
             'driver' => 'session',
             'provider' => 'admins',
-        ],
-        'admin-api' => [
-            'driver' => 'passport',
-            'provider' => 'admins',
-        ],
-        'customers' => [
-            'driver' => 'session',
-            'provider' => 'customers',
-        ],
-        'company-api' => [
-            'driver' => 'passport',
-            'provider' => 'companies',
-        ],
-        'api' => [
-            'driver' => 'passport',
-            'provider' => 'employee',
-        ],
+        ]
     ],
 
     /*
@@ -88,10 +64,6 @@ return [
     */
 
     'providers' => [
-        'Admin' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Admin::class,
-        ],
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
@@ -100,10 +72,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Customer::class,
         ],
-        'Customer' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Customer::class,
-        ]
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
