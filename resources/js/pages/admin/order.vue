@@ -1,89 +1,106 @@
 <template>
   <div>
     <v-card elevation="0" class="pa-2">
-        <v-data-table
-            :headers="headers"
-            :single-select="false"
-            :items="orders"
-            item-key="name"
-            multi-sort
-        >
-            <template v-slot:top>
-            <v-toolbar
-                flat
-            >
-              <v-toolbar-title>{{ title }}</v-toolbar-title>
-              <v-divider
-              class="mx-4"
-              inset
-              vertical
-              ></v-divider>
-              <v-spacer></v-spacer>
-              <v-col cols="6" md="3" sm="4">
-                  <v-text-field
-                      append-icon="mdi-magnify"
-                      label="Search"
-                      class="mr-4"
-                      single-line
-                      hide-details
-                  ></v-text-field>
-              </v-col>
-              <v-btn
-                color="success"
-                @click="addNew"
-              >
-                Add
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-            </v-toolbar>
-            </template>
-            <!-- <template v-slot:[`item.name`]="{ item }">
-                {{ item.first_name }} {{ item.last_name }}
-            </template> -->
-            <template v-slot:[`item.action`]="{ item }">
-            <v-icon
-                small
-                class="mr-2"
-                @click="editItem(item)"
-            >
-                mdi-pencil
-            </v-icon>
-            <v-icon
-                small
-                @click="deleteItem(item)"
-            >
-                mdi-delete
-            </v-icon>
-            </template>
-            <template v-slot:no-data>
-            <div>
-                No Data
-            </div>
-            </template>
-        </v-data-table>
-    </v-card>
-    <v-dialog
-      v-model="showForm"
-      persistent
-      max-width="600"
-    >
-      <product-form
-        @cancel="close"
-        @save="save"
+      <table-header
+        :data="data"
+        @addNew="addNew"
+        @refresh="fetchPage"
+        @search="fetchPage"
+        @resetFilters="resetFilter"
+        @filterRecord="fetchPage"
+        :hide="['filter']"
       >
-      </product-form>
+        <template v-slot:custom_filter>
+          <admin-filter :filter="data.filter"></admin-filter>
+        </template>
+      </table-header>
+      <v-data-table
+        :headers="headers"
+        :items="orders"
+        max-height="100%"
+        :search="data.keyword"
+        :loading="data.isFetching"
+        :server-items-length="total"
+        :single-select="false"
+        show-select
+        :footer-props="footerPages"
+        :options.sync="options"
+        :items-per-page="options.itemsPerPage"
+        @update:options="fetchPage"
+        @click:row="viewProduct"
+        class="cursor-pointer table-fix-height"
+        fixed-header
+      >
+        <template v-slot:[`item.customer`]="{ item }">
+          {{ item.customer.first_name+' '+item.customer.last_name }} 
+        </template>
+        <template v-slot:[`item.products`]="{ item }">
+          <v-chip
+            v-for="product in item.products"
+            :key="product.id"
+            small
+            label
+            outlined
+            color="primary"
+            class="px-1"
+          >
+           ({{ product.pivot.quantity }}) {{ product.name }}
+          </v-chip>
+        </template>
+        <template v-slot:[`item.created_at`]="{ item }">
+          {{ moment(item.created_at).format('MMMM DD YYYY') }}
+        </template>
+        <template v-slot:[`item.arrival`]="{ item }">
+          {{ moment(item.arrival).format('MMMM DD YYYY') }}
+        </template>
+        <template v-slot:[`item.total`]="{ item }">
+          &#8369; {{ item.total }}
+        </template>
+        <template v-slot:[`item.status`]="{ item }">
+          <v-chip small :color="status(item.status).color">
+            {{ status(item.status).text }}
+          </v-chip>
+        </template>
+        <template v-slot:[`item.action`]="{ item }">
+          <v-icon small class="mr-2" @click="editItem(item)">
+            mdi-pencil
+          </v-icon>
+          <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+        </template>
+        <template v-slot:no-data>
+          <div>No Data</div>
+        </template>
+      </v-data-table>
+    </v-card>
+    <v-dialog v-model="showForm" persistent max-width="600">
+      <order-form @cancel="close" @save="save"></order-form>
     </v-dialog>
   </div>
 </template>
 
 <script>
-import moment from 'moment';
-import ProductForm from '../../components/admin/order/form.vue'
+import moment from "moment";
+import TableHeader from "../../components/table-header.vue";
+import OrderForm from '../../components/admin/order/form.vue'
   export default {
     components: {
-      ProductForm
+      OrderForm,
+      TableHeader
     },
     data: () => ({
+      data: {
+        title: "Orders",
+        isFetching: false,
+        keyword: "",
+        filter: {},
+      },
+      footerPages: {
+        "items-per-page-options": [5, 10, 15, 20, 30, 40, 50, 100, -1],
+      },
+      options: {
+        itemsPerPage: 15,
+      },
+      total: 0,
       showForm: false,
       dialogDelete: false,
       orders: [],
@@ -106,7 +123,13 @@ import ProductForm from '../../components/admin/order/form.vue'
           text: 'Product',
           align: 'start',
           sortable: true,
-          value: 'product',
+          value: 'products',
+        },
+        {
+          text: 'Note',
+          align: 'start',
+          sortable: true,
+          value: 'note',
         },
         {
           text: 'Date Order',
@@ -140,35 +163,61 @@ import ProductForm from '../../components/admin/order/form.vue'
         },
       ],
     }),
-
-    computed: {
-
-    },
-
-    watch: {
-
-    },
-
-    created() {
-      this.initialize()
-    },
     methods: {
-      initialize () {
-        this.getOrder()
+      viewProduct() {},
+      resetFilter() {},
+      fetchPage() {
+        this.data.isFetching = true;
+        let params = this._createParams(this.options);
+        params = params + this._createFilterParams(this.data.filter);
+        if (this.data.keyword) params = params + "&keyword=" + this.data.keyword;
+        axios.get(`/admin-api/order?${params}`).then(({ data }) => {
+          this.orders = data.data;
+          this.total = data.total;
+          this.data.isFetching = false;
+        });
       },
-      getOrder() {
-        axios.get(`/admin-api/order`).then(({data})=>{
-          this.orders = data
-          console.log(data)
-        })
-      },
+      // initialize () {
+      //   this.getOrder()
+      // },
+      // getOrder() {
+      //   axios.get(`/admin-api/order`).then(({data})=>{
+      //     this.orders = data
+      //     console.log(data)
+      //   })
+      // },
       save(payload) {
-        console.log(payload)
-        axios.post(`/admin-api/order`, payload).then(({data})=>{
-          console.log(data)
+        axios.post(`/admin-api/order`, payload).then(({ data }) => {
+          this.fetchPage()
+        }).finally(()=>{
+          this.showForm = false;
+          this.payload = null;
         })
-        this.initialize()
-        this.showForm = false
+      },
+      // save(payload) {
+      //   console.log(payload)
+      //   axios.post(`/admin-api/order`, payload).then(({data})=>{
+      //     console.log(data)
+      //   })
+      //   this.initialize()
+      //   this.showForm = false
+      // },
+      status(val){
+        if(val==0){
+          return {text: 'Canceled', color: 'error'}
+        }
+        else if(val==1){
+          return {text: 'Pending', color: 'blue-grey lighten-3'}
+        }
+        else if(val==2){
+          return {text: 'Confirmed', color: 'primary'}
+        }
+        else if(val==3){
+          return {text: 'On Delivery', color: 'orange'}
+        }
+        else if(val==4){
+          return {text: 'Delivered', color: 'success'}
+        }
       },
       addNew(){
         this.showForm = true

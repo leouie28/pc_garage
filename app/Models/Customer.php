@@ -13,6 +13,7 @@ class Customer extends Authenticatable
     protected $fillable=[
         'first_name',
         'last_name',
+        'gender',
         'birthday',
         'address',
         'phone',
@@ -21,9 +22,13 @@ class Customer extends Authenticatable
         'status',
     ];
 
-    protected $with = [
-        'orders',
+    protected $hidden = [
+        'password'
     ];
+
+    // protected $with = [
+    //     'orders',
+    // ];
 
     public function orders()
     {

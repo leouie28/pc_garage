@@ -1,186 +1,212 @@
 <template>
   <div>
     <v-card elevation="0" class="pa-2">
-        <v-data-table
-            :headers="headers"
-            :single-select="false"
-            :items="customers"
-            item-key="name"
-            multi-sort
-        >
-            <template v-slot:top>
-            <v-toolbar
-                flat
-            >
-              <v-toolbar-title>{{ title }}</v-toolbar-title>
-              <v-divider
-              class="mx-4"
-              inset
-              vertical
-              ></v-divider>
-              <v-spacer></v-spacer>
-              <v-col cols="6" md="3" sm="4">
-                  <v-text-field
-                      append-icon="mdi-magnify"
-                      label="Search"
-                      class="mr-4"
-                      single-line
-                      hide-details
-                  ></v-text-field>
-              </v-col>
-              <v-btn
-                color="success"
-                @click="addNew"
-              >
-                Add
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-            </v-toolbar>
-            </template>
-            <template v-slot:[`item.name`]="{ item }">
-                {{ item.first_name }} {{ item.last_name }}
-            </template>
-            <template v-slot:[`item.action`]="{ item }">
-            <v-icon
-                small
-                class="mr-2"
-                @click="editItem(item)"
-            >
-                mdi-pencil
-            </v-icon>
-            <v-icon
-                small
-                @click="deleteItem(item)"
-            >
-                mdi-delete
-            </v-icon>
-            </template>
-            <template v-slot:no-data>
-            <div>
-                No Data
-            </div>
-            </template>
-        </v-data-table>
-    </v-card>
-    <v-dialog
-      v-model="showForm"
-      persistent
-      max-width="600"
-    >
-      <product-form
-        @cancel="close"
-        @save="save"
+      <table-header
+        :data="data"
+        @addNew="addNew"
+        @refresh="fetchPage"
+        @search="fetchPage"
+        @resetFilters="resetFilter"
+        @filterRecord="fetchPage"
+        :hide="['filter']"
       >
-      </product-form>
+        <template v-slot:custom_filter>
+          <admin-filter :filter="data.filter"></admin-filter>
+        </template>
+      </table-header>
+      <v-data-table
+        :headers="headers"
+        :items="customers"
+        max-height="100%"
+        :search="data.keyword"
+        :loading="data.isFetching"
+        :server-items-length="total"
+        :footer-props="footerPages"
+        :options.sync="options"
+        :items-per-page="options.itemsPerPage"
+        @update:options="fetchPage"
+        @click:row="viewProduct"
+        class="cursor-pointer table-fix-height"
+        fixed-header
+      >
+        <!-- <template v-slot:[`item.name`]="{ item }">
+          <v-avatar size="35" tile style="border: 1px solid #ccc">
+            <img
+              alt="image"
+              :src="item.images.length?'/images/products/' + item.id + '/' + item.images[0].file_name:'/images/default/noimage.png'"
+            />
+          </v-avatar>
+          <span class="pa-2 font-weight-bold"> {{ item.name }} </span>
+        </template>
+        <template v-slot:[`item.category`]="{ item }">
+          <v-chip
+            v-for="category in item.categories"
+            :key="category.id"
+            small
+            :color="category.color"
+            class="mr-1"
+          >
+            {{ category.name }}
+          </v-chip>
+        </template> -->
+        <template v-slot:[`item.name`]="{ item }">
+          {{ item.first_name+ ' '+item.last_name }}
+        </template>
+        <template v-slot:[`item.created_at`]="{ item }">
+          {{ moment(item.created_at).format('MMMM DD YYYY') }}
+        </template>
+        <template v-slot:[`item.action`]="{ item }">
+          <v-btn
+            small
+            elevation="0"
+            color="primary"
+            @click="editItem(item)"
+          >
+            Edit
+          </v-btn>
+          <v-btn
+            small
+            elevation="0"
+            color="error"
+          >
+            Delete
+          </v-btn>
+
+          <!-- <v-icon small class="mr-2" @click="editItem(item)">
+            mdi-pencil
+          </v-icon> -->
+          <!-- <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon> -->
+        </template>
+        <template v-slot:no-data>
+          <div>No Data</div>
+        </template>
+      </v-data-table>
+    </v-card>
+    <v-dialog v-model="showForm" persistent max-width="600">
+      <customer-form :selectedItem="selectedItem" @cancel="close" @save="save"> </customer-form>
     </v-dialog>
   </div>
 </template>
 
 <script>
-import moment from 'moment';
-import ProductForm from '../../components/admin/product/form.vue'
-  export default {
-    components: {
-      ProductForm
+import moment from "moment";
+import CustomerForm from "../../components/admin/customer/form.vue";
+import TableHeader from "../../components/table-header.vue";
+export default {
+  components: {
+    CustomerForm,
+    TableHeader,
+  },
+  data: () => ({
+    data: {
+      title: "Customers",
+      isFetching: false,
+      keyword: "",
+      filter: {},
     },
-    data: () => ({
-      showForm: false,
-      dialogDelete: false,
-      customers: [],
-      selected: [],
-      title: 'Customers',
-      headers: [
-        {
-          text: 'ID',
-          align: 'start',
-          sortable: true,
-          value: 'id',
-        },
-        {
-          text: 'Name',
-          align: 'start',
-          sortable: true,
-          value: 'name',
-        },
-        {
-          text: 'Birthday',
-          align: 'start',
-          sortable: true,
-          value: 'birthday',
-        },
-        {
-          text: 'Address',
-          align: 'start',
-          sortable: true,
-          value: 'address',
-        },
-        {
-          text: 'Phone',
-          align: 'start',
-          sortable: true,
-          value: 'phone',
-        },
-        {
-          text: 'Email',
-          align: 'start',
-          sortable: true,
-          value: 'email',
-        },
-        {
-          text: 'Orders',
-          align: 'start',
-          sortable: true,
-          value: 'orders_count',
-        },
-        {
-          text: 'Date Added',
-          align: 'start',
-          sortable: true,
-          value: 'created_at',
-        },
-        {
-          text: 'Action',
-          align: 'start',
-          sortable: true,
-          value: 'action',
-        },
-      ],
-    }),
-
-    computed: {
-
+    footerPages: {
+      "items-per-page-options": [5, 10, 15, 20, 30, 40, 50, 100, -1],
     },
-
-    watch: {
-
+    options: {
+      itemsPerPage: 15,
     },
-
-    created() {
-      this.initialize()
-    },
-    methods: {
-      initialize () {
-        this.getProduct()
+    total: 0,
+    showForm: false,
+    dialogDelete: false,
+    customers: [],
+    selectedItem: {},
+    selected: [],
+    title: "Customers",
+    headers: [
+      {
+        text: "ID",
+        align: "start",
+        sortable: true,
+        value: "id",
       },
-      getProduct() {
-        axios.get(`/admin-api/customer`).then(({data})=>{
-          this.customers = data
-          console.log(data)
-        })
+      {
+        text: "Name",
+        align: "start",
+        sortable: true,
+        value: "name",
       },
-      save(payload) {
-        axios.post(`/admin-api/product`, payload).then(({data})=>{
-          console.log(data)
-        })
-        this.initialize()
-        this.showForm = false
+      {
+        text: "Birthday",
+        align: "start",
+        sortable: false,
+        value: "birthday",
       },
-      addNew(){
-        this.showForm = true
+      {
+        text: "Address",
+        align: "start",
+        sortable: false,
+        value: "address",
       },
-      close() {
-        this.showForm = false
-      }
+      {
+        text: "Phone",
+        align: "start",
+        sortable: true,
+        value: "phone",
+      },
+      {
+        text: "Email",
+        align: "start",
+        sortable: true,
+        value: "email",
+      },
+      {
+        text: "Orders",
+        align: "start",
+        sortable: false,
+        value: "orders",
+      },
+      {
+        text: "Date Joined",
+        align: "start",
+        sortable: false,
+        value: "created_at",
+      },
+      {
+        text: "Action",
+        align: "center",
+        sortable: false,
+        value: "action",
+      },
+    ],
+  }),
+  methods: {
+    viewProduct() {},
+    resetFilter() {},
+    fetchPage() {
+      this.data.isFetching = true;
+      let params = this._createParams(this.options);
+      params = params + this._createFilterParams(this.data.filter);
+      if (this.data.keyword) params = params + "&keyword=" + this.data.keyword;
+      axios.get(`/admin-api/customer?${params}`).then(({ data }) => {
+        this.customers = data.data;
+        this.total = data.total;
+        this.data.isFetching = false;
+      });
     },
-  }
+    editItem(val){
+      this.selectedItem = val
+      this.showForm = true
+    },
+    save(payload) {
+      axios.post(`/admin-api/customer`, payload).then(({ data }) => {
+        this.fetchPage()
+      }).finally(()=>{
+        this.showForm = false;
+        this.payload = null;
+      })
+    },
+    addNew() {
+      this.showForm = true;
+    },
+    close() {
+      this.selectedItem = {}
+      this.showForm = false;
+    },
+  },
+};
 </script>

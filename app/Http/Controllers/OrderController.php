@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\OrderFilter;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use OrderProduct;
 
 class OrderController extends Controller
 {
@@ -15,7 +16,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return Order::all();
+        return (new OrderFilter)->searchable();
     }
 
     /**
@@ -47,6 +48,13 @@ class OrderController extends Controller
         $order->save();
 
         $order->products()->attach($request->product, ['quantity' => $request->quantity]);
+
+        $stocks = Product::find($request->product);
+        $old = $stocks->stocks;
+
+        $new = $old - $request->quantity;
+
+        $stocks->update(['quantity' => $new]);
  
         return $order;
     }

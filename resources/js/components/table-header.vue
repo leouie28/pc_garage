@@ -119,14 +119,13 @@
                     <v-btn
                         v-bind="attrs"
                         v-on="on"
-                        fab
-                        tile
                         color="success"
                         @click.stop="$emit('addNew')"
                         v-if="!hide.includes('addNew')"
                         :disabled="disable.includes('addNew')"
                         class="ml-3"
                     >
+                    Add
                         <v-icon>mdi-plus</v-icon>
                     </v-btn>
                 </template>

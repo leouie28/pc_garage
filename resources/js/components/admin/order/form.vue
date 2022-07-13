@@ -207,12 +207,12 @@ export default {
         },
         getProduct() {
             axios.get(`/admin-api/product`).then(({data})=>{
-                this.products = data
+                this.products = data.data
             })
         },
         getCustomer() {
             axios.get(`/admin-api/customer`).then(({data})=>{
-                this.customers = data
+                this.customers = data.data
             })
         },
         save() {

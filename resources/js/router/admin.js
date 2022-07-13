@@ -23,4 +23,10 @@ export default [
         meta: { requireAuth: true },
         name: 'admin-customer'
     },
+    {
+        path: '/admin/inventory',
+        component: () => import('../pages/admin/inventory.vue'),
+        meta: { requireAuth: true },
+        name: 'admin-inventory'
+    },
 ]

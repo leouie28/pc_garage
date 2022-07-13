@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\CustomerFilter;
 use App\Models\Admin;
 use App\Models\Customer;
 use Carbon\Carbon;
@@ -16,7 +17,7 @@ class CustomerController extends Controller
    */
   public function index()
   {
-    return Customer::withCount('orders')->get();
+    return (new CustomerFilter)->searchable();
   }
 
   /**
@@ -37,7 +38,9 @@ class CustomerController extends Controller
    */
   public function store(Request $request)
   {
-    //
+    $customer = Customer::create($request->toArray());
+
+    return $customer;
   }
 
   /**

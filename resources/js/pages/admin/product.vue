@@ -18,8 +18,6 @@
         :headers="headers"
         :items="products"
         max-height="100%"
-        :single-select="false"
-        show-select
         :search="data.keyword"
         :loading="data.isFetching"
         :server-items-length="total"
@@ -31,35 +29,6 @@
         class="cursor-pointer table-fix-height"
         fixed-header
       >
-        <!-- <template v-slot:top>
-            <v-toolbar
-                flat
-            >
-              <v-toolbar-title>{{ title }}</v-toolbar-title>
-              <v-divider
-              class="mx-4"
-              inset
-              vertical
-              ></v-divider>
-              <v-spacer></v-spacer>
-              <v-col cols="6" md="3" sm="4">
-                  <v-text-field
-                      append-icon="mdi-magnify"
-                      label="Search"
-                      class="mr-4"
-                      single-line
-                      hide-details
-                  ></v-text-field>
-              </v-col>
-              <v-btn
-                color="success"
-                @click="addNew"
-              >
-                Add
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-            </v-toolbar>
-            </template> -->
         <template v-slot:[`item.name`]="{ item }">
           <v-avatar size="35" tile style="border: 1px solid #ccc">
             <img
@@ -83,11 +52,30 @@
         <template v-slot:[`item.price`]="{ item }">
           &#8369; {{ item.price }}
         </template>
+        <template v-slot:[`item.created_at`]="{ item }">
+          {{ moment(item.created_at).format('MMMM DD YYYY') }}
+        </template>
         <template v-slot:[`item.action`]="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item)">
+          <v-btn
+            small
+            elevation="0"
+            color="primary"
+            @click="editItem(item)"
+          >
+            Edit
+          </v-btn>
+          <v-btn
+            small
+            elevation="0"
+            color="error"
+          >
+            Delete
+          </v-btn>
+
+          <!-- <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
-          </v-icon>
-          <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+          </v-icon> -->
+          <!-- <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon> -->
         </template>
         <template v-slot:no-data>
           <div>No Data</div>
@@ -95,7 +83,7 @@
       </v-data-table>
     </v-card>
     <v-dialog v-model="showForm" persistent max-width="600">
-      <product-form @cancel="close" @save="save"> </product-form>
+      <product-form :selectedItem="selectedItem" @cancel="close" @save="save"> </product-form>
     </v-dialog>
   </div>
 </template>
@@ -126,6 +114,7 @@ export default {
     showForm: false,
     dialogDelete: false,
     products: [],
+    selectedItem: {},
     selected: [],
     title: "Products",
     headers: [
@@ -179,7 +168,7 @@ export default {
       },
       {
         text: "Action",
-        align: "start",
+        align: "center",
         sortable: false,
         value: "action",
       },
@@ -199,6 +188,10 @@ export default {
         this.data.isFetching = false;
       });
     },
+    editItem(val){
+      this.selectedItem = val
+      this.showForm = true
+    },
     save(payload) {
       axios.post(`/admin-api/product`, payload).then(({ data }) => {
         this.fetchPage()
@@ -211,6 +204,7 @@ export default {
       this.showForm = true;
     },
     close() {
+      this.selectedItem = {}
       this.showForm = false;
     },
   },

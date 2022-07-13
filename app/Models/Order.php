@@ -17,9 +17,10 @@ class Order extends Model
         'customer_id'
     ];
 
-    // protected $with = [
-    //     'customer',
-    // ];
+    protected $with = [
+        'customer',
+        'products',
+    ];
 
     public function customer()
     {

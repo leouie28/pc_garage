@@ -16,7 +16,8 @@ class CustomerSeeder extends Seeder
     {
         Customer::create([
             'first_name' => 'Customer',
-            'last_name' => 'LastName',
+            'last_name' => 'Testing',
+            'Gender' => 'Male',
             'birthday' => '2022-02-10',
             'address' => 'Calbayog City',
             'phone' => '0983743746',

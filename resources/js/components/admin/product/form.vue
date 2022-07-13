@@ -81,7 +81,7 @@
                 <v-row justify="end">
                     <v-btn
                         color="secondary"
-                        @click="$emit('cancel')"
+                        @click="close"
                     >
                         Cancel
                     </v-btn>
@@ -119,6 +119,7 @@ export default {
         }
     }),
     props: {
+        selectedItem: {}
         // formDialog: {}
     },
     created() {
@@ -143,13 +144,47 @@ export default {
                 this.category = data
             })
         },
+        close() {
+            for (var key in this.payload){
+                delete this.payload[key]
+            }
+            // this.img = {}
+            this.$emit('cancel')
+        },
         save() {
-            console.log(this.img)
+            // if(!this.selectedItem){
+            //     console.log('not edit')
+            // }else{
+            //     console.log('edit')
+            // }
+            // // console.log(this.img)
             this.$emit('save', this.payload)
         },
     },
     watch: {
-
+        selectedItem:{
+            handler(val){
+                for (var key in this.payload){
+                        delete this.payload[key]
+                    }
+                if(Object.keys(val).length!==0){
+                    this.img = {}
+                    console.log(val,'afsf')
+                    this.payload.name = val.name
+                    val.categories.forEach(elem => {
+                        this.payload.category.push(elem.id)
+                    });
+                    this.payload.price = val.price
+                    this.payload.stocks = val.stocks
+                    this.payload.description = val.description
+                    val.images.forEach(elem => {
+                        this.img.name = elem.file_name
+                    });
+                }else{
+                    // this.img = null
+                }
+            },immediate:true
+        }
     }
 }
 </script>
