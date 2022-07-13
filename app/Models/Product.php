@@ -12,12 +12,14 @@ class Product extends Model
     protected $fillable=[
         'name',
         'description',
-        'stocks'
+        'stocks',
+        'price',
     ];
 
     protected $with = [
         'categories',
-        'images'
+        'images',
+        'orders'
     ];
 
     public function categories()
@@ -28,5 +30,15 @@ class Product extends Model
     public function images()
     {
         return $this->hasMany(Image::class, 'product_id');
+    }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class);
+    }
+
+    public function feedback()
+    {
+        return $this->hasMany(Feedback::class);
     }
 }
