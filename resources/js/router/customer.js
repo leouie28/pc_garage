@@ -11,4 +11,10 @@ export default [
         meta: { requireAuth: true },
         name: 'product'
     },
+    {
+        path: '/cart',
+        component: () => import('../components/customer/checkout.vue'),
+        meta: { requireAuth: true },
+        name: 'cart'
+    },
 ]

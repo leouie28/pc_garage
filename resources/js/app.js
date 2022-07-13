@@ -7,6 +7,7 @@ import Vue from 'vue';
 import vuetify from './plugins/vuetify';
 import "./mixins/index";
 import moment from 'moment';
+import { store } from './store/store'
 
 // import VueToast from 'vue-toast-notification';
 // import 'vue-toast-notification/dist/index.css';
@@ -18,7 +19,7 @@ const app = new Vue({
     el: '#app',
     vuetify,
     router,
-    // store,
+    store,
     // VueToast,
 });
 Vue.prototype.moment = moment;
