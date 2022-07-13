@@ -40,7 +40,15 @@
               </v-btn>
             </v-toolbar>
             </template>
-            <template v-slot:item.action="{ item }">
+            <template v-slot:[`item.image`]="{ item }">
+                <v-avatar size="38">
+                  <img
+                    :src="'/images/products/'+item.id+'/'+item.images[0].file_name"
+                    alt="John"
+                  >
+                </v-avatar>
+            </template>
+            <template v-slot:[`item.action`]="{ item }">
             <v-icon
                 small
                 class="mr-2"
@@ -157,15 +165,16 @@ import ProductForm from '../../components/admin/product/form.vue'
         this.getProduct()
       },
       getProduct() {
-        axios.get(`/admin/product`).then(({data})=>{
+        axios.get(`/admin-api/product`).then(({data})=>{
           this.products = data
           console.log(data)
         })
       },
       save(payload) {
-        axios.post(`/admin/product`, payload).then(({data})=>{
+        axios.post(`/admin-api/product`, payload).then(({data})=>{
           console.log(data)
         })
+        this.initialize()
         this.showForm = false
       },
       addNew(){

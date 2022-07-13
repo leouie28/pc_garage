@@ -126,7 +126,7 @@ export default {
             this.createImg(file);
         },
         getCategory() {
-            axios.get(`/admin/category`).then(({data})=>{
+            axios.get(`/admin-api/category`).then(({data})=>{
                 this.category = data
             })
         },

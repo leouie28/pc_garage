@@ -75,7 +75,7 @@ export default {
     methods: {
         login(){
         let payload = this.credential
-            axios.post(`/admin/login`,{...payload}).then(({data})=>{
+            axios.post(`/admin-api/login`,{...payload}).then(({data})=>{
                 if(!data.error_message){
                     this.$router.push({name:'dashboard'})
                 }else {

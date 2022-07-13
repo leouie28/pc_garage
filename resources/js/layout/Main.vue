@@ -44,7 +44,7 @@ export default {
   },
   methods:{
     checkAuth(){
-      axios.get(`/admin/check-auth`).then(({data})=>{
+      axios.get(`/admin-api/check-auth`).then(({data})=>{
           this.isAuth = data
           this.fetching = false
       })
