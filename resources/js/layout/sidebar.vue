@@ -3,7 +3,7 @@
       v-model="drawer"
       color="blue-grey darken-3"
       class=" accent-4"
-      width="228"
+      width="250"
       dark
       app
     >
@@ -87,11 +87,11 @@ export default {
                 icon: 'mdi-format-list-checks',
                 path: 'order'
             },
-            {
-              name: 'My Cart',
-              icon: 'mdi-cart',
-              path: 'employee'
-            },
+            // {
+            //   name: 'My Cart',
+            //   icon: 'mdi-cart',
+            //   path: 'employee'
+            // },
           ],
           icons: [
             'mdi-facebook',
