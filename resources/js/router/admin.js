@@ -11,4 +11,16 @@ export default [
         name: 'admin-product',
         meta: { requireAuth: true },
     },
+    {
+        path: '/admin/order',
+        component: () => import('../pages/admin/order.vue'),
+        meta: { requireAuth: true },
+        name: 'admin-order'
+    },
+    {
+        path: '/admin/customer',
+        component: () => import('../pages/admin/customer.vue'),
+        meta: { requireAuth: true },
+        name: 'admin-customer'
+    },
 ]

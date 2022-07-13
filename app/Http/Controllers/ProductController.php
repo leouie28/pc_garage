@@ -16,7 +16,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::withCount('orders')->get();
+        return (new ProductFilter)->searchable();
+        // return Product::withCount('orders')->get();
     }
 
     /**
@@ -46,15 +47,16 @@ class ProductController extends Controller
         $product->save();
 
         $product->categories()->attach($request->category);
-        
-        $file = uploadImage(
-            $request->image,
-            'images/products/' . $product->id . '/'
-        );
-        $image = Image::create([
-            'product_id' => $product->id,
-            'file_name' => $file
-        ]);
+        if($request->image){
+            $file = uploadImage(
+                $request->image,
+                'images/products/' . $product->id . '/'
+            );
+            $image = Image::create([
+                'product_id' => $product->id,
+                'file_name' => $file
+            ]);
+        }
 
         return $product;
         

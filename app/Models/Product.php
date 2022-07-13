@@ -19,7 +19,6 @@ class Product extends Model
     protected $with = [
         'categories',
         'images',
-        'orders'
     ];
 
     public function categories()
@@ -32,9 +31,9 @@ class Product extends Model
         return $this->hasMany(Image::class, 'product_id');
     }
 
-    public function orders()
+    public function order()
     {
-        return $this->belongsToMany(Order::class);
+        return $this->belongsToMany(Order::class)->withPivot(['quantity']);
     }
 
     public function feedback()

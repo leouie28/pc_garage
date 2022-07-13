@@ -22,7 +22,7 @@ class Customer extends Authenticatable
     ];
 
     protected $with = [
-        'orders'
+        'orders',
     ];
 
     public function orders()
@@ -34,4 +34,5 @@ class Customer extends Authenticatable
     {
         return $this->hasMany(Feedback::class);
     }
+
 }
