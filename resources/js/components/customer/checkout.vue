@@ -69,12 +69,15 @@
 export default {
   data() {
     return {
-      carts:[]
+      carts:[],
+      payload:{},
     };
   },
   methods:{
     checkout(){
-
+      axios.post(`/customer-api/cart-checkout`,this.payload).then(({data})=>{
+        this.$router.push({name:'orders'})
+      })
     },
     getCartItems(){
       axios.get(`/customer-api/getall-cart`).then(({data})=>{
@@ -103,6 +106,7 @@ export default {
       let total = this.carts.map((cart)=>{
         return cart.quantity * cart.product.price
       })
+      this.payload.total = total.reduce((partialSum, a) => partialSum + a, 0)
       return total.reduce((partialSum, a) => partialSum + a, 0)
     }
   },
