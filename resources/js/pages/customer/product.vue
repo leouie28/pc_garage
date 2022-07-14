@@ -17,8 +17,8 @@
                 </v-card-text>
             </v-card>
         </v-row>
-        <v-row v-if="!isloading" class="product-list">
-            <v-col v-for="product in products" :key="product.id" cols="2">
+        <v-row v-if="!isloading" class="product-list" wrap>
+            <v-col v-for="product in products" :key="product.id" cols="12" sm="2">
                 <v-card max-height="350">
                     <v-card-text>
                         <h1>₱{{ product.price}}</h1>
@@ -45,16 +45,11 @@
                 </v-card>
             </v-col>
         </v-row>
-        <check-out :show="ischeckout" @close="ischeckout = false"/>
     </div>
 </template>
 <script>
-import CheckOut from "../../components/customer/checkout.vue"
 import { mapGetters } from "vuex";
 export default {
-    components:{
-        CheckOut,
-    },
     data(){
         return{
             products:[],

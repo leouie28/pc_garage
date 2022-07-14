@@ -3,6 +3,7 @@
 namespace App\Filters;
 
 use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 
 class OrderFilter
 {
@@ -16,6 +17,7 @@ class OrderFilter
   {
     $this->searchColumns();
     $this->sortBy();
+    $this->byCustomer();
     $per_page = Request()->per_page;
     if ($per_page == '-1' || !isset(Request()->per_page)) return $this->model->paginate($this->model->count());
     // $this->model->where('isadmin', false);
@@ -32,6 +34,13 @@ class OrderFilter
           $this->model->orWhere($column, 'like', "%" . $keyword . "%");
         }
       }
+    }
+  }
+
+  public function byCustomer()
+  {
+    if(Request()->customer){
+      $this->model->where('customer_id', Auth::guard('web')->user()->id);
     }
   }
 

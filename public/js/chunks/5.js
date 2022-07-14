@@ -9,8 +9,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_customer_checkout_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/customer/checkout.vue */ "./resources/js/components/customer/checkout.vue");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -66,13 +65,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    CheckOut: _components_customer_checkout_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
-  },
   data: function data() {
     return {
       products: [],
@@ -124,7 +118,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   mounted: function mounted() {
     this.getAllPropducts();
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])(["CART_COUNT"]))
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(["CART_COUNT"]))
 });
 
 /***/ }),
@@ -254,11 +248,11 @@ var render = function () {
       !_vm.isloading
         ? _c(
             "v-row",
-            { staticClass: "product-list" },
+            { staticClass: "product-list", attrs: { wrap: "" } },
             _vm._l(_vm.products, function (product) {
               return _c(
                 "v-col",
-                { key: product.id, attrs: { cols: "2" } },
+                { key: product.id, attrs: { cols: "12", sm: "2" } },
                 [
                   _c(
                     "v-card",
@@ -336,15 +330,6 @@ var render = function () {
             1
           )
         : _vm._e(),
-      _vm._v(" "),
-      _c("check-out", {
-        attrs: { show: _vm.ischeckout },
-        on: {
-          close: function ($event) {
-            _vm.ischeckout = false
-          },
-        },
-      }),
     ],
     1
   )

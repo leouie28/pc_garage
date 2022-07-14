@@ -85,7 +85,7 @@ export default {
             {
                 name: 'My Orders',
                 icon: 'mdi-format-list-checks',
-                path: 'order'
+                path: 'orders'
             },
             // {
             //   name: 'My Cart',
