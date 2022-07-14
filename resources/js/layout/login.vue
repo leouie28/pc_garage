@@ -77,7 +77,7 @@ export default {
         let payload = this.credential
             axios.post(`/admin-api/login`,{...payload}).then(({data})=>{
                 if(!data.error_message){
-                    console.log(data.role,"sdlksldksdllllsssssss")
+                    // console.log(data.role,"sdlksldksdllllsssssss")
                     localStorage.setItem('role', data.role)
                     if(data.role=="admin"){
                         console.log(data.role,"sdlksldksdllll")

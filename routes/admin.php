@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -19,4 +20,9 @@ Route::group(['middleware'=>['auth:admin']],function(){
     Route::resource('product', ProductController::class);
     Route::resource('customer', CustomerController::class);
     Route::resource('order', OrderController::class);
+
+    //dashboard
+    Route::get('dashboard/month-orders', [DashboardController::class, 'monthOrders']);
+    Route::get('dashboard/orders', [DashboardController::class, 'orders']);
+    Route::get('dashboard/statistic', [DashboardController::class, 'statistic']);
 });

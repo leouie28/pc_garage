@@ -28,11 +28,12 @@
         "vuex": "^3.5.1"
     },
     "dependencies": {
-        "apexcharts": "^3.33.2",
+        "apexcharts": "^3.35.3",
         "moment": "^2.29.4",
         "noty": "^3.2.0-beta-deprecated",
         "sweetalert2": "^11.4.8",
         "toastr": "^2.1.4",
+        "vue-apexcharts": "^1.6.2",
         "vue-toast-notification": "^3.0.0",
         "vuetify": "^2.6.3"
     }

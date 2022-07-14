@@ -54,7 +54,7 @@ class OrderController extends Controller
 
         $new = $old - $request->quantity;
 
-        $stocks->update(['quantity' => $new]);
+        $stocks->update(['stocks' => $new]);
  
         return $order;
     }
@@ -90,7 +90,11 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $stat = Order::find($id);
+        $stat->status = $request->status;
+        $stat->save();
+
+        return $stat;
     }
 
     /**

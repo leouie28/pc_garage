@@ -7,6 +7,7 @@ import Vue from 'vue';
 import vuetify from './plugins/vuetify';
 import "./mixins/index";
 import moment from 'moment';
+import './plugins/apexcharts'
 import { store } from './store/store'
 
 // import VueToast from 'vue-toast-notification';

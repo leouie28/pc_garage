@@ -14,11 +14,12 @@
             </div>
             <Loading v-else></Loading>
         </div>
-        <div  v-if="!isAuth && !loading">
-            <!-- <Register></Register>
-            <Login ></Login> -->
+        <Login v-else></Login>
+        <!-- <div  v-if="!isAuth && !loading">
+            <Register></Register>
+            <Login ></Login>
             <router-view></router-view>
-        </div>
+        </div> -->
     </v-app>
 </template>
 
@@ -46,48 +47,48 @@ data() {
     };
 },
 mounted(){
-    console.log(this.to)
-    // this.checkAuth()
+    // console.log(this.to)
+    // // this.checkAuth()
+    // console.log(this.fetching)
   },
   methods:{
     checkAuth(){
-        this.loading = true
+        // this.loading = true
         axios.get(`/admin-api/check-auth`).then(({data})=>{
             this.isAuth = data
+            console.log(data,'asfskjfklsjf')
             this.fetching = false
         }).finally(()=>{
-            this.loading = false
+            // this.loading = false
         })
     },
     logout(){
-        this.loading = true
+        // this.loading = true
         axios.get(`/admin-api/logout`).then(({data})=>{
             this.isAuth = false
+            localStorage.role = 0
             this.$router.push({name:'login'})
-            localStorage.role = '0'
         }).finally(()=>{
-            this.loading = false
+            // this.loading = false
         })
-
+        localStorage.role = '0'
     },
-    // load(){
-    //   this.loading = true
-    //   console.log(this.loading, 'loading')
-    //   setTimeout(() => {
-    //       this.loading = false
-    //   }, 2500);
-    //   setTimeout(() => {
-    //       location.reload()
-    //   }, 2000);
-    // },
+    load(){
+      this.loading = true
+      console.log(this.loading, 'loading')
+      setTimeout(() => {
+          this.loading = false
+      }, 2500);
+      setTimeout(() => {
+          location.reload()
+      }, 2000);
+    },
   },
   watch:{
-    // isAuth(val) {
-    //   if(val){
-    //     localStorage.role = val
-    //     console.log(val)
-    //   }
-    // },
+    isAuth(val) {
+      localStorage.rol = val
+      console.log(localStorage.role, 'user role')
+    },
     $route (to, from){
         this.checkAuth()
     },

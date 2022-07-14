@@ -55,7 +55,7 @@
         <template v-slot:[`item.created_at`]="{ item }">
           {{ moment(item.created_at).format('MMMM DD YYYY') }}
         </template>
-        <template v-slot:[`item.action`]="{ item }">
+        <!-- <template v-slot:[`item.action`]="{ item }">
           <v-btn
             small
             elevation="0"
@@ -71,12 +71,7 @@
           >
             Delete
           </v-btn>
-
-          <!-- <v-icon small class="mr-2" @click="editItem(item)">
-            mdi-pencil
-          </v-icon> -->
-          <!-- <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon> -->
-        </template>
+        </template> -->
         <template v-slot:no-data>
           <div>No Data</div>
         </template>
@@ -165,12 +160,6 @@ export default {
         align: "start",
         sortable: true,
         value: "created_at",
-      },
-      {
-        text: "Action",
-        align: "center",
-        sortable: false,
-        value: "action",
       },
     ],
   }),

@@ -24,6 +24,12 @@ export default [
         name: 'admin-customer'
     },
     {
+        path: '/admin/recommendation',
+        component: () => import('../pages/admin/recommendation.vue'),
+        meta: { requireAuth: true },
+        name: 'admin-recommendation'
+    },
+    {
         path: '/admin/inventory',
         component: () => import('../pages/admin/inventory.vue'),
         meta: { requireAuth: true },

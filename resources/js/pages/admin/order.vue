@@ -39,10 +39,7 @@
             v-for="product in item.products"
             :key="product.id"
             small
-            label
-            outlined
             color="primary"
-            class="px-1"
           >
            ({{ product.pivot.quantity }}) {{ product.name }}
           </v-chip>
@@ -57,16 +54,48 @@
           &#8369; {{ item.total }}
         </template>
         <template v-slot:[`item.status`]="{ item }">
-          <v-chip small :color="status(item.status).color">
+          <div class="text-center">
+            <v-menu offset-y>
+              <template v-slot:activator="{ on, attrs }">
+                <v-chip
+                  :color="status(item.status).color"
+                  class="pr-0"
+                  outlined
+                  label
+                  small
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  {{ status(item.status).text }} 
+                  <v-icon>
+                    mdi-menu-down
+                  </v-icon>
+                </v-chip>
+              </template>
+              <v-list dense>
+                <v-list-item-group
+                :v-model="statSelected=item.status">
+                  <v-list-item
+                    v-for="stat in statItem"
+                    :key="stat.id"
+                    @click="updateStatus(item.id, stat.id)"
+                  >
+                    <v-list-item-title>{{ stat.text }}</v-list-item-title>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+            </v-menu>
+          </div>
+          <!-- <v-chip small :color="status(item.status).color">
             {{ status(item.status).text }}
-          </v-chip>
+          </v-chip> -->
         </template>
-        <template v-slot:[`item.action`]="{ item }">
+        <!-- <template v-slot:[`item.action`]="{ item }">
           <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
           <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-        </template>
+        </template> -->
         <template v-slot:no-data>
           <div>No Data</div>
         </template>
@@ -104,6 +133,14 @@ import OrderForm from '../../components/admin/order/form.vue'
       showForm: false,
       dialogDelete: false,
       orders: [],
+      statSelected: '',
+      statItem: [
+          {id: 0, text: 'Cancel' },
+          {id: 1, text: 'Pending' },
+          {id: 2, text: 'Confirm' },
+          {id: 3, text: 'On Delivery' },
+          {id: 4, text: 'Delivered' },
+      ],
       selected: [],
       title: 'Orders',
       headers: [
@@ -151,15 +188,9 @@ import OrderForm from '../../components/admin/order/form.vue'
         },
         {
           text: 'Status',
-          align: 'start',
+          align: 'center',
           sortable: true,
           value: 'status',
-        },
-        {
-          text: 'Action',
-          align: 'start',
-          sortable: true,
-          value: 'action',
         },
       ],
     }),
@@ -176,6 +207,15 @@ import OrderForm from '../../components/admin/order/form.vue'
           this.total = data.total;
           this.data.isFetching = false;
         });
+      },
+      updateStatus(ord, stat){
+        let order = { order: ord, status: stat}
+        axios.put(`/admin-api/order/${ord}`, order).then(({ data }) => {
+          this.fetchPage()
+        }).finally(()=>{
+          this.showForm = false;
+          this.payload = null;
+        })
       },
       // initialize () {
       //   this.getOrder()
@@ -207,7 +247,7 @@ import OrderForm from '../../components/admin/order/form.vue'
           return {text: 'Canceled', color: 'error'}
         }
         else if(val==1){
-          return {text: 'Pending', color: 'blue-grey lighten-3'}
+          return {text: 'Pending', color: 'secondary'}
         }
         else if(val==2){
           return {text: 'Confirmed', color: 'primary'}

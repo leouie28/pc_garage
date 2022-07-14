@@ -7,12 +7,14 @@
       dark
       app
     >
-      <img src="https://picsum.photos/500/300?image=40" alt="ubi logo" style="margin-top: 10%; margin-left: 25%; margin-bottom:10%;" height="100" width="100" />
+      <div class="mx-auto">
+        <img src="/images/system/logo.png" alt="ubi logo" height="150" width="150" style="margin: 10px 18%;" />
+      </div>
       <v-list>
         <v-list-item
           v-for="item in navs"
           :key="item.icon"
-          @click="$router.push({name: item.path})"
+          @click="$router.push({name: item.path}).catch(() => {})"
           :class="getUrl == item.path ? 'active' : '' "
         >
           <v-list-item-icon class="pl-3">
@@ -71,6 +73,11 @@ export default {
               path: 'admin-customer'
             },
             {
+              name: 'Recommendation',
+              icon: 'mdi-message-bulleted',
+              path: 'admin-recommendation'
+            },
+            {
               name: 'Inventory',
               icon: 'mdi-nas',
               path: 'admin-inventory'
@@ -86,6 +93,11 @@ export default {
                 name: 'My Orders',
                 icon: 'mdi-format-list-checks',
                 path: 'orders'
+            },
+            {
+                name: 'My Recommendation',
+                icon: 'mdi-message-bulleted',
+                path: 'recommendations'
             },
             // {
             //   name: 'My Cart',
@@ -120,7 +132,12 @@ export default {
       getUrl(){
         let url = this.$route.fullPath
         let path = url.split('/')
-        return path[1]
+        if(localStorage.role=='admin'){
+          let name = path[1]+'-'+path[2]
+          return name
+        }else{
+          return path[1]
+        }
       },
     },
     watch: {

@@ -4,6 +4,7 @@
     <v-toolbar-title>PCGarage</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-badge
+      v-if="isCustomer"
       :content="CART_COUNT"
       :value="CART_COUNT"
       color="primary"
@@ -70,6 +71,7 @@ export default {
   data: () => ({
     dialog: false,
     user: {},
+    isCustomer: false,
     route: "",
   }),
   methods: {
@@ -95,6 +97,7 @@ export default {
   created(){
     if(localStorage.role=='customer'){
       this.getCartCount()
+      this.isCustomer = true
     }
   },
   computed: {

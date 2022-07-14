@@ -23,4 +23,10 @@ export default [
         meta: { requireAuth: true },
         name: 'cart'
     },
+    {
+        path: '/recommendations',
+        component: () => import('../pages/customer/recommendation.vue'),
+        meta: { requireAuth: true },
+        name: 'recommendations'
+    },
 ]
