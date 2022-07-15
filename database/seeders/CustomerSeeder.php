@@ -25,5 +25,16 @@ class CustomerSeeder extends Seeder
             'password' => bcrypt('123'),
             'status' => true,
         ]);
+        Customer::create([
+            'first_name' => 'New',
+            'last_name' => 'Customer',
+            'Gender' => 'Male',
+            'birthday' => '2022-02-10',
+            'address' => 'Calbayog City',
+            'phone' => '0983743746',
+            'email' => 'newcustomer@gmail.com',
+            'password' => bcrypt('123'),
+            'status' => true,
+        ]);
     }
 }

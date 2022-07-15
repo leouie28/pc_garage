@@ -16,12 +16,15 @@ class CategorySeeder extends Seeder
     {
         Category::create([
             'name' => 'Case',
+            'color' => 'primary',
         ]);
         Category::create([
             'name' => 'Processor',
+            'color' => 'success',
         ]);
         Category::create([
             'name' => 'Storage',
+            'color' => 'error',
         ]);
     }
 }

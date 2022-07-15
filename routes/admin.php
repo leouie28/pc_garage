@@ -16,13 +16,23 @@ Route::post('register', [CustomerController::class, 'register']);
 
 Route::group(['middleware'=>['auth:admin']],function(){
 
-    Route::resource('category', CategoryController::class);
-    Route::resource('product', ProductController::class);
-    Route::resource('customer', CustomerController::class);
-    Route::resource('order', OrderController::class);
-
     //dashboard
-    Route::get('dashboard/month-orders', [DashboardController::class, 'monthOrders']);
-    Route::get('dashboard/orders', [DashboardController::class, 'orders']);
-    Route::get('dashboard/statistic', [DashboardController::class, 'statistic']);
+    Route::controller(DashboardController::class)->group(function () {
+        Route::get('dashboard/month-orders', 'monthOrders');
+        Route::get('dashboard/orders', 'orders');
+        Route::get('dashboard/statistic', 'statistic');
+    });
+
+    //order
+    Route::controller(OrderController::class)->group(function () {
+        Route::put('order/update-status/{id}', 'updateStatus');
+        Route::put('order/update-arrival/{id}', 'updateArrival');
+    });
+
+    Route::resources([
+        'category' => CategoryController::class,
+        'product' => ProductController::class,
+        'customer' => CustomerController::class,
+        'order' => OrderController::class,
+    ]);
 });

@@ -40,6 +40,7 @@
             :key="product.id"
             small
             color="primary"
+            class="mr-1"
           >
            ({{ product.pivot.quantity }}) {{ product.name }}
           </v-chip>
@@ -48,7 +49,21 @@
           {{ moment(item.created_at).format('MMMM DD YYYY') }}
         </template>
         <template v-slot:[`item.arrival`]="{ item }">
-          {{ moment(item.arrival).format('MMMM DD YYYY') }}
+          <v-chip
+          :color="arrivalStat(item.arrival)"
+          @click="arrivalPicker(item.id), arriveSelected = item.arrival"
+          label>
+            <v-icon left small>
+              mdi-calendar
+            </v-icon>
+            <span v-if="item.arrival">
+              {{ moment(item.arrival).format('MMMM DD YYYY') }}
+            </span>
+            <span v-else style="width:80px;">
+              Set Arrival
+            </span>
+          </v-chip>
+          <!-- {{ moment(item.arrival).format('MMMM DD YYYY') }} -->
         </template>
         <template v-slot:[`item.total`]="{ item }">
           &#8369; {{ item.total }}
@@ -58,18 +73,18 @@
             <v-menu offset-y>
               <template v-slot:activator="{ on, attrs }">
                 <v-chip
+                  style="width:120px;"
                   :color="status(item.status).color"
-                  class="pr-0"
-                  outlined
+                  class="mx-auto d-flex justify-end"
                   label
-                  small
                   v-bind="attrs"
                   v-on="on"
                 >
-                  {{ status(item.status).text }} 
+                {{ status(item.status).text }} 
                   <v-icon>
                     mdi-menu-down
                   </v-icon>
+                  
                 </v-chip>
               </template>
               <v-list dense>
@@ -101,6 +116,35 @@
         </template>
       </v-data-table>
     </v-card>
+    <v-dialog
+    v-model="arrivalDatePicker"
+    persistent
+    max-width="300"
+    >
+        <v-date-picker
+        full-width
+        width="340"
+        show-adjacent-months
+        scrollable
+        v-model="arriveSelected"
+        >
+        <v-spacer></v-spacer>
+        <v-btn
+            text
+            color="primary"
+            @click="arrivalDatePicker = false"
+        >
+            Cancel
+        </v-btn>
+        <v-btn
+            text
+            color="primary"
+            @click="updateArrival(arrivalId, arriveSelected)"
+        >
+            OK
+        </v-btn>
+        </v-date-picker>
+    </v-dialog>
     <v-dialog v-model="showForm" persistent max-width="600">
       <order-form @cancel="close" @save="save"></order-form>
     </v-dialog>
@@ -117,6 +161,7 @@ import OrderForm from '../../components/admin/order/form.vue'
       TableHeader
     },
     data: () => ({
+      date: moment().format('MMMM DD YYYY'),
       data: {
         title: "Orders",
         isFetching: false,
@@ -133,6 +178,9 @@ import OrderForm from '../../components/admin/order/form.vue'
       showForm: false,
       dialogDelete: false,
       orders: [],
+      arriveSelected: new Date().toISOString().slice(0, 10),
+      arrivalId: '',
+      arrivalDatePicker: false,
       statSelected: '',
       statItem: [
           {id: 0, text: 'Cancel' },
@@ -176,7 +224,7 @@ import OrderForm from '../../components/admin/order/form.vue'
         },
         {
           text: 'Arrival',
-          align: 'start',
+          align: 'center',
           sortable: true,
           value: 'arrival',
         },
@@ -208,13 +256,26 @@ import OrderForm from '../../components/admin/order/form.vue'
           this.data.isFetching = false;
         });
       },
+      arrivalPicker(val) {
+        this.arrivalDatePicker = true
+        this.arrivalId = val
+        console.log(val)
+      },
       updateStatus(ord, stat){
         let order = { order: ord, status: stat}
-        axios.put(`/admin-api/order/${ord}`, order).then(({ data }) => {
+        axios.put(`/admin-api/order/update-status/${ord}`, order).then(({ data }) => {
           this.fetchPage()
         }).finally(()=>{
           this.showForm = false;
           this.payload = null;
+        })
+      },
+      updateArrival(ord, arv){
+        // let arrival = { order: ord, arrive: arv}
+        axios.put(`/admin-api/order/update-arrival/${ord}?arrive=${arv}`).then(({ data }) => {
+          this.fetchPage()
+        }).finally(()=>{
+          this.arrivalDatePicker = false;
         })
       },
       // initialize () {
@@ -242,6 +303,18 @@ import OrderForm from '../../components/admin/order/form.vue'
       //   this.initialize()
       //   this.showForm = false
       // },
+      arrivalStat(val){
+        let now = moment()
+        if(val!=null){
+          if(moment(val)>=now){
+            return 'primary'
+          }else{
+            return 'secondary'
+          }
+        }else{
+          return 'success'
+        }
+      },
       status(val){
         if(val==0){
           return {text: 'Canceled', color: 'error'}

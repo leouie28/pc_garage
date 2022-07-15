@@ -1,5 +1,7 @@
 <?php
 
+use Laravel\Passport\PassportServiceProvider;
+
 return [
 
     /*
@@ -169,6 +171,7 @@ return [
         /*
          * Application Service Providers...
          */
+        PassportServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,

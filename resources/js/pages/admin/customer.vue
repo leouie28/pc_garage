@@ -55,7 +55,7 @@
         <template v-slot:[`item.created_at`]="{ item }">
           {{ moment(item.created_at).format('MMMM DD YYYY') }}
         </template>
-        <!-- <template v-slot:[`item.action`]="{ item }">
+        <template v-slot:[`item.action`]="{ item }">
           <v-btn
             small
             elevation="0"
@@ -68,10 +68,11 @@
             small
             elevation="0"
             color="error"
+            @click="warning(item)"
           >
             Delete
           </v-btn>
-        </template> -->
+        </template>
         <template v-slot:no-data>
           <div>No Data</div>
         </template>
@@ -80,15 +81,20 @@
     <v-dialog v-model="showForm" persistent max-width="600">
       <customer-form :selectedItem="selectedItem" @cancel="close" @save="save"> </customer-form>
     </v-dialog>
+    <v-dialog v-model="deleteForm" persistent width="500">
+      <delete-dialog :data="user" @close="close" @confirm="confirm"></delete-dialog>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import moment from "moment";
+import DeleteDialog from "../../components/deleteDialog.vue";
 import CustomerForm from "../../components/admin/customer/form.vue";
 import TableHeader from "../../components/table-header.vue";
 export default {
   components: {
+    DeleteDialog,
     CustomerForm,
     TableHeader,
   },
@@ -106,8 +112,10 @@ export default {
       itemsPerPage: 15,
     },
     total: 0,
+    deleteForm: false,
     showForm: false,
     dialogDelete: false,
+    user: {},
     customers: [],
     selectedItem: {},
     selected: [],
@@ -161,6 +169,12 @@ export default {
         sortable: false,
         value: "created_at",
       },
+      {
+        text: "Actions",
+        align: "center",
+        sortable: false,
+        value: "action",
+      },
     ],
   }),
   methods: {
@@ -195,7 +209,20 @@ export default {
     close() {
       this.selectedItem = {}
       this.showForm = false;
+      this.deleteForm = false
     },
+    warning(val){
+      this.user = {
+        id: val.id,
+        text: val.first_name+' '+val.last_name,
+        model: 'customer'
+      }
+      this.deleteForm = true
+    },
+    confirm() {
+      this.deleteForm = false
+      this.fetchPage()
+    }
   },
 };
 </script>

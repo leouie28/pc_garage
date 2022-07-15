@@ -85,7 +85,10 @@ class CustomerController extends Controller
    */
   public function destroy($id)
   {
-    //
+    $customer = Customer::where('id', $id)->first();
+    $customer->delete();
+
+    return $customer->with('response', 'success', 'Successfully deleted!');
   }
 
   public function checkEmail()

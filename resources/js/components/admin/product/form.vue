@@ -28,7 +28,6 @@
                         :items="category"
                         item-text="name"
                         item-value="id"
-                        prepend-inner-icon="mdi-plus"
                         multiple
                         ></v-autocomplete>
                     </v-col>
@@ -66,7 +65,8 @@
                     </v-col>
                     <v-col cols="12">
                         <v-file-input
-                            chips
+                            show-size
+                            truncate-length="20"
                             v-model="img"
                             counter
                             prepend-icon=""

@@ -15,7 +15,7 @@
           v-for="item in navs"
           :key="item.icon"
           @click="$router.push({name: item.path}).catch(() => {})"
-          :class="getUrl == item.path ? 'active' : '' "
+          :class="getUrl == item.path ? 'active-nav' : '' "
         >
           <v-list-item-icon class="pl-3">
             <v-icon dense color="#cccccc">{{ item.icon }}</v-icon>
@@ -149,10 +149,10 @@ export default {
 }
 </script>
 <style scope> 
-.active .v-icon, .active .v-list-item__title{
+.active-nav .v-icon, .active .v-list-item__title{
   color: #fff !important;
 }
-.active{
+.active-nav{
   background: #263238 !important;
 }
 .footer{

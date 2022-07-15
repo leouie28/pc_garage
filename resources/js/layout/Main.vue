@@ -39,7 +39,7 @@ export default {
 },
 data() {
     return {
-        drawer: true,
+        drawer: false,
         login: false,
         isAuth: false,
         fetching: true,

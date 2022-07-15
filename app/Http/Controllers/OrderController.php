@@ -90,11 +90,25 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
+        return $request;
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
         $stat = Order::find($id);
         $stat->status = $request->status;
         $stat->save();
 
         return $stat;
+    }
+
+    public function updateArrival(Request $request, $id)
+    {
+        $arrival = Order::find($id);
+        $arrival->arrival = $request->arrive;
+        $arrival->save();
+
+        return $arrival;
     }
 
     /**
