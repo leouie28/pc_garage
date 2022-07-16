@@ -16,10 +16,11 @@ class CustomerFilter
   {
     $this->searchColumns();
     $this->sortBy();
+    $this->orderCount();
     $per_page = Request()->per_page;
     if ($per_page == '-1' || !isset(Request()->per_page)) return $this->model->paginate($this->model->count());
     // $this->model->where('isadmin', false);
-    return $this->model->paginate($per_page);
+    return $this->model->withCount('orders')->paginate($per_page);
   }
 
   public function searchColumns()
@@ -59,5 +60,10 @@ class CustomerFilter
     } else {
       $this->model->orderBy('id', 'desc');
     }
+  }
+
+  public function orderCount()
+  {
+    
   }
 }

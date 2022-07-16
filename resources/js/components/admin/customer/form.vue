@@ -133,7 +133,7 @@
                 <v-row justify="end">
                     <v-btn
                         color="secondary"
-                        @click="$emit('cancel')"
+                        @click="close"
                     >
                         Cancel
                     </v-btn>
@@ -142,7 +142,7 @@
                         color="success"
                         @click="save"
                     >
-                        Save
+                        {{ isEdit ? 'Update' : 'Create' }}
                     </v-btn>
                 </v-row>
             </v-container>
@@ -159,7 +159,7 @@
 export default {
     data: () => ({
         // dialog: false
-        raw: '',
+        isEdit: false,
         qty: 1,
         itemPrice: '',
         img: null,
@@ -175,6 +175,7 @@ export default {
             'Female',
             'Hidden',
         ],
+        newPayload: {},
         payload: {
             first_name: '',
             last_name: '',
@@ -188,16 +189,47 @@ export default {
         }
     }),
     props: {
+        selectedItem: {
+            type: Object,
+            default: () => {},
+        }
         // formDialog: {}
     },
     created() {
 
     },
     methods: {
+        close() {
+            this.isEdit = false
+            this.payload = JSON.parse(JSON.stringify(this.newPayload))
+            this.$emit('cancel')
+        },
         save() {
-            this.$emit('save', this.payload)
+            if(this.isEdit){
+                this.$emit('update', this.payload)
+            }else{
+                this.$emit('save', this.payload)
+            }
+            this.isEdit = false
+            this.payload = JSON.parse(JSON.stringify(this.newPayload))
             // console.log(this.payload)
         },
     },
+    watch: {
+        selectedItem: {
+            handler(val) {
+                if(Object.keys(val).length===0){
+                    this.isEdit = false
+                    return
+                }
+                this.payload = JSON.parse(JSON.stringify(val))
+                this.isEdit = true
+                console.log(this.isEdit)
+                // console.log(val)
+            },
+            deep: true,
+            immediate: true,
+        },
+    }
 }
 </script>

@@ -52,7 +52,7 @@ export default {
                 product: {
                     item: '',
                     color: 'orange',
-                    icon: 'mdi-food',
+                    icon: 'mdi-desktop-classic',
                     link: ''
                 },
                 order: {
@@ -166,6 +166,9 @@ export default {
         this.initialize()
     },
     mounted(){
+        this.$nextTick(() => {
+            window.dispatchEvent(new Event('resize'));
+        });
         // console.log(this.$route)
         // this.initialize()
     },
@@ -206,17 +209,16 @@ export default {
             var orders = []
             axios.get(`/admin-api/dashboard/orders`).then(({data})=>{
                 data.forEach(prod => {
-                    this.donutSeries.push(parseInt(prod.order_sum_order_productquantity))
+                    console.log(prod.order_count, 'item')
+                    if(prod.order_count==null){
+                        prod.order_count = '0'
+                    }
+                    this.donutSeries.push(parseInt(prod.order_count))
                     this.donutOptions.labels.push(prod.name)
                 });
-                console.log(this.donutOptions.labels)
+                console.log(this.donutSeries)
             })
         }
     },
-    mounted() {
-    this.$nextTick(() => {
-        window.dispatchEvent(new Event('resize'));
-    });
-}
 }
 </script>

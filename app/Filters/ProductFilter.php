@@ -19,7 +19,10 @@ class ProductFilter
     $per_page = Request()->per_page;
     if ($per_page == '-1' || !isset(Request()->per_page)) return $this->model->paginate($this->model->count());
     // $this->model->where('isadmin', false);
-    return $this->model->paginate($per_page);
+    return $this->model->with('categories')->withSum('sold', 'order_product.quantity')
+                                          ->withSum('toDeliver', 'order_product.quantity')
+                                          ->withSum('pending', 'order_product.quantity')
+                                          ->withSum('canceled', 'order_product.quantity')->paginate($per_page);
   }
 
   public function searchColumns()

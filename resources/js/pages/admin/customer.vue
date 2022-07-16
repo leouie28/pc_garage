@@ -29,26 +29,6 @@
         class="cursor-pointer table-fix-height"
         fixed-header
       >
-        <!-- <template v-slot:[`item.name`]="{ item }">
-          <v-avatar size="35" tile style="border: 1px solid #ccc">
-            <img
-              alt="image"
-              :src="item.images.length?'/images/products/' + item.id + '/' + item.images[0].file_name:'/images/default/noimage.png'"
-            />
-          </v-avatar>
-          <span class="pa-2 font-weight-bold"> {{ item.name }} </span>
-        </template>
-        <template v-slot:[`item.category`]="{ item }">
-          <v-chip
-            v-for="category in item.categories"
-            :key="category.id"
-            small
-            :color="category.color"
-            class="mr-1"
-          >
-            {{ category.name }}
-          </v-chip>
-        </template> -->
         <template v-slot:[`item.name`]="{ item }">
           {{ item.first_name+ ' '+item.last_name }}
         </template>
@@ -79,11 +59,29 @@
       </v-data-table>
     </v-card>
     <v-dialog v-model="showForm" persistent max-width="600">
-      <customer-form :selectedItem="selectedItem" @cancel="close" @save="save"> </customer-form>
+      <customer-form :selectedItem="selectedItem" @cancel="close" @save="save" @update="update"> </customer-form>
     </v-dialog>
     <v-dialog v-model="deleteForm" persistent width="500">
       <delete-dialog :data="user" @close="close" @confirm="confirm"></delete-dialog>
     </v-dialog>
+    <v-snackbar
+    v-model="alert.trigger"
+    multi-line
+    elevation="12"
+    :color="alert.color"
+    transition="scroll-x-reverse-transition"
+    top
+    right>
+      <div class="d-flex justify-space-between">
+        <div>
+          <v-icon large>info</v-icon>
+          {{ alert.text }}
+        </div>
+        <v-btn @click="alert.trigger = false">
+          Close
+        </v-btn>
+      </div>
+    </v-snackbar>
   </div>
 </template>
 
@@ -99,6 +97,11 @@ export default {
     TableHeader,
   },
   data: () => ({
+    alert: {
+      trigger: false,
+      color: '',
+      text: ''
+    },
     data: {
       title: "Customers",
       isFetching: false,
@@ -134,6 +137,12 @@ export default {
         value: "name",
       },
       {
+        text: "Gender",
+        align: "start",
+        sortable: false,
+        value: "gender",
+      },
+      {
         text: "Birthday",
         align: "start",
         sortable: false,
@@ -159,9 +168,9 @@ export default {
       },
       {
         text: "Orders",
-        align: "start",
+        align: "center",
         sortable: false,
-        value: "orders",
+        value: "orders_count",
       },
       {
         text: "Date Joined",
@@ -203,6 +212,14 @@ export default {
         this.payload = null;
       })
     },
+    update(payload) {
+      axios.put(`/admin-api/customer/${this.selectedItem.id}`, payload).then(({ data }) => {
+        this.fetchPage()
+      }).finally(()=>{
+        this.showForm = false;
+        this.payload = null;
+      })
+    },
     addNew() {
       this.showForm = true;
     },
@@ -220,8 +237,15 @@ export default {
       this.deleteForm = true
     },
     confirm() {
+      axios.delete(`/admin-api/${this.user.model}/${this.user.id}`).then(({data})=>{
+          this.alert.color = data.type
+          this.alert.text = data.message
+      });
       this.deleteForm = false
       this.fetchPage()
+      setTimeout(() => {
+        this.alert.trigger = true
+      }, 1000)
     }
   },
 };

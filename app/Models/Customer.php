@@ -26,10 +26,10 @@ class Customer extends Authenticatable
         'password'
     ];
 
-    // protected $with = [
-    //     'orders',
-    // ];
-
+    protected $with = [
+        // 'orders',
+    ];
+    
     public function orders()
     {
         return $this->hasMany(Order::class);

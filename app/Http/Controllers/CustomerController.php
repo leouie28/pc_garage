@@ -7,6 +7,7 @@ use App\Models\Admin;
 use App\Models\Customer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class CustomerController extends Controller
 {
@@ -74,7 +75,20 @@ class CustomerController extends Controller
    */
   public function update(Request $request, $id)
   {
-    //
+    $customer = Customer::find($id);
+    $customer->first_name = $request->first_name;
+    $customer->last_name = $request->last_name;
+    $customer->gender = $request->gender;
+    $customer->birthday = $request->birthday;
+    $customer->address = $request->address;
+    $customer->phone = $request->phone;
+    $customer->email = $request->email;
+    if(isset($request->password)){
+      $customer->password = Hash::make($request->password);
+    }
+    $customer->save();
+
+    return $customer;
   }
 
   /**
@@ -85,10 +99,21 @@ class CustomerController extends Controller
    */
   public function destroy($id)
   {
-    $customer = Customer::where('id', $id)->first();
-    $customer->delete();
-
-    return $customer->with('response', 'success', 'Successfully deleted!');
+    $customer = Customer::withCount('orders')->where('id', $id)->first();
+    if($customer->orders_count>0){
+      return [
+        "data" => $customer,
+        "type" => "error",
+        "message" => "Failed to delete user! This user has order record.",
+      ];
+    }else{
+      $customer->delete();
+      return [
+        "data" => $customer,
+        "type" => "success",
+        "message" => "Delete successfully",
+      ];
+    }
   }
 
   public function checkEmail()

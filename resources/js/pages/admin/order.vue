@@ -21,6 +21,9 @@
         :search="data.keyword"
         :loading="data.isFetching"
         :server-items-length="total"
+        v-model="itemsSelected"
+        item-key="id"
+        @input="selectOption()"
         :single-select="false"
         show-select
         :footer-props="footerPages"
@@ -50,6 +53,7 @@
         </template>
         <template v-slot:[`item.arrival`]="{ item }">
           <v-chip
+          outlined
           :color="arrivalStat(item.arrival)"
           @click="arrivalPicker(item.id), arriveSelected = item.arrival"
           label>
@@ -116,6 +120,19 @@
         </template>
       </v-data-table>
     </v-card>
+    <v-fab-transition>
+      <v-btn
+        v-model="changeBtn"
+        elevation="12"
+        large
+        color="secondary"
+        bottom
+        class="v-btn--example"
+      >
+        <v-icon>mdi-pencil</v-icon>
+        Change
+      </v-btn>
+    </v-fab-transition>
     <v-dialog
     v-model="arrivalDatePicker"
     persistent
@@ -175,12 +192,14 @@ import OrderForm from '../../components/admin/order/form.vue'
         itemsPerPage: 15,
       },
       total: 0,
+      changeBtn: false,
       showForm: false,
       dialogDelete: false,
       orders: [],
       arriveSelected: new Date().toISOString().slice(0, 10),
       arrivalId: '',
       arrivalDatePicker: false,
+      itemsSelected: [],
       statSelected: '',
       statItem: [
           {id: 0, text: 'Cancel' },
@@ -278,15 +297,6 @@ import OrderForm from '../../components/admin/order/form.vue'
           this.arrivalDatePicker = false;
         })
       },
-      // initialize () {
-      //   this.getOrder()
-      // },
-      // getOrder() {
-      //   axios.get(`/admin-api/order`).then(({data})=>{
-      //     this.orders = data
-      //     console.log(data)
-      //   })
-      // },
       save(payload) {
         axios.post(`/admin-api/order`, payload).then(({ data }) => {
           this.fetchPage()
@@ -295,14 +305,14 @@ import OrderForm from '../../components/admin/order/form.vue'
           this.payload = null;
         })
       },
-      // save(payload) {
-      //   console.log(payload)
-      //   axios.post(`/admin-api/order`, payload).then(({data})=>{
-      //     console.log(data)
-      //   })
-      //   this.initialize()
-      //   this.showForm = false
-      // },
+
+      selectOption() {
+        if(this.itemsSelected.length>0){
+          this.changeBtn = true
+        }else{
+          this.changeBtn = false
+        }
+      },
       arrivalStat(val){
         let now = moment()
         if(val!=null){
@@ -339,5 +349,17 @@ import OrderForm from '../../components/admin/order/form.vue'
         this.showForm = false
       }
     },
+    watch: {
+
+    }
   }
 </script>
+
+<style scoped>
+.v-btn--example {
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    margin: 0 32px 32px 0;
+  }
+</style>

@@ -36,7 +36,7 @@ class DashboardController extends Controller
 
     public function orders()
     {
-        $orders = Product::withSum('order', 'order_product.quantity')->get();
+        $orders = Product::withCount('order')->get();
         return $orders;
     }
 }

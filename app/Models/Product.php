@@ -17,8 +17,9 @@ class Product extends Model
     ];
 
     protected $with = [
-        'categories',
+        // 'categories',
         'images',
+        // 'order',
     ];
 
     public function categories()
@@ -34,6 +35,26 @@ class Product extends Model
     public function order()
     {
         return $this->belongsToMany(Order::class)->withPivot(['quantity']);
+    }
+
+    public function sold()
+    {
+        return $this->order()->where('status', '=', 4);
+    }
+
+    public function toDeliver()
+    {
+        return $this->order()->where('status', '=', 2)->orWhere('status', '=', 3);
+    }
+
+    public function pending()
+    {
+        return $this->order()->where('status', '=', 1);
+    }
+
+    public function canceled()
+    {
+        return $this->order()->where('status', '=', 0);
     }
 
     public function carts()

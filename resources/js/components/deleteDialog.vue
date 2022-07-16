@@ -24,7 +24,7 @@
                 <v-btn
                 color="error"
                 elevation="0"
-                @click="remove"
+                @click="confirm"
                 >
                 Delete
                 <v-icon>mdi-delete</v-icon>
@@ -48,11 +48,8 @@
         cancel(){
             this.$emit('close')
         },
-        remove() {
-            axios.delete(`/admin-api/${this.data.model}/${this.data.id}`).then(({data})=>{
-                console.log(data)
-                this.$emit('confirm')
-            })
+        confirm() {
+            this.$emit('confirm')
         }
     }
   }

@@ -52,6 +52,18 @@
         <template v-slot:[`item.price`]="{ item }">
           &#8369; {{ item.price }}
         </template>
+        <template v-slot:[`item.canceled`]="{ item }">
+          {{ item.canceled_sum_order_productquantity==null ? '0' : item.canceled_sum_order_productquantity }}
+        </template>
+        <template v-slot:[`item.pending`]="{ item }">
+          {{ item.pending_sum_order_productquantity==null ? '0' : item.pending_sum_order_productquantity }}
+        </template>
+        <template v-slot:[`item.todeliver`]="{ item }">
+          {{ item.to_deliver_sum_order_productquantity==null ? '0' : item.to_deliver_sum_order_productquantity }}
+        </template>
+        <template v-slot:[`item.sold`]="{ item }">
+          {{ item.sold_sum_order_productquantity==null ? '0' : item.sold_sum_order_productquantity }}
+        </template>
         <template v-slot:[`item.created_at`]="{ item }">
           {{ moment(item.created_at).format('MMMM DD YYYY') }}
         </template>
@@ -156,10 +168,28 @@ export default {
         value: "stocks",
       },
       {
-        text: "Orders",
-        align: "start",
+        text: "Canceled",
+        align: "center",
         sortable: false,
-        value: "orders_count",
+        value: "canceled",
+      },
+      {
+        text: "Pending",
+        align: "center",
+        sortable: false,
+        value: "pending",
+      },
+      {
+        text: "To Deliver",
+        align: "center",
+        sortable: false,
+        value: "todeliver",
+      },
+      {
+        text: "Sold",
+        align: "center",
+        sortable: false,
+        value: "sold",
       },
       {
         text: "Date Added",

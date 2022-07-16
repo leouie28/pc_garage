@@ -18,8 +18,8 @@ class Order extends Model
     ];
 
     protected $with = [
-        'customer',
-        'products',
+        // 'customer',
+        // 'products',
     ];
 
     public function customer()

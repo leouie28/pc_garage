@@ -1,6 +1,6 @@
 <template>
     <v-navigation-drawer
-      v-model="drawer"
+      v-model="drawer1"
       color="blue-grey darken-3"
       class=" accent-4"
       width="250"
@@ -47,10 +47,13 @@
 </template>
 
 <script>
+import EventHandler from '../../../vendor/twbs/bootstrap/js/src/dom/event-handler'
+
 export default {
     data: () => {
         return{
           navs: null,
+          drawer1: true,
           admin: [
             {
               name: 'Dashboard',
@@ -66,6 +69,11 @@ export default {
               name: 'Orders',
               icon: 'mdi-format-list-checks',
               path: 'admin-order'
+            },
+            {
+              name: 'Categories',
+              icon: 'mdi-format-list-text',
+              path: 'admin-category'
             },
             {
               name: 'Customers',
@@ -112,7 +120,10 @@ export default {
         }
     },
     props:{
-      drawer: {},
+      drawer: {
+        type: Boolean,
+        default: () => true
+      },
       role: {},
       inActive: {}
     },
@@ -141,9 +152,12 @@ export default {
       },
     },
     watch: {
-      drawer(val){
-        console.log(val)
-        return val
+      drawer: {
+        handler(val) {
+          this.drawer1 = val
+        },
+        deep: true,
+        immediate: true
       }
     }
 }
