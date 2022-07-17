@@ -46,7 +46,7 @@ class ProductController extends Controller
         ]);
         $product->save();
 
-        $product->categories()->attach($request->category);
+        $product->categories()->attach($request->categories);
         if($request->image){
             $file = uploadImage(
                 $request->image,
@@ -104,7 +104,23 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::where('id',$id)->first();
-        $product->delete();
+        // $product = Product::where('id',$id)->first();
+        // $product->delete();
+
+        $product = Product::withCount('order')->where('id', $id)->first();
+        if($product->order_count>0){
+            return [
+                "data" => $product,
+                "type" => "error",
+                "message" => "Failed to delete product! This product has order record.",
+            ];
+        }else{
+            $product->delete();
+            return [
+                "data" => $product,
+                "type" => "success",
+                "message" => "Delete successfully",
+            ];
+        }
     }
 }

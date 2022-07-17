@@ -20,7 +20,7 @@
                         <v-autocomplete
                         chips
                         deletable-chips
-                        v-model="payload.category"
+                        v-model="payload.categories"
                         filled
                         label="Category"
                         hide-details="auto"
@@ -65,10 +65,10 @@
                     </v-col>
                     <v-col cols="12">
                         <v-file-input
-                            show-size
+                            :show-size="isEdit ? false : true"
                             truncate-length="20"
                             v-model="img"
-                            counter
+                            :counter="isEdit ? false : true"
                             prepend-icon=""
                             accept="image/x-png,image/gif,image/jpeg"
                             label="Image"
@@ -90,7 +90,7 @@
                         color="success"
                         @click="save"
                     >
-                        Save
+                        {{ isEdit ? 'Update' : 'Create' }}
                     </v-btn>
                 </v-row>
             </v-container>
@@ -108,10 +108,12 @@ export default {
     data: () => ({
         // dialog: false
         img: null,
+        isEdit: false,
+        newPayload: {},
         category: [],
         payload: {
             name: '',
-            category: [],
+            categories: [],
             stocks: 1,
             price: '',
             description: '',
@@ -145,11 +147,10 @@ export default {
             })
         },
         close() {
-            for (var key in this.payload){
-                delete this.payload[key]
-            }
-            // this.img = {}
             this.$emit('cancel')
+            this.isEdit = false
+            this.img = null
+            this.payload = JSON.parse(JSON.stringify(this.newPayload))
         },
         save() {
             // if(!this.selectedItem){
@@ -164,26 +165,20 @@ export default {
     watch: {
         selectedItem:{
             handler(val){
-                for (var key in this.payload){
-                        delete this.payload[key]
-                    }
-                if(Object.keys(val).length!==0){
-                    this.img = {}
-                    console.log(val,'afsf')
-                    this.payload.name = val.name
-                    val.categories.forEach(elem => {
-                        this.payload.category.push(elem.id)
-                    });
-                    this.payload.price = val.price
-                    this.payload.stocks = val.stocks
-                    this.payload.description = val.description
-                    val.images.forEach(elem => {
-                        this.img.name = elem.file_name
-                    });
-                }else{
-                    // this.img = null
+                if(Object.keys(val).length===0){
+                    this.isEdit = false
+                    return
                 }
-            },immediate:true
+                this.payload = JSON.parse(JSON.stringify(val))
+                this.img = {}
+                val.images.forEach(elem => {
+                    this.img.name = elem.file_name
+                });
+                this.isEdit = true
+                console.log(val)
+            },
+            depp: true,
+            immediate:true
         }
     }
 }

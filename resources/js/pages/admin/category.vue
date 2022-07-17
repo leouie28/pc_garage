@@ -16,7 +16,7 @@
       </table-header>
       <v-data-table
         :headers="headers"
-        :items="products"
+        :items="categories"
         max-height="100%"
         :search="data.keyword"
         :loading="data.isFetching"
@@ -29,40 +29,13 @@
         class="cursor-pointer table-fix-height"
         fixed-header
       >
-        <template v-slot:[`item.name`]="{ item }">
-          <v-avatar size="35" tile style="border: 1px solid #ccc">
-            <img
-              alt="image"
-              :src="item.images.length?'/images/products/' + item.id + '/' + item.images[0].file_name:'/images/default/noimage.png'"
-            />
-          </v-avatar>
-          <span class="pa-2 font-weight-bold"> {{ item.name }} </span>
-        </template>
-        <template v-slot:[`item.category`]="{ item }">
-          <v-chip
-            v-for="category in item.categories"
-            :key="category.id"
-            small
-            :color="category.color"
-            class="mr-1 mb-1"
-          >
-            {{ category.name }}
+        <template v-slot:[`item.color`]="{ item }">
+          <v-chip :color="item.color" small>
+            <span class="text-capitalize">{{ item.color }}</span>
           </v-chip>
         </template>
-        <template v-slot:[`item.price`]="{ item }">
-          &#8369; {{ item.price }}
-        </template>
-        <template v-slot:[`item.canceled`]="{ item }">
-          {{ item.canceled_sum_order_productquantity==null ? '0' : item.canceled_sum_order_productquantity }}
-        </template>
-        <template v-slot:[`item.pending`]="{ item }">
-          {{ item.pending_sum_order_productquantity==null ? '0' : item.pending_sum_order_productquantity }}
-        </template>
-        <template v-slot:[`item.todeliver`]="{ item }">
-          {{ item.to_deliver_sum_order_productquantity==null ? '0' : item.to_deliver_sum_order_productquantity }}
-        </template>
-        <template v-slot:[`item.sold`]="{ item }">
-          {{ item.sold_sum_order_productquantity==null ? '0' : item.sold_sum_order_productquantity }}
+        <template v-slot:[`item.icon`]="{ item }">
+          {{ item.icon ? item.icon : 'no icon' }}
         </template>
         <template v-slot:[`item.created_at`]="{ item }">
           {{ moment(item.created_at).format('MMMM DD YYYY') }}
@@ -91,7 +64,7 @@
       </v-data-table>
     </v-card>
     <v-dialog v-model="showForm" persistent max-width="600">
-      <product-form :selectedItem="selectedItem" @cancel="close" @save="save"> </product-form>
+      <customer-form :selectedItem="selectedItem" @cancel="close" @save="save" @update="update"> </customer-form>
     </v-dialog>
     <v-dialog v-model="deleteForm" persistent width="500">
       <delete-dialog :data="item" @close="close" @confirm="confirm"></delete-dialog>
@@ -105,7 +78,7 @@
     top
     right>
       <div class="d-flex justify-space-between">
-        <div class="mr-2">
+        <div>
           <v-icon large>info</v-icon>
           {{ alert.text }}
         </div>
@@ -120,12 +93,12 @@
 <script>
 import moment from "moment";
 import DeleteDialog from "../../components/deleteDialog.vue";
-import ProductForm from "../../components/admin/product/form.vue";
+import CustomerForm from "../../components/admin/customer/form.vue";
 import TableHeader from "../../components/table-header.vue";
 export default {
   components: {
     DeleteDialog,
-    ProductForm,
+    CustomerForm,
     TableHeader,
   },
   data: () => ({
@@ -135,7 +108,7 @@ export default {
       text: ''
     },
     data: {
-      title: "Products",
+      title: "Customers",
       isFetching: false,
       keyword: "",
       filter: {},
@@ -147,13 +120,14 @@ export default {
       itemsPerPage: 15,
     },
     total: 0,
-    showForm: false,
     deleteForm: false,
+    showForm: false,
+    dialogDelete: false,
     item: {},
-    products: [],
+    categories: [],
     selectedItem: {},
     selected: [],
-    title: "Products",
+    title: "Customers",
     headers: [
       {
         text: "ID",
@@ -168,57 +142,27 @@ export default {
         value: "name",
       },
       {
-        text: "Category",
+        text: "Color",
         align: "start",
         sortable: false,
-        value: "category",
+        value: "color",
       },
       {
-        text: "Description",
+        text: "Icon",
         align: "start",
         sortable: false,
-        value: "description",
+        value: "icon",
       },
       {
-        text: "Price",
+        text: "Products",
         align: "start",
-        sortable: true,
-        value: "price",
+        sortable: false,
+        value: "products_count",
       },
       {
-        text: "Stocks",
+        text: "Date Created",
         align: "start",
-        sortable: true,
-        value: "stocks",
-      },
-      {
-        text: "Canceled",
-        align: "center",
         sortable: false,
-        value: "canceled",
-      },
-      {
-        text: "Pending",
-        align: "center",
-        sortable: false,
-        value: "pending",
-      },
-      {
-        text: "To Deliver",
-        align: "center",
-        sortable: false,
-        value: "todeliver",
-      },
-      {
-        text: "Sold",
-        align: "center",
-        sortable: false,
-        value: "sold",
-      },
-      {
-        text: "Date Added",
-        align: "start",
-        sortable: true,
         value: "created_at",
       },
       {
@@ -237,8 +181,8 @@ export default {
       let params = this._createParams(this.options);
       params = params + this._createFilterParams(this.data.filter);
       if (this.data.keyword) params = params + "&keyword=" + this.data.keyword;
-      axios.get(`/admin-api/product?${params}`).then(({ data }) => {
-        this.products = data.data;
+      axios.get(`/admin-api/category?${params}`).then(({ data }) => {
+        this.categories = data.data;
         this.total = data.total;
         this.data.isFetching = false;
       });
@@ -248,7 +192,15 @@ export default {
       this.showForm = true
     },
     save(payload) {
-      axios.post(`/admin-api/product`, payload).then(({ data }) => {
+      axios.post(`/admin-api/customer`, payload).then(({ data }) => {
+        this.fetchPage()
+      }).finally(()=>{
+        this.showForm = false;
+        this.payload = null;
+      })
+    },
+    update(payload) {
+      axios.put(`/admin-api/customer/${this.selectedItem.id}`, payload).then(({ data }) => {
         this.fetchPage()
       }).finally(()=>{
         this.showForm = false;
@@ -263,8 +215,16 @@ export default {
       this.showForm = false;
       this.deleteForm = false
     },
+    warning(val){
+      this.user = {
+        id: val.id,
+        text: val.first_name+' '+val.last_name,
+        model: 'customer'
+      }
+      this.deleteForm = true
+    },
     confirm() {
-      axios.delete(`/admin-api/${this.item.model}/${this.item.id}`).then(({data})=>{
+      axios.delete(`/admin-api/${this.user.model}/${this.user.id}`).then(({data})=>{
           this.alert.color = data.type
           this.alert.text = data.message
       });
@@ -273,15 +233,6 @@ export default {
       setTimeout(() => {
         this.alert.trigger = true
       }, 1000)
-    },
-    warning(val){
-      // console.log(val)
-      this.item = {
-        id: val.id,
-        text: val.name,
-        model: 'product'
-      }
-      this.deleteForm = true
     }
   },
 };
