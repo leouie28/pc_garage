@@ -119,10 +119,12 @@ __webpack_require__.r(__webpack_exports__);
     return {
       // dialog: false
       img: null,
+      isEdit: false,
+      newPayload: {},
       category: [],
       payload: {
         name: '',
-        category: [],
+        categories: [],
         stocks: 1,
         price: '',
         description: '',
@@ -165,12 +167,10 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     close: function close() {
-      for (var key in this.payload) {
-        delete this.payload[key];
-      } // this.img = {}
-
-
       this.$emit('cancel');
+      this.isEdit = false;
+      this.img = null;
+      this.payload = JSON.parse(JSON.stringify(this.newPayload));
     },
     save: function save() {
       // if(!this.selectedItem){
@@ -187,27 +187,87 @@ __webpack_require__.r(__webpack_exports__);
       handler: function handler(val) {
         var _this3 = this;
 
-        for (var key in this.payload) {
-          delete this.payload[key];
+        if (Object.keys(val).length === 0) {
+          this.isEdit = false;
+          return;
         }
 
-        if (Object.keys(val).length !== 0) {
-          this.img = {};
-          console.log(val, 'afsf');
-          this.payload.name = val.name;
-          val.categories.forEach(function (elem) {
-            _this3.payload.category.push(elem.id);
-          });
-          this.payload.price = val.price;
-          this.payload.stocks = val.stocks;
-          this.payload.description = val.description;
-          val.images.forEach(function (elem) {
-            _this3.img.name = elem.file_name;
-          });
-        } else {// this.img = null
-        }
+        this.payload = JSON.parse(JSON.stringify(val));
+        this.img = {};
+        val.images.forEach(function (elem) {
+          _this3.img.name = elem.file_name;
+        });
+        this.isEdit = true;
+        console.log(val);
       },
+      depp: true,
       immediate: true
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/deleteDialog.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/deleteDialog.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      dialog: false
+    };
+  },
+  props: {
+    data: {}
+  },
+  methods: {
+    cancel: function cancel() {
+      this.$emit('close');
+    },
+    confirm: function confirm() {
+      this.$emit('confirm');
     }
   }
 });
@@ -225,8 +285,9 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_admin_product_form_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/admin/product/form.vue */ "./resources/js/components/admin/product/form.vue");
-/* harmony import */ var _components_table_header_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/table-header.vue */ "./resources/js/components/table-header.vue");
+/* harmony import */ var _components_deleteDialog_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/deleteDialog.vue */ "./resources/js/components/deleteDialog.vue");
+/* harmony import */ var _components_admin_product_form_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/admin/product/form.vue */ "./resources/js/components/admin/product/form.vue");
+/* harmony import */ var _components_table_header_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/table-header.vue */ "./resources/js/components/table-header.vue");
 //
 //
 //
@@ -317,16 +378,52 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    ProductForm: _components_admin_product_form_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    TableHeader: _components_table_header_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+    DeleteDialog: _components_deleteDialog_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    ProductForm: _components_admin_product_form_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    TableHeader: _components_table_header_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   data: function data() {
     return {
+      alert: {
+        trigger: false,
+        color: '',
+        text: ''
+      },
       data: {
         title: "Products",
         isFetching: false,
@@ -341,7 +438,8 @@ __webpack_require__.r(__webpack_exports__);
       },
       total: 0,
       showForm: false,
-      dialogDelete: false,
+      deleteForm: false,
+      item: {},
       products: [],
       selectedItem: {},
       selected: [],
@@ -377,17 +475,32 @@ __webpack_require__.r(__webpack_exports__);
         sortable: true,
         value: "stocks"
       }, {
-        text: "Sold",
-        align: "start",
+        text: "Canceled",
+        align: "center",
         sortable: false,
-        value: "orders_count"
+        value: "canceled"
+      }, {
+        text: "Pending",
+        align: "center",
+        sortable: false,
+        value: "pending"
+      }, {
+        text: "To Deliver",
+        align: "center",
+        sortable: false,
+        value: "todeliver"
+      }, {
+        text: "Sold",
+        align: "center",
+        sortable: false,
+        value: "sold"
       }, {
         text: "Date Added",
         align: "start",
         sortable: true,
         value: "created_at"
       }, {
-        text: "Action",
+        text: "Actions",
         align: "center",
         sortable: false,
         value: "action"
@@ -435,6 +548,30 @@ __webpack_require__.r(__webpack_exports__);
     close: function close() {
       this.selectedItem = {};
       this.showForm = false;
+      this.deleteForm = false;
+    },
+    confirm: function confirm() {
+      var _this3 = this;
+
+      axios["delete"]("/admin-api/".concat(this.item.model, "/").concat(this.item.id)).then(function (_ref3) {
+        var data = _ref3.data;
+        _this3.alert.color = data.type;
+        _this3.alert.text = data.message;
+      });
+      this.deleteForm = false;
+      this.fetchPage();
+      setTimeout(function () {
+        _this3.alert.trigger = true;
+      }, 1000);
+    },
+    warning: function warning(val) {
+      // console.log(val)
+      this.item = {
+        id: val.id,
+        text: val.name,
+        model: 'product'
+      };
+      this.deleteForm = true;
     }
   }
 });
@@ -513,15 +650,14 @@ var render = function () {
                               items: _vm.category,
                               "item-text": "name",
                               "item-value": "id",
-                              "prepend-inner-icon": "mdi-plus",
                               multiple: "",
                             },
                             model: {
-                              value: _vm.payload.category,
+                              value: _vm.payload.categories,
                               callback: function ($$v) {
-                                _vm.$set(_vm.payload, "category", $$v)
+                                _vm.$set(_vm.payload, "categories", $$v)
                               },
-                              expression: "payload.category",
+                              expression: "payload.categories",
                             },
                           }),
                         ],
@@ -608,8 +744,9 @@ var render = function () {
                         [
                           _c("v-file-input", {
                             attrs: {
-                              chips: "",
-                              counter: "",
+                              "show-size": _vm.isEdit ? false : true,
+                              "truncate-length": "20",
+                              counter: _vm.isEdit ? false : true,
                               "prepend-icon": "",
                               accept: "image/x-png,image/gif,image/jpeg",
                               label: "Image",
@@ -656,7 +793,13 @@ var render = function () {
                           attrs: { color: "success" },
                           on: { click: _vm.save },
                         },
-                        [_vm._v("\n                    Save\n                ")]
+                        [
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(_vm.isEdit ? "Update" : "Create") +
+                              "\n                "
+                          ),
+                        ]
                       ),
                     ],
                     1
@@ -669,6 +812,106 @@ var render = function () {
           ),
           _vm._v(" "),
           _c("v-card-actions", [_c("v-spacer")], 1),
+        ],
+        1
+      ),
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/deleteDialog.vue?vue&type=template&id=205a5dc4&":
+/*!***************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/deleteDialog.vue?vue&type=template&id=205a5dc4& ***!
+  \***************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c(
+        "v-card",
+        [
+          _c("v-card-title", { staticClass: "text-h5" }, [
+            _vm._v("\n            Delete "),
+            _c("span", { staticClass: "ml-2 text-capitalize" }, [
+              _vm._v(_vm._s(_vm.data.model)),
+            ]),
+            _vm._v("!\n        "),
+          ]),
+          _vm._v(" "),
+          _c("v-card-text", [
+            _c(
+              "span",
+              {
+                staticClass: "text-subtitle-1",
+                staticStyle: { size: "'30px'", "font-weight": "500" },
+              },
+              [
+                _vm._v(
+                  "\n                Are you sure you want to delete\n                "
+                ),
+                _c("strong", { staticClass: "red--text" }, [
+                  _vm._v('"' + _vm._s(_vm.data.text) + '"'),
+                ]),
+                _vm._v(
+                  "\n                " +
+                    _vm._s(_vm.data.model) +
+                    "?\n            "
+                ),
+              ]
+            ),
+          ]),
+          _vm._v(" "),
+          _c(
+            "v-card-actions",
+            { staticClass: "mr-4" },
+            [
+              _c("v-spacer"),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  attrs: { elevation: "0", color: "secondary" },
+                  on: { click: _vm.cancel },
+                },
+                [
+                  _vm._v("\n            Cancel\n            "),
+                  _c("v-icon", [_vm._v("mdi-close")]),
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  attrs: { color: "error", elevation: "0" },
+                  on: { click: _vm.confirm },
+                },
+                [
+                  _vm._v("\n            Delete\n            "),
+                  _c("v-icon", [_vm._v("mdi-delete")]),
+                ],
+                1
+              ),
+            ],
+            1
+          ),
         ],
         1
       ),
@@ -793,7 +1036,7 @@ var render = function () {
                         "v-chip",
                         {
                           key: category.id,
-                          staticClass: "mr-1",
+                          staticClass: "mr-1 mb-1",
                           attrs: { small: "", color: category.color },
                         },
                         [
@@ -813,6 +1056,74 @@ var render = function () {
                     var item = ref.item
                     return [
                       _vm._v("\n        ₱ " + _vm._s(item.price) + "\n      "),
+                    ]
+                  },
+                },
+                {
+                  key: "item.canceled",
+                  fn: function (ref) {
+                    var item = ref.item
+                    return [
+                      _vm._v(
+                        "\n        " +
+                          _vm._s(
+                            item.canceled_sum_order_productquantity == null
+                              ? "0"
+                              : item.canceled_sum_order_productquantity
+                          ) +
+                          "\n      "
+                      ),
+                    ]
+                  },
+                },
+                {
+                  key: "item.pending",
+                  fn: function (ref) {
+                    var item = ref.item
+                    return [
+                      _vm._v(
+                        "\n        " +
+                          _vm._s(
+                            item.pending_sum_order_productquantity == null
+                              ? "0"
+                              : item.pending_sum_order_productquantity
+                          ) +
+                          "\n      "
+                      ),
+                    ]
+                  },
+                },
+                {
+                  key: "item.todeliver",
+                  fn: function (ref) {
+                    var item = ref.item
+                    return [
+                      _vm._v(
+                        "\n        " +
+                          _vm._s(
+                            item.to_deliver_sum_order_productquantity == null
+                              ? "0"
+                              : item.to_deliver_sum_order_productquantity
+                          ) +
+                          "\n      "
+                      ),
+                    ]
+                  },
+                },
+                {
+                  key: "item.sold",
+                  fn: function (ref) {
+                    var item = ref.item
+                    return [
+                      _vm._v(
+                        "\n        " +
+                          _vm._s(
+                            item.sold_sum_order_productquantity == null
+                              ? "0"
+                              : item.sold_sum_order_productquantity
+                          ) +
+                          "\n      "
+                      ),
                     ]
                   },
                 },
@@ -857,6 +1168,11 @@ var render = function () {
                         "v-btn",
                         {
                           attrs: { small: "", elevation: "0", color: "error" },
+                          on: {
+                            click: function ($event) {
+                              return _vm.warning(item)
+                            },
+                          },
                         },
                         [_vm._v("\n          Delete\n        ")]
                       ),
@@ -898,6 +1214,78 @@ var render = function () {
           }),
         ],
         1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-dialog",
+        {
+          attrs: { persistent: "", width: "500" },
+          model: {
+            value: _vm.deleteForm,
+            callback: function ($$v) {
+              _vm.deleteForm = $$v
+            },
+            expression: "deleteForm",
+          },
+        },
+        [
+          _c("delete-dialog", {
+            attrs: { data: _vm.item },
+            on: { close: _vm.close, confirm: _vm.confirm },
+          }),
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-snackbar",
+        {
+          attrs: {
+            "multi-line": "",
+            elevation: "12",
+            color: _vm.alert.color,
+            transition: "scroll-x-reverse-transition",
+            top: "",
+            right: "",
+          },
+          model: {
+            value: _vm.alert.trigger,
+            callback: function ($$v) {
+              _vm.$set(_vm.alert, "trigger", $$v)
+            },
+            expression: "alert.trigger",
+          },
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "d-flex justify-space-between" },
+            [
+              _c(
+                "div",
+                { staticClass: "mr-2" },
+                [
+                  _c("v-icon", { attrs: { large: "" } }, [_vm._v("info")]),
+                  _vm._v("\n        " + _vm._s(_vm.alert.text) + "\n      "),
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  on: {
+                    click: function ($event) {
+                      _vm.alert.trigger = false
+                    },
+                  },
+                },
+                [_vm._v("\n        Close\n      ")]
+              ),
+            ],
+            1
+          ),
+        ]
       ),
     ],
     1
@@ -974,6 +1362,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_form_vue_vue_type_template_id_717ce02f___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_form_vue_vue_type_template_id_717ce02f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/deleteDialog.vue":
+/*!**************************************************!*\
+  !*** ./resources/js/components/deleteDialog.vue ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _deleteDialog_vue_vue_type_template_id_205a5dc4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./deleteDialog.vue?vue&type=template&id=205a5dc4& */ "./resources/js/components/deleteDialog.vue?vue&type=template&id=205a5dc4&");
+/* harmony import */ var _deleteDialog_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./deleteDialog.vue?vue&type=script&lang=js& */ "./resources/js/components/deleteDialog.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _deleteDialog_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _deleteDialog_vue_vue_type_template_id_205a5dc4___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _deleteDialog_vue_vue_type_template_id_205a5dc4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/deleteDialog.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/deleteDialog.vue?vue&type=script&lang=js&":
+/*!***************************************************************************!*\
+  !*** ./resources/js/components/deleteDialog.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_deleteDialog_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./deleteDialog.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/deleteDialog.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_deleteDialog_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/deleteDialog.vue?vue&type=template&id=205a5dc4&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/deleteDialog.vue?vue&type=template&id=205a5dc4& ***!
+  \*********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_deleteDialog_vue_vue_type_template_id_205a5dc4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./deleteDialog.vue?vue&type=template&id=205a5dc4& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/deleteDialog.vue?vue&type=template&id=205a5dc4&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_deleteDialog_vue_vue_type_template_id_205a5dc4___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_deleteDialog_vue_vue_type_template_id_205a5dc4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
