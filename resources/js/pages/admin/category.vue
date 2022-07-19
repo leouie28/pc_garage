@@ -16,7 +16,7 @@
       </table-header>
       <v-data-table
         :headers="headers"
-        :items="products"
+        :items="categories"
         max-height="100%"
         :search="data.keyword"
         :loading="data.isFetching"
@@ -29,70 +29,37 @@
         class="cursor-pointer table-fix-height"
         fixed-header
       >
-        <template v-slot:[`item.name`]="{ item }">
-          <v-avatar size="35" tile style="border: 1px solid #ccc">
-            <img
-              alt="image"
-              :src="item.images.length?'/images/products/' + item.id + '/' + item.images[0].file_name:'/images/default/noimage.png'"
-            />
-          </v-avatar>
-          <span class="pa-2 font-weight-bold"> {{ item.name }} </span>
-        </template>
-        <template v-slot:[`item.category`]="{ item }">
-          <v-chip
-            v-for="category in item.categories"
-            :key="category.id"
-            small
-            :color="category.color"
-            class="mr-1"
-          >
-            {{ category.name }}
+        <template v-slot:[`item.color`]="{ item }">
+          <v-chip small :color="item.color">
+            <span class="text-capitalize">{{ item.color }}</span>
           </v-chip>
         </template>
-        <template v-slot:[`item.stocks`]="{ item }">
-          {{ item.stocks }}
-        </template>
-        <template v-slot:[`item.price`]="{ item }">
-          &#8369; {{ item.price }}
+        <template v-slot:[`item.icon`]="{ item }">
+            <v-chip label small v-if="item.icon!=null">
+                <v-icon>mdi-account</v-icon>
+                mdi-account
+            </v-chip>
+            <span v-else>No icon</span>
         </template>
         <template v-slot:[`item.created_at`]="{ item }">
           {{ moment(item.created_at).format('MMMM DD YYYY') }}
         </template>
         <template v-slot:[`item.action`]="{ item }">
-          <v-tooltip left color="blue">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                style="min-width:10px;"
-                class="px-2"
-                small
-                v-bind="attrs"
-                v-on="on"
-                elevation="0"
-                color="secondary"
-                @click="editItem(item)"
-              >
-                <v-icon small>mdi-plus-circle</v-icon>
-              </v-btn>
-            </template>
-            <span>Add Stocks</span>
-          </v-tooltip>
           <v-btn
-            class="px-2"
             small
             elevation="0"
             color="primary"
             @click="editItem(item)"
           >
-            <v-icon small>mdi-square-edit-outline</v-icon>
+            Edit
           </v-btn>
           <v-btn
-            class="px-2"
             small
             elevation="0"
             color="error"
             @click="warning(item)"
           >
-            <v-icon small>mdi-trash-can</v-icon>
+            Delete
           </v-btn>
         </template>
         <template v-slot:no-data>
@@ -101,10 +68,10 @@
       </v-data-table>
     </v-card>
     <v-dialog v-model="showForm" persistent max-width="600">
-      <product-form :selectedItem="selectedItem" @cancel="close" @save="save" @update="update"> </product-form>
+      <customer-form :selectedItem="selectedItem" @cancel="close" @save="save" @update="update"> </customer-form>
     </v-dialog>
     <v-dialog v-model="deleteForm" persistent width="500">
-      <delete-dialog :data="item" @close="close" @confirm="confirm"></delete-dialog>
+      <delete-dialog :data="user" @close="close" @confirm="confirm"></delete-dialog>
     </v-dialog>
     <v-snackbar
     v-model="alert.trigger"
@@ -130,17 +97,17 @@
 <script>
 import moment from "moment";
 import DeleteDialog from "../../components/deleteDialog.vue";
-import ProductForm from "../../components/admin/product/form.vue";
+import CustomerForm from "../../components/admin/customer/form.vue";
 import TableHeader from "../../components/table-header.vue";
 export default {
   components: {
     DeleteDialog,
-    ProductForm,
+    CustomerForm,
     TableHeader,
   },
   data: () => ({
     data: {
-      title: "Products",
+      title: "Categories",
       isFetching: false,
       keyword: "",
       filter: {},
@@ -152,13 +119,14 @@ export default {
       itemsPerPage: 15,
     },
     total: 0,
-    showForm: false,
     deleteForm: false,
-    item: {},
-    products: [],
+    showForm: false,
+    dialogDelete: false,
+    user: {},
+    categories: [],
     selectedItem: {},
     selected: [],
-    title: "Products",
+    title: "Categories",
     headers: [
       {
         text: "ID",
@@ -173,63 +141,27 @@ export default {
         value: "name",
       },
       {
-        text: "Serial #",
-        align: "start",
-        sortable: true,
-        value: "serial",
-      },
-      {
-        text: "Category",
+        text: "Color",
         align: "start",
         sortable: false,
-        value: "category",
+        value: "color",
       },
       {
-        text: "Description",
+        text: "Icon",
         align: "start",
         sortable: false,
-        value: "description",
+        value: "icon",
       },
       {
-        text: "Price",
+        text: "Products",
         align: "start",
-        sortable: true,
-        value: "price",
-      },
-      {
-        text: "Stocks",
-        align: "start",
-        sortable: true,
-        value: "stocks",
-      },
-      {
-        text: "Canceled",
-        align: "center",
         sortable: false,
-        value: "canceled_sum_order_productquantity",
-      },
-      {
-        text: "Pending",
-        align: "center",
-        sortable: false,
-        value: "pending_sum_order_productquantity",
-      },
-      {
-        text: "To Deliver",
-        align: "center",
-        sortable: false,
-        value: "to_deliver_sum_order_productquantity",
-      },
-      {
-        text: "Sold",
-        align: "center",
-        sortable: false,
-        value: "sold_sum_order_productquantity",
+        value: "products_count",
       },
       {
         text: "Date Added",
         align: "start",
-        sortable: true,
+        sortable: false,
         value: "created_at",
       },
       {
@@ -248,18 +180,19 @@ export default {
       let params = this._createParams(this.options);
       params = params + this._createFilterParams(this.data.filter);
       if (this.data.keyword) params = params + "&keyword=" + this.data.keyword;
-      axios.get(`/admin-api/product?${params}`).then(({ data }) => {
-        this.products = data.data;
+      axios.get(`/admin-api/category?${params}`).then(({ data }) => {
+        this.categories = data.data;
         this.total = data.total;
         this.data.isFetching = false;
       });
     },
     editItem(val){
+      console.log(this.alert.trigger,'trigger')
       this.selectedItem = val
       this.showForm = true
     },
     save(payload) {
-      axios.post(`/admin-api/product`, payload).then(({ data }) => {
+      axios.post(`/admin-api/customer`, payload).then(({ data }) => {
         this.fetchPage()
         this.newAlert(true, data.type, data.message)
       }).finally(()=>{
@@ -268,7 +201,7 @@ export default {
       })
     },
     update(payload) {
-      axios.put(`/admin-api/product/${this.selectedItem.id}`, payload).then(({ data }) => {
+      axios.put(`/admin-api/customer/${this.selectedItem.id}`, payload).then(({ data }) => {
         this.showForm = false;
         this.fetchPage()
         this.newAlert(true, data.type, data.message)
@@ -283,23 +216,16 @@ export default {
       this.showForm = false;
       this.deleteForm = false
     },
-    confirm() {
-      axios.delete(`/admin-api/${this.user.model}/${this.user.id}`).then(({data})=>{
-        this.deleteForm = false
-        this.fetchPage()
-        this.newAlert(true, data.type, data.message)
-      });
-    },
     warning(val){
-      this.item = {
+      this.user = {
         id: val.id,
-        text: val.name,
-        model: 'product'
+        text: val.first_name+' '+val.last_name,
+        model: 'customer'
       }
       this.deleteForm = true
     },
     confirm() {
-      axios.delete(`/admin-api/${this.item.model}/${this.item.id}`).then(({data})=>{
+      axios.delete(`/admin-api/${this.user.model}/${this.user.id}`).then(({data})=>{
         this.deleteForm = false
         this.fetchPage()
         this.newAlert(true, data.type, data.message)

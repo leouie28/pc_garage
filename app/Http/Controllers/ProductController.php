@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Filters\ProductFilter;
 use App\Models\Image;
 use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -38,27 +39,39 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = new Product([
-            'name' => $request->name,
-            'description' => $request->description,
-            'stocks' => $request->stocks,
-            'price' => $request->price,
-        ]);
-        $product->save();
-
-        $product->categories()->attach($request->category);
-        if($request->image){
-            $file = uploadImage(
-                $request->image,
-                'images/products/' . $product->id . '/'
-            );
-            $image = Image::create([
-                'product_id' => $product->id,
-                'file_name' => $file
+        try{
+            $product = new Product([
+                'name' => $request->name,
+                'description' => $request->description,
+                'stocks' => $request->stocks,
+                'price' => $request->price,
             ]);
+            $product->save();
+    
+            $product->categories()->attach($request->categories);
+            if($request->image){
+                $file = uploadImage(
+                    $request->image,
+                    'images/products/' . $product->id . '/'
+                );
+                $image = Image::create([
+                    'product_id' => $product->id,
+                    'file_name' => $file
+                ]);
+            }
+    
+            return [
+                "data" => $product,
+                "type" => "success",
+                "message" => "Product successfully added!",
+            ];
+        }catch(Exception $e){
+            return [
+                "data" => $product,
+                "type" => "success",
+                "message" => "Failed to add product! Please try again..",
+            ];
         }
-
-        return $product;
         
     }
 
@@ -93,7 +106,49 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            $product = Product::find($id);
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->stocks = $request->stocks;
+            
+            $product->save();
+    
+            // $product->categories()->delete();
+    
+            $product->categories()->sync($request->category);
+    
+            if(!empty($request->image)){
+                $file = uploadImage(
+                    $request->image,
+                    'images/products/' . $product->id . '/'
+                );
+                $image = Image::where('product_id', $product->id)->first();
+                if($image){
+                    $image->file_name = $file;
+                    $image->save();
+                }else{
+                    $image = Image::create([
+                        'product_id' => $product->id,
+                        'file_name' => $file
+                    ]);
+                }
+                    
+            }
+
+            return [
+                "data" => $product,
+                "type" => "success",
+                "message" => "Product successfully updated!",
+            ];
+        }catch(Exception $e){
+            return [
+                "data" => $request,
+                "type" => "error",
+                "message" => "Failed to update product! Please try again..",
+            ];
+        }
     }
 
     /**
@@ -104,7 +159,20 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::where('id',$id)->first();
+        $product = Product::withCount('order')->where('id', $id)->first();
+
+        if($product->order_count>0){
+            return [
+                "data" => $product,
+                "type" => "error",
+                "message" => "Failed to delete product! This product has order record.",
+              ];
+        }
         $product->delete();
+        return [
+        "data" => $product,
+        "type" => "warning",
+        "message" => "Delete successfully",
+        ];
     }
 }

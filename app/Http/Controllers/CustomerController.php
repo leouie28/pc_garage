@@ -6,6 +6,7 @@ use App\Filters\CustomerFilter;
 use App\Models\Admin;
 use App\Models\Customer;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -39,9 +40,21 @@ class CustomerController extends Controller
    */
   public function store(Request $request)
   {
-    $customer = Customer::create($request->toArray());
-
-    return $customer;
+    try{
+      $customer = Customer::create($request->toArray());
+  
+      return [
+        "data" => $customer,
+        "type" => "success",
+        "message" => "User successfully added.",
+      ];
+    }catch(Exception $e){
+      return [
+        "data" => $request,
+        "type" => "error",
+        "message" => "Failed to add customer! Please try again.",
+      ];
+    }
   }
 
   /**
@@ -88,7 +101,11 @@ class CustomerController extends Controller
     }
     $customer->save();
 
-    return $customer;
+    return [
+      "data" => $customer,
+      "type" => "success",
+      "message" => "User successfully updated.",
+    ];
   }
 
   /**
@@ -110,7 +127,7 @@ class CustomerController extends Controller
       $customer->delete();
       return [
         "data" => $customer,
-        "type" => "success",
+        "type" => "warning",
         "message" => "Delete successfully",
       ];
     }

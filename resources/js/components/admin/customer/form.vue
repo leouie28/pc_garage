@@ -14,7 +14,7 @@
                         v-model="payload.first_name"
                         filled
                         hide-details=""
-                        required
+                        :rules="required"
                         ></v-text-field>
                     </v-col>
                     <v-col md="6" cols="12">
@@ -24,6 +24,7 @@
                         v-model="payload.last_name"
                         filled
                         hide-details=""
+                        :rules="required"
                         required
                         ></v-text-field>
                     </v-col>
@@ -35,6 +36,7 @@
                             prepend-inner-icon="mdi-calendar"
                             readonly
                             hide-details=""
+                            :rules="required"
                             @click.stop="datePicker = true"
                         ></v-text-field>
                     </v-col>
@@ -73,6 +75,7 @@
                         v-model="payload.gender"
                         filled
                         hide-details="auto"
+                        :rules="required"
                         required
                         ></v-select>
                     </v-col>
@@ -83,6 +86,7 @@
                         v-model="payload.address"
                         filled
                         hide-details=""
+                        :rules="required"
                         required
                         ></v-text-field>
                     </v-col>
@@ -93,6 +97,7 @@
                         v-model="payload.phone"
                         filled
                         hide-details=""
+                        :rules="required"
                         required
                         ></v-text-field>
                     </v-col>
@@ -105,7 +110,8 @@
                         dense
                         v-model="payload.status"
                         filled
-                        hide-details="auto"
+                        hide-details=""
+                        :rules="required"
                         required
                         ></v-select>
                     </v-col>
@@ -116,6 +122,7 @@
                         v-model="payload.email"
                         filled
                         hide-details=""
+                        :rules="required"
                         required
                         ></v-text-field>
                     </v-col>
@@ -126,6 +133,7 @@
                         v-model="payload.password"
                         filled
                         hide-details=""
+                        :rules="!isEdit ? required : []"
                         required
                         ></v-text-field>
                     </v-col>
@@ -176,6 +184,9 @@ export default {
             'Hidden',
         ],
         newPayload: {},
+        required: [
+            v => !!v || 'This field is required!',
+        ],
         payload: {
             first_name: '',
             last_name: '',
@@ -201,8 +212,8 @@ export default {
     methods: {
         close() {
             this.isEdit = false
-            this.payload = JSON.parse(JSON.stringify(this.newPayload))
             this.$emit('cancel')
+            this.payload = JSON.parse(JSON.stringify(this.newPayload))
         },
         save() {
             if(this.isEdit){

@@ -18,6 +18,12 @@ export default [
         name: 'admin-order'
     },
     {
+        path: '/admin/category',
+        component: () => import('../pages/admin/category.vue'),
+        meta: { requireAuth: true },
+        name: 'admin-category'
+    },
+    {
         path: '/admin/customer',
         component: () => import('../pages/admin/customer.vue'),
         meta: { requireAuth: true },

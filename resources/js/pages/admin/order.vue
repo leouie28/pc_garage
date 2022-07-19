@@ -122,15 +122,15 @@
     </v-card>
     <v-fab-transition>
       <v-btn
-        v-model="changeBtn"
+        v-if="changeBtn"
         elevation="12"
         large
-        color="secondary"
+        color="primary"
         bottom
         class="v-btn--example"
       >
-        <v-icon>mdi-pencil</v-icon>
-        Change
+        <v-icon>mdi-square-edit-outline</v-icon>
+        Multiple Update
       </v-btn>
     </v-fab-transition>
     <v-dialog

@@ -13,6 +13,7 @@
                         label="Name*"
                         filled
                         hide-details=""
+                        :rules="required"
                         required
                         ></v-text-field>
                     </v-col>
@@ -25,7 +26,8 @@
                         label="Category"
                         hide-details="auto"
                         dense
-                        :items="category"
+                        :rules="required"
+                        :items="categories"
                         item-text="name"
                         item-value="id"
                         multiple
@@ -35,6 +37,7 @@
                         <v-text-field
                         label="Price*"
                         dense
+                        :rules="required"
                         v-model="payload.price"
                         type="number"
                         filled
@@ -47,6 +50,7 @@
                         <v-text-field
                         label="Stocks*"
                         dense
+                        :rules="required"
                         v-model="payload.stocks"
                         type="number"
                         filled
@@ -58,6 +62,7 @@
                     <v-col cols="12">
                         <v-textarea
                             filled
+                            :rules="required"
                             v-model="payload.description"
                             label="Description"
                             hide-details=""
@@ -65,12 +70,12 @@
                     </v-col>
                     <v-col cols="12">
                         <v-file-input
-                            show-size
-                            truncate-length="20"
+                            :show-size="isEdit ? false : true"
                             v-model="img"
-                            counter
+                            :counter="isEdit ? false : true"
                             prepend-icon=""
-                            accept="image/x-png,image/gif,image/jpeg"
+                            :rules="required"
+                            accept="image/*"
                             label="Image"
                             filled
                             @change="onFileChange"
@@ -107,8 +112,13 @@
 export default {
     data: () => ({
         // dialog: false
+        isEdit: false,
+        newPayload: {},
         img: null,
-        category: [],
+        categories: [],
+        required: [
+            v => !!v || 'This field is required!',
+        ],
         payload: {
             name: '',
             category: [],
@@ -141,49 +151,46 @@ export default {
         },
         getCategory() {
             axios.get(`/admin-api/category`).then(({data})=>{
-                this.category = data
+                this.categories = data.data
             })
         },
         close() {
-            for (var key in this.payload){
-                delete this.payload[key]
-            }
             // this.img = {}
             this.$emit('cancel')
+            this.isEdit = false
+            this.img = null
+            this.payload = JSON.parse(JSON.stringify(this.newPayload))
         },
         save() {
-            // if(!this.selectedItem){
-            //     console.log('not edit')
-            // }else{
-            //     console.log('edit')
-            // }
-            // // console.log(this.img)
-            this.$emit('save', this.payload)
+            if(this.isEdit){
+                this.$emit('update', this.payload)
+            }else{
+                this.$emit('save', this.payload)
+            }
+            this.isEdit = false
+            this.payload = JSON.parse(JSON.stringify(this.newPayload))
         },
     },
     watch: {
         selectedItem:{
             handler(val){
-                for (var key in this.payload){
-                        delete this.payload[key]
-                    }
-                if(Object.keys(val).length!==0){
-                    this.img = {}
-                    console.log(val,'afsf')
-                    this.payload.name = val.name
-                    val.categories.forEach(elem => {
-                        this.payload.category.push(elem.id)
-                    });
-                    this.payload.price = val.price
-                    this.payload.stocks = val.stocks
-                    this.payload.description = val.description
-                    val.images.forEach(elem => {
-                        this.img.name = elem.file_name
-                    });
-                }else{
-                    // this.img = null
+                if(Object.keys(val).length===0){
+                    this.isEdit = false
+                    return
                 }
-            },immediate:true
+                this.payload = JSON.parse(JSON.stringify(val))
+                this.payload.category = []
+                val.categories.forEach(elem => {
+                    this.payload.category.push(elem.id)
+                });
+                this.img = {}
+                val.images.forEach(elem => {
+                    this.img.name = elem.file_name
+                });
+                this.isEdit = true
+            },
+            deep: true,
+            immediate:true
         }
     }
 }

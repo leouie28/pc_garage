@@ -17,6 +17,7 @@ class OrderProduct extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained();
             $table->foreignId('product_id')->constrained();
+            // $table->integer('price');
             $table->integer('quantity');
             $table->timestamps();
         });

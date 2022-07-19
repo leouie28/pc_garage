@@ -37,19 +37,23 @@
         </template>
         <template v-slot:[`item.action`]="{ item }">
           <v-btn
+            class="px-2"
             small
             elevation="0"
             color="primary"
             @click="editItem(item)"
           >
+            <v-icon small>mdi-square-edit-outline</v-icon>
             Edit
           </v-btn>
           <v-btn
+            class="px-2"
             small
             elevation="0"
             color="error"
             @click="warning(item)"
           >
+            <v-icon small>mdi-trash-can</v-icon>
             Delete
           </v-btn>
         </template>
@@ -73,7 +77,7 @@
     top
     right>
       <div class="d-flex justify-space-between">
-        <div>
+        <div class="mr-2">
           <v-icon large>info</v-icon>
           {{ alert.text }}
         </div>
@@ -97,11 +101,6 @@ export default {
     TableHeader,
   },
   data: () => ({
-    alert: {
-      trigger: false,
-      color: '',
-      text: ''
-    },
     data: {
       title: "Customers",
       isFetching: false,
@@ -201,12 +200,14 @@ export default {
       });
     },
     editItem(val){
+      console.log(this.alert.trigger,'trigger')
       this.selectedItem = val
       this.showForm = true
     },
     save(payload) {
       axios.post(`/admin-api/customer`, payload).then(({ data }) => {
         this.fetchPage()
+        this.newAlert(true, data.type, data.message)
       }).finally(()=>{
         this.showForm = false;
         this.payload = null;
@@ -214,9 +215,9 @@ export default {
     },
     update(payload) {
       axios.put(`/admin-api/customer/${this.selectedItem.id}`, payload).then(({ data }) => {
-        this.fetchPage()
-      }).finally(()=>{
         this.showForm = false;
+        this.fetchPage()
+        this.newAlert(true, data.type, data.message)
         this.payload = null;
       })
     },
@@ -238,14 +239,10 @@ export default {
     },
     confirm() {
       axios.delete(`/admin-api/${this.user.model}/${this.user.id}`).then(({data})=>{
-          this.alert.color = data.type
-          this.alert.text = data.message
+        this.deleteForm = false
+        this.fetchPage()
+        this.newAlert(true, data.type, data.message)
       });
-      this.deleteForm = false
-      this.fetchPage()
-      setTimeout(() => {
-        this.alert.trigger = true
-      }, 1000)
     }
   },
 };
