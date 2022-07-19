@@ -8,7 +8,7 @@
                 <span class="text-subtitle-1" style="size:'30px'; font-weight:500;">
                     Are you sure you want to delete
                     <strong class="red--text">"{{ data.text }}"</strong>
-                    customer?
+                    {{ data.model }}?
                 </span>
             </v-card-text>
             <v-card-actions class="mr-4">

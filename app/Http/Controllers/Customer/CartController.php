@@ -6,6 +6,7 @@ use App\Filters\CartFilter;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -59,6 +60,10 @@ class CartController extends Controller
         $carts = Cart::where('client_id',Auth::guard('web')->user()->id)->get();
         foreach ($carts as $key => $cart) {
             $order->products()->attach($cart->product_id, ['quantity' => $cart->quantity]);
+            $product = Product::where('id', $cart->product_id)->first();
+            $product->update([
+                'stocks' => $product->stocks - $cart->quantity
+            ]);
             $cart->delete();
         }
     }

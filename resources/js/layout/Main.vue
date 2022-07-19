@@ -55,9 +55,9 @@ mounted(){
     checkAuth(){
         // this.loading = true
         axios.get(`/admin-api/check-auth`).then(({data})=>{
-            this.isAuth = data
-            console.log(data,'asfskjfklsjf')
             this.fetching = false
+            this.isAuth = data
+            console.log(this.data,'auth')
         }).finally(()=>{
             // this.loading = false
         })

@@ -3,8 +3,6 @@
 namespace App\Filters;
 
 use App\Models\Category;
-use App\Models\Customer;
-
 class CategoryFilter
 {
 

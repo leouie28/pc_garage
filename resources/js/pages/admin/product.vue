@@ -44,7 +44,7 @@
             :key="category.id"
             small
             :color="category.color"
-            class="mr-1"
+            class="mr-1 mb-1"
           >
             {{ category.name }}
           </v-chip>
@@ -139,6 +139,11 @@ export default {
     TableHeader,
   },
   data: () => ({
+    alert: {
+      trigger: false,
+      color: '',
+      text: ''
+    },
     data: {
       title: "Products",
       isFetching: false,

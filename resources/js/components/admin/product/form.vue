@@ -21,7 +21,7 @@
                         <v-autocomplete
                         chips
                         deletable-chips
-                        v-model="payload.category"
+                        v-model="payload.categories"
                         filled
                         label="Category"
                         hide-details="auto"
@@ -95,7 +95,7 @@
                         color="success"
                         @click="save"
                     >
-                        Save
+                        {{ isEdit ? 'Update' : 'Create' }}
                     </v-btn>
                 </v-row>
             </v-container>
@@ -121,7 +121,7 @@ export default {
         ],
         payload: {
             name: '',
-            category: [],
+            categories: [],
             stocks: 1,
             price: '',
             description: '',
