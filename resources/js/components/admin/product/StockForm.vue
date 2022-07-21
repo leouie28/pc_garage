@@ -23,8 +23,8 @@
                         </v-col>
                         <v-col sm="5" cols="12" class="py-0 px-1">
                             <v-text-field
-                            placeholder="Stocks"
                             v-model="stocks[skus.id]"
+                            placeholder="Stocks"
                             hide-details=""
                             append-icon="mdi-plus"
                             type="number"
@@ -41,6 +41,7 @@
                         v-model="skuPayload.sku"
                         placeholder="New Stock keeping unit"
                         hide-details=""
+                        @keyup="uppercase"
                         append-icon="mdi-plus"
                         @click:append="addSku"
                         solo>
@@ -54,7 +55,7 @@
                         color="primary"
                         @click="isNew = true"
                         large>
-                            Add new
+                            Add new SKU
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                     </v-col>
@@ -113,11 +114,12 @@ export default {
             this.stocks = []
             axios.get(`/admin-api/stock/sku?&product=${id}`).then(({ data }) => {
                 this.sku = data
-                data.forEach(elem => {
-                    this.stocks[elem.id] = ''
-                });
+                // data.forEach(elem => {
+                //     this.stocks[elem.id] = ''
+                // });
+                console.log(data)
             })
-            console.log(this.stocks)
+            // console.log(this.stocks)
         },
         addSku() {
             axios.post(`/admin-api/stock`, this.skuPayload).then(({ data }) => {
@@ -137,6 +139,9 @@ export default {
                 }
                 this.newAlert(true, data.type, data.message)
             })
+        },
+        uppercase() {
+            this.skuPayload.sku = this.skuPayload.sku.toUpperCase()
         }
     },
     watch: {

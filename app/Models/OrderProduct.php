@@ -10,9 +10,9 @@ class OrderProduct extends Pivot
 {
     use HasFactory;
 
-    public function sold()
-    {
-        return $this->belongsTo(Product::class)
-        ->where('status', 1);
-    }
+    // public function sold()
+    // {
+    //     return $this->belongsTo(Product::class)
+    //     ->where('status', 1);
+    // }
 }

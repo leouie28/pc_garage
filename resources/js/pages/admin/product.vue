@@ -50,7 +50,10 @@
           </v-chip>
         </template>
         <template v-slot:[`item.stocks_sum_stocksstocks`]="{ item }">
-          {{ item.stocks_sum_stocksstocks ? item.stocks_sum_stocksstocks : 'Out of stock' }}
+          <span v-if="item.stocks_sum_stocksstocks">
+            {{ item.stocks_sum_stocksstocks }}
+          </span>
+          <span v-else class="red--text">Out of stock</span>
         </template>
         <template v-slot:[`item.price`]="{ item }">
           &#8369; {{ item.price }}

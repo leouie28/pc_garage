@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Filters\OrderFilter;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Stock;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -50,13 +51,24 @@ class OrderController extends Controller
 
         $product = Product::find($request->product);
 
-        $order->products()->attach($request->product, ['price' => $product->price, 'quantity' => $request->quantity]);
+        $stock = null;
 
-        $old = $product->stocks;
+        foreach($product->stocks as $stocks){
+            if($stocks->stocks>=$request->quantity){
+                $stock = $stocks->id;
+            }
+        }
 
-        $new = $old - $request->quantity;
+        $stock = Stock::find($stock);
+        $stock->update(['stocks' => $stock->stocks - $request->quantity]);
 
-        $product->update(['stocks' => $new]);
+        $order->products()->attach($request->product, ['price' => $product->price, 'quantity' => $request->quantity, 'stock_id' => $stock->id]);
+
+        // $old = $product->stocks;
+
+        // $new = $old - $request->quantity;
+
+        // $product->update(['stocks' => $new]);
  
         return $order;
     }

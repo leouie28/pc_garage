@@ -15,6 +15,7 @@
                         filled
                         hide-details="auto"
                         label="Product"
+                        item-disabled="disabledProduct"
                         dense
                         >
                             <template v-slot:selection="{ item }">
@@ -98,16 +99,18 @@
                         :items="customers"
                         filled
                         item-value="id"
+                        item-text="first_name"
+                        item-disabled="disable"
                         hide-details="auto"
                         label="Customer"
                         dense
                         >
-                            <template v-slot:selection="{ item }">
+                            <!-- <template v-slot:selection="{ item }">
                                 {{item.first_name}} {{item.last_name}}
                             </template>
                             <template v-slot:item="{ item }">
                                 {{item.first_name}} {{item.last_name}}
-                            </template>
+                            </template> -->
                         </v-select>
                     </v-col>
                     <v-col md="6" cols="12">
@@ -218,6 +221,9 @@ export default {
             axios.get(`/admin-api/customer`).then(({data})=>{
                 this.customers = data.data
             })
+            this.customers.forEach(elem => {
+                this.customers.push
+            });
         },
         save() {
             this.$emit('save', this.payload)

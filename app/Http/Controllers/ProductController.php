@@ -118,7 +118,7 @@ class ProductController extends Controller
     
             // $product->categories()->delete();
     
-            $product->categories()->sync($request->category);
+            $product->categories()->sync($request->categories);
     
             if(!empty($request->image)){
                 $file = uploadImage(
