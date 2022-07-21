@@ -105,16 +105,7 @@
               </v-list>
             </v-menu>
           </div>
-          <!-- <v-chip small :color="status(item.status).color">
-            {{ status(item.status).text }}
-          </v-chip> -->
         </template>
-        <!-- <template v-slot:[`item.action`]="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item)">
-            mdi-pencil
-          </v-icon>
-          <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-        </template> -->
         <template v-slot:no-data>
           <div>No Data</div>
         </template>
@@ -212,10 +203,10 @@ import OrderForm from '../../components/admin/order/form.vue'
       title: 'Orders',
       headers: [
         {
-          text: 'ID',
+          text: 'Order Code',
           align: 'start',
           sortable: true,
-          value: 'id',
+          value: 'order_code',
         },
         {
           text: 'Customer',

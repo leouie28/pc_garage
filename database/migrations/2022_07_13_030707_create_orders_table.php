@@ -15,6 +15,7 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('order_code')->uniqid();// 8 character
             $table->integer('total');
             $table->string('note')->nullable();
             $table->integer('status')->default(1);

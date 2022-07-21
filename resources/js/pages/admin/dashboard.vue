@@ -198,18 +198,16 @@ export default {
                     cat.push(key)
                 })
                 console.log(cat)
-                this.timelineOptions.categories = cat
+                this.timelineOptions.xaxis.categories = cat
                 // this.timelineSeries[0].data = val
-                console.log(this.timelineSeries,'ajkfsjlslkjlksjlfk')
+                console.log(this.timelineOptions.xaxis.categories,'ajkfsjlslkjlksjlfk')
             })
         },
         getOrders() {
             this.donutSeries = []
             this.donutOptions.labels = []
-            var orders = []
             axios.get(`/admin-api/dashboard/orders`).then(({data})=>{
                 data.forEach(prod => {
-                    console.log(prod.order_count, 'item')
                     if(prod.order_count==null){
                         prod.order_count = '0'
                     }

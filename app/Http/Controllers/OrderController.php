@@ -38,6 +38,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $order = new Order([
+            'order_code' => '#' . genareteNumbers(7),
             'total' => $request->total,
             'note' => $request->note,
             'status' => $request->status,
@@ -47,14 +48,15 @@ class OrderController extends Controller
 
         $order->save();
 
-        $order->products()->attach($request->product, ['quantity' => $request->quantity]);
+        $product = Product::find($request->product);
 
-        $stocks = Product::find($request->product);
-        $old = $stocks->stocks;
+        $order->products()->attach($request->product, ['price' => $product->price, 'quantity' => $request->quantity]);
+
+        $old = $product->stocks;
 
         $new = $old - $request->quantity;
 
-        $stocks->update(['stocks' => $new]);
+        $product->update(['stocks' => $new]);
  
         return $order;
     }

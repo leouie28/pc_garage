@@ -40,10 +40,11 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try{
+
             $product = new Product([
+                'serial_number' => '#' . genareteNumbers(7),
                 'name' => $request->name,
                 'description' => $request->description,
-                'stocks' => $request->stocks,
                 'price' => $request->price,
             ]);
             $product->save();
@@ -55,7 +56,8 @@ class ProductController extends Controller
                     'images/products/' . $product->id . '/'
                 );
                 $image = Image::create([
-                    'product_id' => $product->id,
+                    'imagable_id' => $product->id,
+                    'imagable_type' => 'App\Models\Product',
                     'file_name' => $file
                 ]);
             }
@@ -111,7 +113,6 @@ class ProductController extends Controller
             $product->name = $request->name;
             $product->description = $request->description;
             $product->price = $request->price;
-            $product->stocks = $request->stocks;
             
             $product->save();
     
@@ -124,14 +125,15 @@ class ProductController extends Controller
                     $request->image,
                     'images/products/' . $product->id . '/'
                 );
-                $image = Image::where('product_id', $product->id)->first();
+                $image = Image::where('imagable_id', $product->id)->first();
                 if($image){
                     $image->file_name = $file;
                     $image->save();
                 }else{
                     $image = Image::create([
-                        'product_id' => $product->id,
-                        'file_name' => $file
+                        'imagable_id' => $product->id,
+                        'imagable_type' => 'App\Models\Product',
+                        'file_name' => $file,
                     ]);
                 }
                     

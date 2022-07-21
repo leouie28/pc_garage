@@ -19,13 +19,15 @@
                         >
                             <template v-slot:selection="{ item }">
                                 <v-avatar size="35" style="border: 1px solid #ccc;">
-                                    <img :src="'/images/products/'+item.id+'/'+item.images[0].file_name">
+                                    <img v-if="item.images.length>0" :src="'/images/products/'+item.id+'/'+item.images[0].file_name">
+                                    <v-icon v-else>mdi-camera</v-icon>
                                 </v-avatar>
                                 <span class="pa-2">{{ item.name }}</span>
                             </template>
                             <template v-slot:item="{ item }">
                                 <v-avatar size="35" style="border: 1px solid #ccc;">
-                                    <img :src="'/images/products/'+item.id+'/'+item.images[0].file_name">
+                                    <img v-if="item.images.length>0" :src="'/images/products/'+item.id+'/'+item.images[0].file_name">
+                                    <v-icon v-else>mdi-camera</v-icon>
                                 </v-avatar>
                                 <span class="pa-2">{{ item.name }}</span>
                             </template>
@@ -128,6 +130,7 @@
                         type="number"
                         filled
                         min="1"
+                        :max="mx"
                         hide-details=""
                         required
                         ></v-text-field>
@@ -163,6 +166,7 @@ export default {
     data: () => ({
         // dialog: false
         raw: '',
+        mx: '',
         qty: 1,
         itemPrice: '',
         now: new Date().toISOString().slice(0, 10),
@@ -224,6 +228,11 @@ export default {
         raw(val){
             this.payload.product = val
             this.qty = 1
+            this.products.forEach(elem => {
+                if(elem.id==val){
+                    this.mx = elem.stocks
+                }
+            });
             this.compute(val)
         },
         qty(val){

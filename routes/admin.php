@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StockController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
@@ -29,10 +30,17 @@ Route::group(['middleware'=>['auth:admin']],function(){
         Route::put('order/update-arrival/{id}', 'updateArrival');
     });
 
+    //stock
+    Route::controller(StockController::class)->group(function () {
+        Route::get('stock/sku', 'getProductSku');
+        Route::put('stock/update-sku/{skuId}', 'updateSkuStocks');
+    });
+
     Route::resources([
         'category' => CategoryController::class,
         'product' => ProductController::class,
         'customer' => CustomerController::class,
         'order' => OrderController::class,
+        'stock' => StockController::class,
     ]);
 });

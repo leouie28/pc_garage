@@ -49,8 +49,8 @@
             {{ category.name }}
           </v-chip>
         </template>
-        <template v-slot:[`item.stocks`]="{ item }">
-          {{ item.stocks }}
+        <template v-slot:[`item.stocks_sum_stocksstocks`]="{ item }">
+          {{ item.stocks_sum_stocksstocks ? item.stocks_sum_stocksstocks : 'Out of stock' }}
         </template>
         <template v-slot:[`item.price`]="{ item }">
           &#8369; {{ item.price }}
@@ -69,7 +69,7 @@
                 v-on="on"
                 elevation="0"
                 color="secondary"
-                @click="editItem(item)"
+                @click="addStocks(item)"
               >
                 <v-icon small>mdi-plus-circle</v-icon>
               </v-btn>
@@ -100,6 +100,9 @@
         </template>
       </v-data-table>
     </v-card>
+    <v-dialog v-model="stockForm" persistent max-width="500">
+      <stock-form :selectedItem="selectedItem" @cancel="close"></stock-form>
+    </v-dialog>
     <v-dialog v-model="showForm" persistent max-width="600">
       <product-form :selectedItem="selectedItem" @cancel="close" @save="save" @update="update"> </product-form>
     </v-dialog>
@@ -132,12 +135,14 @@ import moment from "moment";
 import DeleteDialog from "../../components/deleteDialog.vue";
 import ProductForm from "../../components/admin/product/form.vue";
 import TableHeader from "../../components/table-header.vue";
+import StockForm from "../../components/admin/product/StockForm.vue";
 export default {
   components: {
     DeleteDialog,
     ProductForm,
     TableHeader,
-  },
+    StockForm
+},
   data: () => ({
     alert: {
       trigger: false,
@@ -158,6 +163,7 @@ export default {
     },
     total: 0,
     showForm: false,
+    stockForm: false,
     deleteForm: false,
     item: {},
     products: [],
@@ -176,12 +182,6 @@ export default {
         align: "start",
         sortable: true,
         value: "name",
-      },
-      {
-        text: "Serial #",
-        align: "start",
-        sortable: true,
-        value: "serial",
       },
       {
         text: "Category",
@@ -205,7 +205,7 @@ export default {
         text: "Stocks",
         align: "start",
         sortable: true,
-        value: "stocks",
+        value: "stocks_sum_stocksstocks",
       },
       {
         text: "Canceled",
@@ -259,6 +259,10 @@ export default {
         this.data.isFetching = false;
       });
     },
+    addStocks(val){
+      this.selectedItem = val
+      this.stockForm = true
+    },
     editItem(val){
       this.selectedItem = val
       this.showForm = true
@@ -285,11 +289,13 @@ export default {
     },
     close() {
       this.selectedItem = {}
+      this.stockForm = false
       this.showForm = false;
       this.deleteForm = false
+      this.fetchPage()
     },
     confirm() {
-      axios.delete(`/admin-api/${this.user.model}/${this.user.id}`).then(({data})=>{
+      axios.delete(`/admin-api/${this.item.model}/${this.item.id}`).then(({data})=>{
         this.deleteForm = false
         this.fetchPage()
         this.newAlert(true, data.type, data.message)

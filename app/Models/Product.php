@@ -12,13 +12,13 @@ class Product extends Model
     protected $fillable=[
         'name',
         'description',
-        'stocks',
         'price',
     ];
 
     protected $with = [
         // 'categories',
         'images',
+        'stocks',
         // 'order',
     ];
 
@@ -29,9 +29,15 @@ class Product extends Model
 
     public function images()
     {
-        return $this->hasMany(Image::class, 'product_id');
+        // return $this->hasMany(Image::class, 'product_id');
+        return $this->morphMany(Image::class, 'imagable');
     }
 
+    public function stocks()
+    {
+        return $this->hasMany(Stock::class, 'product_id');
+    }
+    
     public function order()
     {
         return $this->belongsToMany(Order::class)->withPivot(['quantity']);
