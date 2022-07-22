@@ -14,8 +14,8 @@
                         v-model="raw"
                         filled
                         hide-details="auto"
+                        :item-disabled="disableItem"
                         label="Product"
-                        item-disabled="disabledProduct"
                         dense
                         >
                             <template v-slot:selection="{ item }">
@@ -31,6 +31,7 @@
                                     <v-icon v-else>mdi-camera</v-icon>
                                 </v-avatar>
                                 <span class="pa-2">{{ item.name }}</span>
+                                <span class="red--text" v-if="!item.stocks_sum_stocksstocks || item.stocks_sum_stocksstocks=='0'">Out of stock</span>
                             </template>
                         </v-select>
                     </v-col>
@@ -100,7 +101,6 @@
                         filled
                         item-value="id"
                         item-text="first_name"
-                        item-disabled="disable"
                         hide-details="auto"
                         label="Customer"
                         dense
@@ -213,8 +213,8 @@ export default {
             this.payload.total = price * this.payload.quantity
         },
         getProduct() {
-            axios.get(`/admin-api/product`).then(({data})=>{
-                this.products = data.data
+            axios.get(`/admin-api/order/get-product`).then(({data})=>{
+                this.products = data
             })
         },
         getCustomer() {
@@ -226,9 +226,18 @@ export default {
             });
         },
         save() {
-            this.$emit('save', this.payload)
+            if(this.payload.quantity>this.mx){
+                alert('Quantity is higher than the product stocks')
+            }else{
+                this.$emit('save', this.payload)
+            }
             // console.log(this.payload)
         },
+        disableItem(item) {
+            if(item.stocks_sum_stocksstocks==0 || item.stocks_sum_stocksstocks==null){
+                return true
+            }
+        }
     },
     watch: {
         raw(val){
@@ -236,7 +245,7 @@ export default {
             this.qty = 1
             this.products.forEach(elem => {
                 if(elem.id==val){
-                    this.mx = elem.stocks
+                    this.mx = parseInt(elem.stocks_sum_stocksstocks)
                 }
             });
             this.compute(val)

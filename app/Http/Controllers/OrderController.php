@@ -6,6 +6,7 @@ use App\Filters\OrderFilter;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Stock;
+use Exception;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -18,6 +19,11 @@ class OrderController extends Controller
     public function index()
     {
         return (new OrderFilter)->searchable();
+    }
+
+    public function getProduct()
+    {
+        return Product::withSum('stocks', 'stocks.stocks')->get();
     }
 
     /**
@@ -38,39 +44,83 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $order = new Order([
-            'order_code' => '#' . genareteNumbers(7),
-            'total' => $request->total,
-            'note' => $request->note,
-            'status' => $request->status,
-            'arrival' => $request->arrival,
-            'customer_id' => $request->customer,
-        ]);
-
-        $order->save();
-
-        $product = Product::find($request->product);
-
-        $stock = null;
-
-        foreach($product->stocks as $stocks){
-            if($stocks->stocks>=$request->quantity){
-                $stock = $stocks->id;
+        try{
+            $order = new Order([
+                'order_code' => '#' . genareteNumbers(7),
+                'total' => $request->total,
+                'note' => $request->note,
+                'status' => $request->status,
+                'arrival' => $request->arrival,
+                'customer_id' => $request->customer,
+            ]);
+    
+            $order->save();
+    
+            $product = Product::find($request->product);
+    
+            $available = array();
+    
+            foreach($product->stocks as $stocks){
+                if($stocks->stocks>=$request->quantity){
+                    $available[] = $stocks->id;
+                }
             }
+            if(count($available)>0){
+                $key = array_rand($available);
+                $stock = Stock::find($available[$key]);
+                $stock->update(['stocks' => $stock->stocks - $request->quantity]);
+                $order->products()->attach($request->product, ['price' => $product->price, 'quantity' => $request->quantity, 'stock_id' => $stock->id]);
+            }else{
+                $ord_qty = $request->quantity;
+                $stocks = $product->stocks;
+                $counter = 0;
+                while($ord_qty > 0){
+                    if($stocks[$counter]->stocks>0){
+                        $stock = Stock::find($stocks[$counter]->id);
+                        if($ord_qty<$stock->stocks){
+                            $order->products()->attach($request->product, ['price' => $product->price, 'quantity' => $ord_qty, 'stock_id' => $stock->id]);
+                            $stock->update(['stocks' => $stock->stocks - $ord_qty]);
+                            $ord_qty = 0;
+                        }else{
+                            $order->products()->attach($request->product, ['price' => $product->price, 'quantity' => $stock->stocks, 'stock_id' => $stock->id]);
+                            $ord_qty = $ord_qty - $stock->stocks;
+                            $stock->update(['stocks' => $stock->stocks - $stock->stocks]);
+                        }
+                    }
+                    $counter++;
+                }
+            }
+            return [
+                "data" => Order::find($order->id),
+                "type" => "success",
+                "message" => "Order successfully added...",
+            ];
+        }catch(Exception $e){
+            return [
+                "data" => $request,
+                "type" => "error",
+                "message" => $e->getMessage(),
+            ];
         }
 
-        $stock = Stock::find($stock);
-        $stock->update(['stocks' => $stock->stocks - $request->quantity]);
 
-        $order->products()->attach($request->product, ['price' => $product->price, 'quantity' => $request->quantity, 'stock_id' => $stock->id]);
+        // if($stock){
+            
+    
+            
+        // }else{
+        //     return [
+        //         "data" => $request,
+        //         "type" => "error",
+        //         "message" => "Failed to update stocks on product...",
+        //     ];
+        // }
 
         // $old = $product->stocks;
 
         // $new = $old - $request->quantity;
 
         // $product->update(['stocks' => $new]);
- 
-        return $order;
     }
 
     /**

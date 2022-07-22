@@ -28,6 +28,7 @@ Route::group(['middleware'=>['auth:admin']],function(){
     Route::controller(OrderController::class)->group(function () {
         Route::put('order/update-status/{id}', 'updateStatus');
         Route::put('order/update-arrival/{id}', 'updateArrival');
+        Route::get('order/get-product', 'getProduct');
     });
 
     //stock

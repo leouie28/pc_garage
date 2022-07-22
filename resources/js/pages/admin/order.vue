@@ -38,15 +38,16 @@
           {{ item.customer.first_name+' '+item.customer.last_name }} 
         </template>
         <template v-slot:[`item.products`]="{ item }">
-          <v-chip
+          {{ custProd(item) }}
+          <!-- <v-chip
             v-for="product in item.products"
             :key="product.id"
             small
             color="primary"
             class="mr-1"
           >
-           ({{ product.pivot.quantity }}) {{ product.name }}
-          </v-chip>
+            <span>({{ product.pivot.quantity }}) {{ product.name }}</span>
+          </v-chip> -->
         </template>
         <template v-slot:[`item.created_at`]="{ item }">
           {{ moment(item.created_at).format('MMMM DD YYYY') }}
@@ -156,6 +157,24 @@
     <v-dialog v-model="showForm" persistent max-width="600">
       <order-form @cancel="close" @save="save"></order-form>
     </v-dialog>
+    <v-snackbar
+    v-model="alert.trigger"
+    multi-line
+    elevation="12"
+    :color="alert.color"
+    transition="scroll-x-reverse-transition"
+    top
+    right>
+      <div class="d-flex justify-space-between">
+        <div class="mr-2">
+          <v-icon large>info</v-icon>
+          {{ alert.text }}
+        </div>
+        <v-btn @click="alert.trigger = false">
+          Close
+        </v-btn>
+      </div>
+    </v-snackbar>
   </div>
 </template>
 
@@ -163,6 +182,7 @@
 import moment from "moment";
 import TableHeader from "../../components/table-header.vue";
 import OrderForm from '../../components/admin/order/form.vue'
+import productVue from './product.vue';
   export default {
     components: {
       OrderForm,
@@ -291,10 +311,29 @@ import OrderForm from '../../components/admin/order/form.vue'
       save(payload) {
         axios.post(`/admin-api/order`, payload).then(({ data }) => {
           this.fetchPage()
+          this.newAlert(true, data.type, data.message)
         }).finally(()=>{
           this.showForm = false;
           this.payload = null;
         })
+      },
+      custProd(val){
+        let item = []
+        let prod = []
+        val.products.forEach((elem, index) => {
+          prod.push(elem.name)
+          // if(!item.includes(elem.name)){
+          //   item.push(elem.name)
+          //   prod.push({name: elem.name, qty: elem.pivot.quantity})
+          // }
+          // else{
+          //   let count = prod[index]
+          //   prod[index] = {name: elem.name, qty: elem.pivot.quantity}
+          //   // prod.push({name: elem.name, qty: elem.pivot.quantity})
+          // }
+          //   // prod.push({name: elem.name, qty: elem.pivot.quantity})
+        });
+        return prod
       },
 
       selectOption() {

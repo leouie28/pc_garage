@@ -70,7 +70,7 @@ class ProductController extends Controller
         }catch(Exception $e){
             return [
                 "data" => $product,
-                "type" => "success",
+                "type" => "error",
                 "message" => "Failed to add product! Please try again..",
             ];
         }
