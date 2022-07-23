@@ -157,6 +157,24 @@
     <v-dialog v-model="showForm" persistent max-width="600">
       <order-form @cancel="close" @save="save"></order-form>
     </v-dialog>
+    <v-snackbar
+    v-model="alert.trigger"
+    multi-line
+    elevation="12"
+    :color="alert.color"
+    transition="scroll-x-reverse-transition"
+    top
+    right>
+      <div class="d-flex justify-space-between">
+        <div class="mr-2">
+          <v-icon large>info</v-icon>
+          {{ alert.text }}
+        </div>
+        <v-btn @click="alert.trigger = false">
+          Close
+        </v-btn>
+      </div>
+    </v-snackbar>
   </div>
 </template>
 
@@ -164,6 +182,7 @@
 import moment from "moment";
 import TableHeader from "../../components/table-header.vue";
 import OrderForm from '../../components/admin/order/form.vue'
+import productVue from './product.vue';
   export default {
     components: {
       OrderForm,
@@ -295,6 +314,7 @@ import OrderForm from '../../components/admin/order/form.vue'
       save(payload) {
         axios.post(`/admin-api/order`, payload).then(({ data }) => {
           this.fetchPage()
+          this.newAlert(true, data.type, data.message)
         }).finally(()=>{
           this.showForm = false;
           this.payload = null;

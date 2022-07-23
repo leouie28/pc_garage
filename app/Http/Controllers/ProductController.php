@@ -70,7 +70,7 @@ class ProductController extends Controller
         }catch(Exception $e){
             return [
                 "data" => $product,
-                "type" => "success",
+                "type" => "error",
                 "message" => "Failed to add product! Please try again..",
             ];
         }
@@ -118,7 +118,7 @@ class ProductController extends Controller
     
             // $product->categories()->delete();
     
-            $product->categories()->sync($request->category);
+            $product->categories()->sync($request->categories);
     
             if(!empty($request->image)){
                 $file = uploadImage(

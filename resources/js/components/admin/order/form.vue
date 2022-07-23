@@ -14,6 +14,7 @@
                         v-model="raw"
                         filled
                         hide-details="auto"
+                        :item-disabled="disableItem"
                         label="Product"
                         dense
                         >
@@ -30,6 +31,7 @@
                                     <v-icon v-else>mdi-camera</v-icon>
                                 </v-avatar>
                                 <span class="pa-2">{{ item.name }}</span>
+                                <span class="red--text" v-if="!item.stocks_sum_stocksstocks || item.stocks_sum_stocksstocks=='0'">Out of stock</span>
                             </template>
                         </v-select>
                     </v-col>
@@ -98,16 +100,17 @@
                         :items="customers"
                         filled
                         item-value="id"
+                        item-text="first_name"
                         hide-details="auto"
                         label="Customer"
                         dense
                         >
-                            <template v-slot:selection="{ item }">
+                            <!-- <template v-slot:selection="{ item }">
                                 {{item.first_name}} {{item.last_name}}
                             </template>
                             <template v-slot:item="{ item }">
                                 {{item.first_name}} {{item.last_name}}
-                            </template>
+                            </template> -->
                         </v-select>
                     </v-col>
                     <v-col md="6" cols="12">
@@ -210,19 +213,31 @@ export default {
             this.payload.total = price * this.payload.quantity
         },
         getProduct() {
-            axios.get(`/admin-api/product`).then(({data})=>{
-                this.products = data.data
+            axios.get(`/admin-api/order/get-product`).then(({data})=>{
+                this.products = data
             })
         },
         getCustomer() {
             axios.get(`/admin-api/customer`).then(({data})=>{
                 this.customers = data.data
             })
+            this.customers.forEach(elem => {
+                this.customers.push
+            });
         },
         save() {
-            this.$emit('save', this.payload)
+            if(this.payload.quantity>this.mx){
+                alert('Quantity is higher than the product stocks')
+            }else{
+                this.$emit('save', this.payload)
+            }
             // console.log(this.payload)
         },
+        disableItem(item) {
+            if(item.stocks_sum_stocksstocks==0 || item.stocks_sum_stocksstocks==null){
+                return true
+            }
+        }
     },
     watch: {
         raw(val){
@@ -230,7 +245,7 @@ export default {
             this.qty = 1
             this.products.forEach(elem => {
                 if(elem.id==val){
-                    this.mx = elem.stocks
+                    this.mx = parseInt(elem.stocks_sum_stocksstocks)
                 }
             });
             this.compute(val)
