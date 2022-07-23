@@ -30,7 +30,7 @@
         :options.sync="options"
         :items-per-page="options.itemsPerPage"
         @update:options="fetchPage"
-        @click:row="viewProduct"
+        @click:row="viewOrder"
         class="cursor-pointer table-fix-height"
         fixed-header
       >
@@ -39,14 +39,15 @@
         </template>
         <template v-slot:[`item.products`]="{ item }">
           <v-chip
-            v-for="product in item.products"
-            :key="product.id"
             small
-            color="primary"
-            class="mr-1"
+            dark
+            color="teal"
+            class="mr-1 prod-truncate"
           >
-           ({{ product.pivot.quantity }}) {{ product.name }}
+          {{ item.products[0].name }}
+           <!-- ({{ product.pivot.quantity }}) {{ product.name }} -->
           </v-chip>
+          <span v-if="item.products.length>1">+ more...</span>
         </template>
         <template v-slot:[`item.created_at`]="{ item }">
           {{ moment(item.created_at).format('MMMM DD YYYY') }}
@@ -55,7 +56,7 @@
           <v-chip
           outlined
           :color="arrivalStat(item.arrival)"
-          @click="arrivalPicker(item.id), arriveSelected = item.arrival"
+          @click.stop="arrivalPicker(item.id), arriveSelected = item.arrival"
           label>
             <v-icon left small>
               mdi-calendar
@@ -253,7 +254,10 @@ import OrderForm from '../../components/admin/order/form.vue'
       ],
     }),
     methods: {
-      viewProduct() {},
+      viewOrder(item) {
+        console.log(this.$route)
+        this.$router.push({path: this.$route.fullPath+'/'+item.id})
+      },
       resetFilter() {},
       fetchPage() {
         this.data.isFetching = true;
@@ -296,7 +300,15 @@ import OrderForm from '../../components/admin/order/form.vue'
           this.payload = null;
         })
       },
-
+      prodName(val) {
+        let prod = []
+        val.forEach((elem, index) => {
+          if(!prod.includes(elem.name)){
+            prod.push(elem.name)
+          }
+        });
+        return prod
+      },
       selectOption() {
         if(this.itemsSelected.length>0){
           this.changeBtn = true

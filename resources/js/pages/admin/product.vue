@@ -69,7 +69,7 @@
                 v-on="on"
                 elevation="0"
                 color="secondary"
-                @click="addStocks(item)"
+                @click.stop="addStocks(item)"
               >
                 <v-icon small>mdi-plus-circle</v-icon>
               </v-btn>
@@ -81,7 +81,7 @@
             small
             elevation="0"
             color="primary"
-            @click="editItem(item)"
+            @click.stop="editItem(item)"
           >
             <v-icon small>mdi-square-edit-outline</v-icon>
           </v-btn>
@@ -90,7 +90,7 @@
             small
             elevation="0"
             color="error"
-            @click="warning(item)"
+            @click.stop="warning(item)"
           >
             <v-icon small>mdi-trash-can</v-icon>
           </v-btn>
@@ -100,6 +100,9 @@
         </template>
       </v-data-table>
     </v-card>
+    <v-dialog v-model="showProd" persistent max-width="800">
+      <product-profile :selectedItem="selectedItem" @cancel="close"></product-profile>
+    </v-dialog>
     <v-dialog v-model="stockForm" persistent max-width="500">
       <stock-form :selectedItem="selectedItem" @cancel="close"></stock-form>
     </v-dialog>
@@ -136,12 +139,14 @@ import DeleteDialog from "../../components/deleteDialog.vue";
 import ProductForm from "../../components/admin/product/form.vue";
 import TableHeader from "../../components/table-header.vue";
 import StockForm from "../../components/admin/product/StockForm.vue";
+import ProductProfile from "../../components/admin/product/product-profile.vue";
 export default {
   components: {
     DeleteDialog,
     ProductForm,
     TableHeader,
-    StockForm
+    StockForm,
+    ProductProfile
 },
   data: () => ({
     alert: {
@@ -163,6 +168,7 @@ export default {
     },
     total: 0,
     showForm: false,
+    showProd: false,
     stockForm: false,
     deleteForm: false,
     item: {},
@@ -246,7 +252,10 @@ export default {
     ],
   }),
   methods: {
-    viewProduct() {},
+    viewProduct(item) {
+      this.selectedItem = item
+      this.showProd = true
+    },
     resetFilter() {},
     fetchPage() {
       this.data.isFetching = true;
@@ -291,6 +300,7 @@ export default {
       this.selectedItem = {}
       this.stockForm = false
       this.showForm = false;
+      this.showProd = false;
       this.deleteForm = false
       this.fetchPage()
     },

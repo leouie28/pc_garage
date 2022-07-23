@@ -85,7 +85,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        return Product::with('categories')->find($id);
     }
 
     /**

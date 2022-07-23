@@ -135,3 +135,10 @@
     display: flex;
     justify-content: space-between;
 }
+
+.v-data-table__wrapper td {
+    max-width: 200px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

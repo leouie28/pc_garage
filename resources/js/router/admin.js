@@ -18,6 +18,12 @@ export default [
         name: 'admin-order'
     },
     {
+        path: '/admin/order/:id',
+        component: () => import('../pages/admin/item-profile/order-profile.vue'),
+        name: 'admin-order-profile',
+        meta: { requireAuth: true },
+    },
+    {
         path: '/admin/category',
         component: () => import('../pages/admin/category.vue'),
         meta: { requireAuth: true },
