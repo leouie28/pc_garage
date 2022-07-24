@@ -15,4 +15,5 @@ class OrderProduct extends Pivot
     //     return $this->belongsTo(Product::class)
     //     ->where('status', 1);
     // }
+
 }

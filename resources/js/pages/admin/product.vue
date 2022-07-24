@@ -103,9 +103,11 @@
         </template>
       </v-data-table>
     </v-card>
-    <v-dialog v-model="showProd" persistent max-width="800">
+    <v-expand-x-transition>
+    <v-dialog v-model="showProd" fullscreen hide-overlay>
       <product-profile :selectedItem="selectedItem" @cancel="close"></product-profile>
     </v-dialog>
+    </v-expand-x-transition>
     <v-dialog v-model="stockForm" persistent max-width="500">
       <stock-form :selectedItem="selectedItem" @cancel="close"></stock-form>
     </v-dialog>

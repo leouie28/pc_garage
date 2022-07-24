@@ -131,7 +131,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        //
+        return Order::with(['customer', 'products'])->find($id);
     }
 
     /**

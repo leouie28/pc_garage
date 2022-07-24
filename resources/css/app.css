@@ -140,5 +140,6 @@
     max-width: 200px !important;
     white-space: nowrap;
     overflow: hidden;
+    /* padding: 4px !important; */
     text-overflow: ellipsis;
 }

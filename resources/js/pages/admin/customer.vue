@@ -44,7 +44,6 @@
             @click="editItem(item)"
           >
             <v-icon small>mdi-square-edit-outline</v-icon>
-            Edit
           </v-btn>
           <v-btn
             class="px-2"
@@ -54,7 +53,6 @@
             @click="warning(item)"
           >
             <v-icon small>mdi-trash-can</v-icon>
-            Delete
           </v-btn>
         </template>
         <template v-slot:no-data>

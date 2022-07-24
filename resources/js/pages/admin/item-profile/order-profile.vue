@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card elevation="0" class="pa-2">
+        <v-card elevation="0"  class="pa-2">
             <v-card-title>
                 Order Info
                 <v-spacer></v-spacer>
@@ -12,13 +12,13 @@
             <v-card-text>
                 <v-row>
                     <v-col md="5" cols="12">
-                        <v-card elevation="0" color="grey lighten-2" rounded="">
+                        <v-card elevation="0">
                             <v-card-text>
                             <div class="d-flex justify-space-between">
                                 <div>
                                     <h4>Order Id:</h4>
                                     <p class="text-h3 text--primary">
-                                        #0506212
+                                        {{ order.order_code }}
                                     </p>
                                 </div>
                                 <div>
@@ -44,7 +44,7 @@
                                     left
                                     icon="mdi-account">
                                         <p class="text-h5 text--primary">
-                                            Mark Leouie Tabique
+                                            {{ order.customer.first_name + ' ' + order.customer.last_name }}
                                         </p>
                                     </v-timeline-item>
                                     <v-timeline-item
@@ -52,7 +52,7 @@
                                     left
                                     icon="mdi-map-marker">
                                         <p class="text-h5 text--primary">
-                                            Address Testing
+                                            {{ order.customer.address }}
                                         </p>
                                     </v-timeline-item>
                                 </v-timeline>
@@ -60,49 +60,57 @@
                             <div class="d-flex justify-space-between">
                                 <div>
                                     <h4>Date Order:</h4>
-                                    <p class="text-h5 text--primary">July 12, 2022</p>
+                                    <p class="text-h5 text--primary">
+                                        {{ moment(order.created_at).format('MMMM DD YYYY') }}
+                                    </p>
                                 </div>
                                 <div>
                                     <h4>Date Arrival:</h4>
-                                    <p class="text-h5 primary--text">July 12, 2022</p>
+                                    <p class="text-h5 primary--text">
+                                        {{ moment(order.arrival).format('MMMM DD YYYY') }}
+                                    </p>
                                 </div>
                             </div>
                             <v-divider class="my-2"></v-divider>
                             <v-sheet class="pa-2 text-center" color="success" rounded="">
-                                <span class="white--text text-h5">Total: &#8369; 674</span>
+                                <span class="white--text text-h5">Total: &#8369; {{ order.total }}</span>
                             </v-sheet>
                             </v-card-text>
                         </v-card>
                     </v-col>
-                    <v-col md="7" cols="12">
-                        <v-card rounded color="blue-grey darken-4">
+                    <v-col md="7" cols="12" class="cus-border">
+                        <v-card class="mb-4" elevation="0">
                             <v-card-title>
-                                <h4 class="white--text">Order Items</h4>
+                                Order Items
                             </v-card-title>
-                            <v-card-text class="white">
-                                <v-list>
-                                    <v-list-item two-line>
-                                        <v-list-item-content>
-                                            <div class="d-flex justify-space-between align-center">
-                                                <div class="d-flex justify-space-between align-center">
-                                                    <v-img
-                                                    max-width="100"
-                                                    max-height="100"
-                                                    src="https://picsum.photos/id/11/500/300"
-                                                    ></v-img>
-                                                    <div class="ml-4">
-                                                        <v-list-item-subtitle><h4>Qty: 4</h4></v-list-item-subtitle>
-                                                        <v-list-item-title><span class="text-h5">Title Test</span></v-list-item-title>
-                                                    </div>
-                                                </div>
-                                                <v-sheet color="red darken-1" dark class="pa-4">
-                                                    <h2>&#8369; 54</h2>
-                                                </v-sheet>
+                            <v-card-text>
+                                <v-divider></v-divider>
+                                <div
+                                v-for="product in order.products"
+                                :key="product.id">
+                                    <div class="my-2 d-flex justify-space-between">
+                                        <div class="d-flex justify-space-between align-center">
+                                            <v-img
+                                            style="width:60px;height:60px;"
+                                            alt="image"
+                                            :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'"
+                                            max-height="100"
+                                            max-width="100">
+                                            </v-img>
+                                            <div class="ml-3">
+                                                <span class="text-h5 text--primary">
+                                                    {{ product.name }}
+                                                </span>
+                                                <h4 class="blue--text">Quantity: {{ product.pivot.quantity }}</h4>
                                             </div>
-                                        </v-list-item-content>
-                                    </v-list-item>
+                                        </div>
+                                        <v-sheet class="pa-4 text-right">
+                                            <h2>&#8369; {{ product.pivot.price }}</h2>
+                                            <div class="text-subtitle-1">SKU: JKLS374</div>
+                                        </v-sheet>
+                                    </div>
                                     <v-divider></v-divider>
-                                </v-list>
+                                </div>
                             </v-card-text>
                         </v-card>
                     </v-col>
@@ -114,7 +122,7 @@
 <script>
 export default {
     data: () => ({
-        product: {}
+        order: {}
     }),
     mounted() {
         this.show()
@@ -122,11 +130,17 @@ export default {
     methods: {
         show() {
             let id = this.$route.params.id
-            axios.get(`/admin-api/product/${id}`).then(({data})=>{
-                this.product = data
+            axios.get(`/admin-api/order/${id}`).then(({data})=>{
+                this.order = data
                 console.log(data)
             })
         }
     }
 }
 </script>
+
+<style scoped>
+.cus-border{
+    border-left: 1px solid #ccc;
+}
+</style>
