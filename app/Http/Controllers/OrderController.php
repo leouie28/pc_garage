@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Stock;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -183,7 +184,60 @@ class OrderController extends Controller
             $order = Order::with('products')->find($id);
 
             foreach($order->products as $prod){
-                // upd($prod);
+                $stock = Stock::find($prod->pivot->stock_id);
+                if($stock->stocks < $prod->pivot->quantity){
+                    return [
+                        "data" => $request,
+                        "type" => "error",
+                        "message" => 'Failed to update order! Error in stocks of the product. Please check if the product has enough item to make an order...',
+                    ];
+                    break;
+                }
+            }
+
+            foreach($order->product as $prod){
+                $stock_qty = Stock::find($prod->pivot->stock_id);
+                if($stock_qty->stocks >= $prod->pivot->quantity){
+
+                    $available = array();
+                    foreach($prod->stocks as $stocks){
+                        if($stocks->stocks>=$prod->pivot->quantity){
+                            $available[] = $stocks->id;
+                        }
+                    }
+                    if(count($available)>0){
+                        $key = array_rand($available);
+                        $stock = Stock::find($available[$key]);
+                        $stock->update(['stocks' => $stock->stocks - $prod->pivot->quantity]);
+                        $order->products()->sync($prod->id, ['price' => $prod->price, 'quantity' => $prod->pivot->quantity, 'stock_id' => $stock->id, 'sku' => $stock->sku]);
+                    }else{
+                        $ord_qty = $prod->pivot->quantity;
+                        $toDl = $prod->pivot->id;
+                        $stocks = $prod->stocks;
+                        $counter = 0;
+                        while($ord_qty > 0){
+                            if($stocks[$counter]->stocks>0){
+                                $stock = Stock::find($stocks[$counter]->id);
+                                if($ord_qty<$stock->stocks){
+                                    $order->products()->attach($prod->id, ['price' => $prod->price, 'quantity' => $prod->pivot->quantity, 'stock_id' => $stock->id, 'sku' => $stock->sku]);
+                                    $stock->update(['stocks' => $stock->stocks - $ord_qty]);
+                                    $ord_qty = 0;
+                                }else{
+                                    $order->products()->attach($request->product, ['price' => $prod->price, 'quantity' => $stock->stocks, 'stock_id' => $stock->id, 'sku' => $stock->sku]);
+                                    $ord_qty = $ord_qty - $stock->stocks;
+                                    $stock->update(['stocks' => $stock->stocks - $stock->stocks]);
+                                }
+                            }
+                            $counter++;
+                        }
+                        DB::table('order_product')->delete($toDl);
+                    }
+                    return [
+                        "data" => Order::find($order->id),
+                        "type" => "success",
+                        "message" => "Order successfully added...",
+                    ];
+                }
             }
 
             return $ord;
