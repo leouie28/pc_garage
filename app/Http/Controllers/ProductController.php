@@ -55,6 +55,7 @@ class ProductController extends Controller
                     $request->image,
                     'images/products/' . $product->id . '/'
                 );
+                // $product->images()->attach($file);
                 $image = Image::create([
                     'imagable_id' => $product->id,
                     'imagable_type' => 'App\Models\Product',
@@ -71,7 +72,8 @@ class ProductController extends Controller
             return [
                 "data" => $product,
                 "type" => "error",
-                "message" => "Failed to add product! Please try again..",
+                "message" => $e->getMessage(),
+                // "message" => "Failed to add product! Please try again..",
             ];
         }
         
@@ -148,7 +150,8 @@ class ProductController extends Controller
             return [
                 "data" => $request,
                 "type" => "error",
-                "message" => "Failed to update product! Please try again..",
+                "message" => $e->getMessage(),
+                // "message" => "Failed to update product! Please try again..",
             ];
         }
     }

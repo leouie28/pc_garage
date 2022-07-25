@@ -8,9 +8,12 @@
             <v-container>
                 <v-row>
                     <v-col cols="12">
-                        <v-select
+                        <v-autocomplete
                         :items="products"
                         item-value="id"
+                        item-text="name"
+                        chips
+                        clearable
                         v-model="raw"
                         filled
                         hide-details="auto"
@@ -33,7 +36,7 @@
                                 <span class="pa-2">{{ item.name }}</span>
                                 <span class="red--text" v-if="!item.stocks_sum_stocksstocks || item.stocks_sum_stocksstocks=='0'">Out of stock</span>
                             </template>
-                        </v-select>
+                        </v-autocomplete>
                     </v-col>
                     <v-col md="6" cols="12">
                         <v-text-field
@@ -54,7 +57,6 @@
                         <v-date-picker
                         v-model="payload.arrival"
                         scrollable
-                        :min="now"
                         >
                         <v-spacer></v-spacer>
                         <v-btn
@@ -95,7 +97,7 @@
                         ></v-textarea>
                     </v-col>
                     <v-col cols="12">
-                        <v-select
+                        <v-autocomplete
                         v-model="payload.customer"
                         :items="customers"
                         filled
@@ -105,13 +107,13 @@
                         label="Customer"
                         dense
                         >
-                            <!-- <template v-slot:selection="{ item }">
+                            <template v-slot:selection="{ item }">
                                 {{item.first_name}} {{item.last_name}}
                             </template>
                             <template v-slot:item="{ item }">
                                 {{item.first_name}} {{item.last_name}}
-                            </template> -->
-                        </v-select>
+                            </template>
+                        </v-autocomplete>
                     </v-col>
                     <v-col md="6" cols="12">
                         <v-text-field
@@ -142,7 +144,7 @@
                 <v-row justify="end">
                     <v-btn
                         color="secondary"
-                        @click="$emit('cancel')"
+                        @click="close"
                     >
                         Cancel
                     </v-btn>
@@ -186,12 +188,17 @@ export default {
         ],
         payload: {
             product: '',
-            arrival: new Date().toISOString().slice(0, 7),
-            status: 1,
+            arrival: new Date().toISOString().slice(0, 10),
+            status: 2,
             note: '',
             customer: '',
             quantity: 1,
             total: '',
+        },
+        orgPayload: {
+            arrival: new Date().toISOString().slice(0, 10),
+            status: 2,
+            quantity: 1,
         }
     }),
     props: {
@@ -225,13 +232,22 @@ export default {
                 this.customers.push
             });
         },
+        close() {
+            this.$emit('cancel')
+            this.payload = JSON.parse(JSON.stringify(this.orgPayload))
+        },
         save() {
-            if(this.payload.quantity>this.mx){
-                alert('Quantity is higher than the product stocks')
+            if(!this.payload.product || !this.payload.customer){
+                alert('Important field required to fillup.')
             }else{
-                this.$emit('save', this.payload)
+                if(this.payload.quantity>this.mx){
+                    alert('Quantity is higher than the product stocks')
+                }else{
+                    this.$emit('save', this.payload)
+                    this.payload = JSON.parse(JSON.stringify(this.orgPayload))
+                }
+                // console.log(this.payload)
             }
-            // console.log(this.payload)
         },
         disableItem(item) {
             if(item.stocks_sum_stocksstocks==0 || item.stocks_sum_stocksstocks==null){

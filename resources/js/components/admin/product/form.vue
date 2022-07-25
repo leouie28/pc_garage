@@ -27,7 +27,7 @@
                         hide-details="auto"
                         dense
                         :rules="required"
-                        :items="categories"
+                        :items="category"
                         item-text="name"
                         item-value="id"
                         multiple
@@ -102,7 +102,7 @@ export default {
         isEdit: false,
         newPayload: {},
         img: null,
-        categories: [],
+        category: [],
         required: [
             v => !!v || 'This field is required!',
         ],
@@ -137,7 +137,7 @@ export default {
         },
         getCategory() {
             axios.get(`/admin-api/category`).then(({data})=>{
-                this.categories = data.data
+                this.category = data.data
             })
         },
         close() {
@@ -165,9 +165,9 @@ export default {
                     return
                 }
                 this.payload = JSON.parse(JSON.stringify(val))
-                this.payload.category = []
+                this.payload.categories = []
                 val.categories.forEach(elem => {
-                    this.payload.category.push(elem.id)
+                    this.payload.categories.push(elem.id)
                 });
                 this.img = {}
                 val.images.forEach(elem => {

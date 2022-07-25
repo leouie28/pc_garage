@@ -34,11 +34,47 @@
         class="cursor-pointer table-fix-height"
         fixed-header
       >
+        <template v-slot:[`header.status`]>
+          <div class="d-flex justify-center align-center">
+            <span class="mr-2">Status</span>
+            <div class="text-center">
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-chip
+                    class="mx-auto d-flex justify-center"
+                    label
+                    small
+                    outlined
+                    color="secondary"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <v-icon small>
+                      mdi-filter-outline
+                    </v-icon>
+                    All
+                  </v-chip>
+                </template>
+                <v-list dense>
+                  <v-list-item-group>
+                    <v-list-item
+                      v-for="stat in statItem"
+                      :key="stat.id"
+                    >
+                      <v-list-item-title>{{ stat.text }}</v-list-item-title>
+                    </v-list-item>
+                  </v-list-item-group>
+                </v-list>
+              </v-menu>
+          </div>
+          </div>
+        </template>
         <template v-slot:[`item.customer`]="{ item }">
           {{ item.customer.first_name+' '+item.customer.last_name }} 
         </template>
         <template v-slot:[`item.products`]="{ item }">
           <v-chip
+            v-if="item.products.length>0"
             small
             dark
             color="teal"
@@ -267,7 +303,7 @@ import productVue from './product.vue';
         {
           text: 'Status',
           align: 'center',
-          sortable: true,
+          sortable: false,
           value: 'status',
         },
       ],

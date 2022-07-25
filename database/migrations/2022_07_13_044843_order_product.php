@@ -19,7 +19,8 @@ class OrderProduct extends Migration
             $table->foreignId('product_id')->constrained();
             $table->integer('price');
             $table->integer('quantity');
-            $table->string('stock_id')->nullable();
+            $table->integer('stock_id')->nullable();
+            $table->string('sku')->nullable();
             $table->timestamps();
         });
     }

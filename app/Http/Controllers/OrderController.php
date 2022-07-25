@@ -57,44 +57,58 @@ class OrderController extends Controller
             $order->save();
     
             $product = Product::find($request->product);
-    
-            $available = array();
-    
-            foreach($product->stocks as $stocks){
-                if($stocks->stocks>=$request->quantity){
-                    $available[] = $stocks->id;
-                }
-            }
-            if(count($available)>0){
-                $key = array_rand($available);
-                $stock = Stock::find($available[$key]);
-                $stock->update(['stocks' => $stock->stocks - $request->quantity]);
-                $order->products()->attach($request->product, ['price' => $product->price, 'quantity' => $request->quantity, 'stock_id' => $stock->id]);
-            }else{
-                $ord_qty = $request->quantity;
-                $stocks = $product->stocks;
-                $counter = 0;
-                while($ord_qty > 0){
-                    if($stocks[$counter]->stocks>0){
-                        $stock = Stock::find($stocks[$counter]->id);
-                        if($ord_qty<$stock->stocks){
-                            $order->products()->attach($request->product, ['price' => $product->price, 'quantity' => $ord_qty, 'stock_id' => $stock->id]);
-                            $stock->update(['stocks' => $stock->stocks - $ord_qty]);
-                            $ord_qty = 0;
-                        }else{
-                            $order->products()->attach($request->product, ['price' => $product->price, 'quantity' => $stock->stocks, 'stock_id' => $stock->id]);
-                            $ord_qty = $ord_qty - $stock->stocks;
-                            $stock->update(['stocks' => $stock->stocks - $stock->stocks]);
-                        }
+
+            $valid = array(2, 3, 4); 
+            $notValid = array(0, 1);
+
+            if(in_array($request->status, $valid)){
+
+                $available = array();
+        
+                foreach($product->stocks as $stocks){
+                    if($stocks->stocks>=$request->quantity){
+                        $available[] = $stocks->id;
                     }
-                    $counter++;
                 }
+                if(count($available)>0){
+                    $key = array_rand($available);
+                    $stock = Stock::find($available[$key]);
+                    $stock->update(['stocks' => $stock->stocks - $request->quantity]);
+                    $order->products()->attach($request->product, ['price' => $product->price, 'quantity' => $request->quantity, 'stock_id' => $stock->id, 'sku' => $stock->sku]);
+                }else{
+                    $ord_qty = $request->quantity;
+                    $stocks = $product->stocks;
+                    $counter = 0;
+                    while($ord_qty > 0){
+                        if($stocks[$counter]->stocks>0){
+                            $stock = Stock::find($stocks[$counter]->id);
+                            if($ord_qty<$stock->stocks){
+                                $order->products()->attach($request->product, ['price' => $product->price, 'quantity' => $ord_qty, 'stock_id' => $stock->id, 'sku' => $stock->sku]);
+                                $stock->update(['stocks' => $stock->stocks - $ord_qty]);
+                                $ord_qty = 0;
+                            }else{
+                                $order->products()->attach($request->product, ['price' => $product->price, 'quantity' => $stock->stocks, 'stock_id' => $stock->id, 'sku' => $stock->sku]);
+                                $ord_qty = $ord_qty - $stock->stocks;
+                                $stock->update(['stocks' => $stock->stocks - $stock->stocks]);
+                            }
+                        }
+                        $counter++;
+                    }
+                }
+                return [
+                    "data" => Order::find($order->id),
+                    "type" => "success",
+                    "message" => "Order successfully added...",
+                ];
+            }else{
+                $order->products()->attach($request->product, ['price' => $product->price, 'quantity' => $request->quantity]);
+                return [
+                    "data" => Order::find($order->id),
+                    "type" => "success",
+                    "message" => "Order successfully added...",
+                ];
             }
-            return [
-                "data" => Order::find($order->id),
-                "type" => "success",
-                "message" => "Order successfully added...",
-            ];
+    
         }catch(Exception $e){
             return [
                 "data" => $request,
@@ -159,11 +173,23 @@ class OrderController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
-        $stat = Order::find($id);
-        $stat->status = $request->status;
-        $stat->save();
+        // $stat = Order::find($id);
+        // $stat->status = $request->status;
+        // $stat->save();
 
-        return $stat;
+        // return $stat;
+        $ord = array();
+        try{
+            $order = Order::with('products')->find($id);
+
+            foreach($order->products as $prod){
+                // upd($prod);
+            }
+
+            return $ord;
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
     }
 
     public function updateArrival(Request $request, $id)

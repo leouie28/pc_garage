@@ -4,7 +4,8 @@
             <v-card-title>
                 Order Info
                 <v-spacer></v-spacer>
-                <v-btn color="secondary">
+                <v-btn color="secondary"
+                @click="$router.go(-1)">
                     <v-icon class="mr-2">mdi-backspace</v-icon>
                     Back
                 </v-btn>
@@ -44,7 +45,7 @@
                                     left
                                     icon="mdi-account">
                                         <p class="text-h5 text--primary">
-                                            {{ order.customer.first_name + ' ' + order.customer.last_name }}
+                                            {{ order.customer.first_name }}
                                         </p>
                                     </v-timeline-item>
                                     <v-timeline-item
@@ -87,7 +88,7 @@
                                 <v-divider></v-divider>
                                 <div
                                 v-for="product in order.products"
-                                :key="product.id">
+                                :key="product.pivot.id">
                                     <div class="my-2 d-flex justify-space-between">
                                         <div class="d-flex justify-space-between align-center">
                                             <v-img
@@ -106,7 +107,7 @@
                                         </div>
                                         <v-sheet class="pa-4 text-right">
                                             <h2>&#8369; {{ product.pivot.price }}</h2>
-                                            <div class="text-subtitle-1">SKU: JKLS374</div>
+                                            <div class="font-italic ext-subtitle-1">SKU: {{ product.pivot.sku ? product.pivot.sku : 'Pending' }}</div>
                                         </v-sheet>
                                     </div>
                                     <v-divider></v-divider>
@@ -122,7 +123,9 @@
 <script>
 export default {
     data: () => ({
-        order: {}
+        order: {
+            customer: ''
+        },
     }),
     mounted() {
         this.show()

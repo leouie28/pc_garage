@@ -54,7 +54,7 @@
             </div>
         </div>
         <v-spacer></v-spacer>
-        <div :class="'table-header-main-container items-end '+searchWidth" gap-3>
+        <div :class="'d-flex jutify-end align-end '+searchWidth" gap-3>
             <v-spacer></v-spacer>
             <div class="table-header-search" v-if="!hide.includes('search')">
                 <v-text-field
