@@ -1,4 +1,5 @@
 <?php
+
     function uploadImage($file, $path){
         $image = $file;
         $ext = explode(';', $image);

@@ -140,6 +140,14 @@
     max-width: 200px !important;
     white-space: nowrap;
     overflow: hidden;
-    /* padding: 4px !important; */
     text-overflow: ellipsis;
+}
+
+@media screen and (max-width: 800px){
+    .v-data-table__wrapper td {
+        max-width: unset !important;
+        white-space: unset;
+        overflow: unset;
+        text-overflow: unset;
+    }
 }
