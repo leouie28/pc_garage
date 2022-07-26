@@ -83,7 +83,7 @@ class Controller extends BaseController
         $prod_ids = array();
         $prod_stocks = array();
 
-        foreach($order->products as $prod){
+        foreach($order->products as $prod){ //group by sku id and sum the quantity
             if(!in_array($prod->id, $prod_ids)){
                 $prod_ids[] = $prod->id;
                 $prod_stocks[$prod->id] = $prod->pivot->quantity;
@@ -93,11 +93,27 @@ class Controller extends BaseController
             $stock = Stock::find($prod->pivot->stock_id);
             $stock->stocks = $stock->stocks + $prod->pivot->quantity;
             $stock->save();
+
+            DB::table('order_product')->delete($prod->pivot->id);
         }
 
-        // foreach($prod_stocks as $stock){
-        //     $order->products()->sync([ $prod->id => ['price' => $prod->price, 'quantity' => $prod->pivot->quantity, 'stock_id' => $stock->id, 'sku' => $stock->sku] ]);
-        // }
+        $check = array();
+        foreach($order->products as $prod){
+            if(!in_array($prod->id, $check)){
+                $check[] = $prod->id;
+                $order->products()->sync([ $prod->id => ['price' => $prod->price, 'quantity' => $prod_stocks[$prod->id], 'stock_id' => null, 'sku' => null]] );
+            }
+        }
+
+        $stat = Order::find($id);
+        $stat->status = $data->status;
+        $stat->save();
+
+        return [
+            "data" => $stat,
+            "type" => "success",
+            "message" => 'Order successfully updated...',
+        ];
     }
 
 }
