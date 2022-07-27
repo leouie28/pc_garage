@@ -45,4 +45,9 @@ class Customer extends Authenticatable
         return $this->hasMany(Feedback::class);
     }
 
+    public function recommendation()
+    {
+        return $this->hasMany(Recommendation::class);
+    }
+
 }

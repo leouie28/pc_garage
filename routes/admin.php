@@ -6,7 +6,9 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\StockController;
+use App\Models\Recommendation;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
@@ -43,5 +45,6 @@ Route::group(['middleware'=>['auth:admin']],function(){
         'customer' => CustomerController::class,
         'order' => OrderController::class,
         'stock' => StockController::class,
+        'recommendation' => RecommendationController::class,
     ]);
 });

@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import EventHandler from '../../../vendor/twbs/bootstrap/js/src/dom/event-handler'
 
 export default {
     data: () => {
@@ -66,7 +65,7 @@ export default {
               path: 'admin-product'
             },
             {
-              name: 'Orders',
+              name: 'Customers Order',
               icon: 'mdi-format-list-checks',
               path: 'admin-order'
             },
@@ -81,6 +80,11 @@ export default {
               path: 'admin-customer'
             },
             {
+              name: 'Compatibility',
+              icon: 'mdi-checkbox-multiple-marked-outline',
+              path: 'admin-compatibility'
+            },
+            {
               name: 'Recommendation',
               icon: 'mdi-message-bulleted',
               path: 'admin-recommendation'
@@ -88,7 +92,7 @@ export default {
             {
               name: 'Inventory',
               icon: 'mdi-nas',
-              path: 'admin-inventory'
+              path: 'admin-inventory-report'
             },
           ],
           customer: [
@@ -137,15 +141,20 @@ export default {
         }else{
           this.navs = this.customer
         }
-      }
+      },
     },
     computed: {
       getUrl(){
         let url = this.$route.fullPath
         let path = url.split('/')
         if(localStorage.role=='admin'){
-          let name = path[1]+'-'+path[2]
-          return name
+          if(path[2]=='inventory'){
+            let name = path[1]+'-'+path[2]+'-report'
+            return name
+          }else{
+            let name = path[1]+'-'+path[2]
+            return name
+          }
         }else{
           return path[1]
         }

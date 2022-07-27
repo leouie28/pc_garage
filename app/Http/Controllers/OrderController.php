@@ -225,7 +225,11 @@ class OrderController extends Controller
         $arrival->arrival = $request->arrive;
         $arrival->save();
 
-        return $arrival;
+        return [
+            "data" => $arrival,
+            "type" => "success",
+            "message" => 'Arrival successfully updated...',
+        ];
     }
 
     /**

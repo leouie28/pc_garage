@@ -155,6 +155,7 @@
         large
         color="primary"
         bottom
+        @click=" multiple_update = true"
         class="v-btn--example"
       >
         <v-icon>mdi-square-edit-outline</v-icon>
@@ -193,6 +194,9 @@
     <v-dialog v-model="showForm" persistent max-width="600">
       <order-form @cancel="close" @save="save"></order-form>
     </v-dialog>
+    <v-dialog v-model="multiple_update" persistent max-width="500">
+      <multiple-update @cancel="close" @confirm="updateMultiple"></multiple-update>
+    </v-dialog>
     <v-snackbar
     v-model="alert.trigger"
     multi-line
@@ -218,11 +222,13 @@
 import moment from "moment";
 import TableHeader from "../../components/table-header.vue";
 import OrderForm from '../../components/admin/order/form.vue'
+import multipleUpdate from "../../components/admin/order/multiple-update.vue";
 import productVue from './product.vue';
   export default {
     components: {
       OrderForm,
-      TableHeader
+      TableHeader,
+      multipleUpdate
     },
     data: () => ({
       date: moment().format('MMMM DD YYYY'),
@@ -241,6 +247,7 @@ import productVue from './product.vue';
       total: 0,
       changeBtn: false,
       showForm: false,
+      multiple_update: false,
       dialogDelete: false,
       orders: [],
       arriveSelected: new Date().toISOString().slice(0, 10),
@@ -325,6 +332,10 @@ import productVue from './product.vue';
           this.data.isFetching = false;
         });
       },
+      updateMultiple() {
+        console.log(this.itemsSelected, 'selected')
+        // this.multiple_update = false
+      },
       arrivalPicker(val) {
         this.arrivalDatePicker = true
         this.arrivalId = val
@@ -334,6 +345,7 @@ import productVue from './product.vue';
         let order = { order: ord, status: stat}
         axios.put(`/admin-api/order/update-status/${ord}`, order).then(({ data }) => {
           this.fetchPage()
+          this.newAlert(true, data.type, data.message)
         }).finally(()=>{
           this.showForm = false;
           this.payload = null;
@@ -343,6 +355,7 @@ import productVue from './product.vue';
         // let arrival = { order: ord, arrive: arv}
         axios.put(`/admin-api/order/update-arrival/${ord}?arrive=${arv}`).then(({ data }) => {
           this.fetchPage()
+          this.newAlert(true, data.type, data.message)
         }).finally(()=>{
           this.arrivalDatePicker = false;
         })
@@ -355,6 +368,10 @@ import productVue from './product.vue';
           this.showForm = false;
           this.payload = null;
         })
+      },
+      close() {
+        this.multiple_update = false
+        this.showForm = false
       },
       prodName(val) {
         let prod = []
@@ -404,9 +421,6 @@ import productVue from './product.vue';
       addNew(){
         this.showForm = true
       },
-      close() {
-        this.showForm = false
-      }
     },
     watch: {
 

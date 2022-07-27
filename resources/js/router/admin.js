@@ -36,15 +36,27 @@ export default [
         name: 'admin-customer'
     },
     {
+        path: '/admin/compatibility',
+        component: () => import('../pages/admin/compatibility.vue'),
+        meta: { requireAuth: true },
+        name: 'admin-compatibility'
+    },
+    {
         path: '/admin/recommendation',
         component: () => import('../pages/admin/recommendation.vue'),
         meta: { requireAuth: true },
         name: 'admin-recommendation'
     },
     {
-        path: '/admin/inventory',
-        component: () => import('../pages/admin/inventory.vue'),
+        path: '/admin/inventory/report',
+        component: () => import('../pages/admin/inventory/report.vue'),
         meta: { requireAuth: true },
-        name: 'admin-inventory'
+        name: 'admin-inventory-report'
+    },
+    {
+        path: '/admin/inventory/stock',
+        component: () => import('../pages/admin/inventory/stock.vue'),
+        meta: { requireAuth: true },
+        name: 'admin-inventory-stock'
     },
 ]
