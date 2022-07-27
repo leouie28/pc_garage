@@ -13,8 +13,8 @@
                     :key="item.name"
                     @click="$router.push({name: item.link}).catch(() => {})"
                 >
+                    <h4 class="mr-2">{{ item.name }}</h4>
                     <v-icon>{{ item.icon }}</v-icon>
-                    <h4 class="ml-2">{{ item.name }}</h4>
                 </v-tab>
             </v-tabs>
         </v-card>
