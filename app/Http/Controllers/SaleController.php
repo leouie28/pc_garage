@@ -34,26 +34,51 @@ class SaleController extends Controller
     public function checkSales()
     {
         try{
+
+            $yesterday = Carbon::yesterday()->toDateString();
+
             $first_sale = Sale::first(['id']);
-    
+
             if(!$first_sale){
-                $first_order = Order::where('status', '=', 4)->oldest()->first(['created_at']);
-                $first_order = $first_order->created_at->format('Y-m-d');
-                $yesterday = Carbon::yesterday()->toDateString();
+                $first_order = Order::where('status', '=', 4)->latest()->first(['date_received']);
+                $first_order = $first_order->date_received;
 
                 if($first_order<=$yesterday){
-                    $orders = Order::where('status', '=', 4)->get();
+                    // $orders = Order::where('status', 4)
+                    // ->groupBy('date_received')
                     // ->sum('total');
-                    // ->selectRaw('SUM(total) as order_total')
-                    // ->get();
+                    
+                    $orders = DB::table('orders')
+                    ->select(DB::raw('date_received, count(id) as order_count, sum(total) as sales'))
+                    ->where('status', 4)
+                    ->groupBy('date_received')
+                    ->get();
 
-                    return $orders;
+                    foreach($orders as $order){
+                        $sale = Sale::create([
+                            'date' => $order->date_received,
+                            'order_count' => $order->order_count,
+                            'sales' => $order->sales
+                        ]);
+                    }
+
+                    return 'Sales created';
                 }
                 else{
-                    return 'hello';
+                    return 'No sales yet.';
                 }
             }else{
+                $last_sales = Sale::orderBy('date', 'desc')->first(['date']);
+                $last_sales = Carbon::parse($last_sales->date)->addDay()->toDateString();
 
+                $unsave_sales = DB::table('orders')
+                ->select(DB::raw('date_received, count(id) as order_count, sum(total) as sales'))
+                ->where('status', 4)
+                ->whereBetween('date_received', [$last_sales, $yesterday])
+                ->groupBy('date_received')
+                ->get();
+
+                return $unsave_sales;
             }
     
             return $first_sale;

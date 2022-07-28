@@ -67,6 +67,10 @@ class Controller extends BaseController
         }
 
         $stat = Order::find($id);
+        if($data->status==4){
+            $now = date('Y-m-d');
+            $stat->date_received = $now;
+        }
         $stat->status = $data->status;
         $stat->save();
 

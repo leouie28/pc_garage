@@ -184,6 +184,10 @@ class OrderController extends Controller
                     return $this->returnStock($request, $id);
                 }else{
                     $order = Order::find($id);
+                    if($request->status==4){
+                        $now = date('Y-m-d');
+                        $order->date_received = $now;
+                    }
                     $order->status = $request->status;
                     $order->save();
 

@@ -56,6 +56,14 @@
                                             {{ order.customer.address }}
                                         </p>
                                     </v-timeline-item>
+                                    <v-timeline-item
+                                    class="py-0 ma-0"
+                                    left
+                                    icon="mdi-phone">
+                                        <p class="text-h5 text--primary">
+                                            {{ order.customer.phone }}
+                                        </p>
+                                    </v-timeline-item>
                                 </v-timeline>
                             </div>
                             <div class="d-flex justify-space-between">

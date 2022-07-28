@@ -302,6 +302,12 @@ import productVue from './product.vue';
           value: 'arrival',
         },
         {
+          text: 'Date Received',
+          align: 'start',
+          sortable: true,
+          value: 'date_received',
+        },
+        {
           text: 'Total',
           align: 'start',
           sortable: true,
