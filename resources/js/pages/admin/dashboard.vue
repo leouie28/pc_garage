@@ -177,6 +177,12 @@ export default {
             this.getMonthOrders()
             this.getOrders()
             this.getStatistic()
+            this.checkSales()
+        },
+        checkSales() {
+            axios.get(`/admin-api/sales/check-sales`).then(({data})=>{
+                console.log(data)
+            })
         },
         getStatistic() {
             axios.get(`/admin-api/dashboard/statistic`).then(({data})=>{

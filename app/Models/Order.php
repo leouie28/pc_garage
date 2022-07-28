@@ -15,6 +15,7 @@ class Order extends Model
         'note',
         'status',
         'arrival',
+        'date_received',
         'customer_id'
     ];
 

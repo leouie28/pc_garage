@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card elevation="0" class="pa-2">
+    <v-card class="pa-2 my-4">
       <table-header
         :data="data"
         @addNew="addNew"
@@ -8,15 +8,12 @@
         @search="fetchPage"
         @resetFilters="resetFilter"
         @filterRecord="fetchPage"
-        :hide="['filter', 'download']"
+        :hide="['filter', 'addNew']"
       >
-        <template v-slot:custom_filter>
-          <admin-filter :filter="data.filter"></admin-filter>
-        </template>
       </table-header>
       <v-data-table
         :headers="headers"
-        :items="customers"
+        :items="categories"
         max-height="100%"
         :search="data.keyword"
         :loading="data.isFetching"
@@ -29,30 +26,37 @@
         class="cursor-pointer table-fix-height"
         fixed-header
       >
-        <template v-slot:[`item.name`]="{ item }">
-          {{ item.first_name+ ' '+item.last_name }}
+        <template v-slot:[`item.color`]="{ item }">
+          <v-chip small :color="item.color">
+            <span class="text-capitalize">{{ item.color }}</span>
+          </v-chip>
+        </template>
+        <template v-slot:[`item.icon`]="{ item }">
+            <v-chip label small v-if="item.icon!=null">
+                <v-icon>mdi-account</v-icon>
+                mdi-account
+            </v-chip>
+            <span v-else>No icon</span>
         </template>
         <template v-slot:[`item.created_at`]="{ item }">
           {{ moment(item.created_at).format('MMMM DD YYYY') }}
         </template>
         <template v-slot:[`item.action`]="{ item }">
           <v-btn
-            class="px-2"
             small
             elevation="0"
             color="primary"
             @click="editItem(item)"
           >
-            <v-icon small>mdi-square-edit-outline</v-icon>
+            Edit
           </v-btn>
           <v-btn
-            class="px-2"
             small
             elevation="0"
             color="error"
             @click="warning(item)"
           >
-            <v-icon small>mdi-trash-can</v-icon>
+            Delete
           </v-btn>
         </template>
         <template v-slot:no-data>
@@ -88,10 +92,9 @@
 </template>
 
 <script>
-import moment from "moment";
-import DeleteDialog from "../../components/deleteDialog.vue";
-import CustomerForm from "../../components/admin/customer/form.vue";
-import TableHeader from "../../components/table-header.vue";
+import DeleteDialog from "@/components/deleteDialog.vue";
+import CustomerForm from "@/components/admin/customer/form.vue";
+import TableHeader from "@/components/table-header.vue";
 export default {
   components: {
     DeleteDialog,
@@ -100,7 +103,7 @@ export default {
   },
   data: () => ({
     data: {
-      title: "Customers",
+      title: "Sales",
       isFetching: false,
       keyword: "",
       filter: {},
@@ -116,10 +119,10 @@ export default {
     showForm: false,
     dialogDelete: false,
     user: {},
-    customers: [],
+    categories: [],
     selectedItem: {},
     selected: [],
-    title: "Customers",
+    title: "Categories",
     headers: [
       {
         text: "ID",
@@ -128,52 +131,22 @@ export default {
         value: "id",
       },
       {
-        text: "Name",
+        text: "Date",
         align: "start",
         sortable: true,
-        value: "name",
-      },
-      {
-        text: "Gender",
-        align: "start",
-        sortable: false,
-        value: "gender",
-      },
-      {
-        text: "Birthday",
-        align: "start",
-        sortable: false,
-        value: "birthday",
-      },
-      {
-        text: "Address",
-        align: "start",
-        sortable: false,
-        value: "address",
-      },
-      {
-        text: "Phone",
-        align: "start",
-        sortable: true,
-        value: "phone",
-      },
-      {
-        text: "Email",
-        align: "start",
-        sortable: true,
-        value: "email",
+        value: "date",
       },
       {
         text: "Orders",
-        align: "center",
-        sortable: false,
-        value: "orders_count",
-      },
-      {
-        text: "Date Joined",
         align: "start",
         sortable: false,
-        value: "created_at",
+        value: "orders",
+      },
+      {
+        text: "Sales",
+        align: "start",
+        sortable: false,
+        value: "sales",
       },
       {
         text: "Actions",
@@ -191,8 +164,8 @@ export default {
       let params = this._createParams(this.options);
       params = params + this._createFilterParams(this.data.filter);
       if (this.data.keyword) params = params + "&keyword=" + this.data.keyword;
-      axios.get(`/admin-api/customer?${params}`).then(({ data }) => {
-        this.customers = data.data;
+      axios.get(`/admin-api/category?${params}`).then(({ data }) => {
+        this.categories = data.data;
         this.total = data.total;
         this.data.isFetching = false;
       });

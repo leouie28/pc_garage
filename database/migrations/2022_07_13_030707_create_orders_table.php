@@ -20,6 +20,7 @@ class CreateOrdersTable extends Migration
             $table->string('note')->nullable();
             $table->integer('status')->default(1);
             $table->string('arrival')->nullable();
+            $table->date('date_received')->nullable();
             $table->foreignId('customer_id')->constrained();
             $table->timestamps();
         });

@@ -8,23 +8,15 @@
     :css-classes="cssClasses"
     :styles="styles"
     :width="width"
+    :height="height"
   />
 </template>
 
 <script>
 import { Bar } from 'vue-chartjs/legacy'
 
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-} from 'chart.js'
-
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 
 export default {
   name: 'BarChart',
@@ -75,10 +67,10 @@ export default {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: {
-            ticks: {
-                  max: 10
-              }
+          x: {
+            grid: {
+              display: false
+            }
           }
         }
       }
@@ -97,8 +89,8 @@ export default {
   }
 }
 </script>
-<style>
+<!-- <style>
 #bar-chart {
   height: 343px !important;
 }
-</style>
+</style> -->

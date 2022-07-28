@@ -131,6 +131,23 @@
                 </template>
                 <span>Add new</span>
             </v-tooltip>
+            <v-tooltip left>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                        v-bind="attrs"
+                        v-on="on"
+                        color="success"
+                        @click.stop="$emit('download')"
+                        v-if="!hide.includes('download')"
+                        :disabled="disable.includes('download')"
+                        class="ml-3"
+                    >
+                        Download
+                        <v-icon>mdi-download</v-icon>
+                    </v-btn>
+                </template>
+                <span>Download Record as pdf</span>
+            </v-tooltip>
         </div>
     </v-toolbar>
 </template>

@@ -15,28 +15,8 @@
 <script>
 import { Line as LineChartGenerator } from 'vue-chartjs/legacy'
 
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  LineElement,
-  LinearScale,
-  CategoryScale,
-  PointElement,
-  Filler
-} from 'chart.js'
-
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  LineElement,
-  LinearScale,
-  CategoryScale,
-  PointElement,
-  Filler
-)
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 
 export default {
   name: 'LineChart',

@@ -38,21 +38,21 @@ export default {
                     icon: 'mdi-package-variant',
                     link: 'admin-inventory-stock'
                 },
-                {
-                    name: 'Product',
-                    icon: 'mdi-desktop-classic',
-                    link: 'admin-inventory-report'
-                },
-                {
-                    name: 'Orders',
-                    icon: 'mdi-format-list-checks',
-                    link: 'admin-inventory-report'
-                },
-                {
-                    name: 'Customers',
-                    icon: 'mdi-account-group',
-                    link: 'admin-inventory-report'
-                },
+                // {
+                //     name: 'Product',
+                //     icon: 'mdi-desktop-classic',
+                //     link: 'admin-inventory-report'
+                // },
+                // {
+                //     name: 'Orders',
+                //     icon: 'mdi-format-list-checks',
+                //     link: 'admin-inventory-report'
+                // },
+                // {
+                //     name: 'Customers',
+                //     icon: 'mdi-account-group',
+                //     link: 'admin-inventory-report'
+                // },
             ],
         }
     },

@@ -10,22 +10,50 @@
       <div class="mx-auto">
         <img src="/images/system/logo.png" alt="ubi logo" height="150" width="150" style="margin: 10px 18%;" />
       </div>
-      <v-list>
-        <v-list-item
-          v-for="item in navs"
-          :key="item.icon"
-          @click="$router.push({name: item.path}).catch(() => {})"
-          :class="getUrl == item.path ? 'active-nav' : '' "
-        >
+      <v-list color="py-0">
+          <v-list-item
+            v-for="(item, index) in navs"
+            :key="index"
+            @click="$router.push({name: item.path}).catch(() => {})"
+            :class="getUrl == item.path ? 'active-nav' : '' "
+          >
+            <v-list-item-icon class="pl-3">
+              <v-icon dense color="#cccccc">{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title style="color:#ccc; font-size: 16px">{{ item.name }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+      </v-list>
+      <v-list-group
+        :value="false"
+      >
+        <template v-slot:activator>
           <v-list-item-icon class="pl-3">
-            <v-icon dense color="#cccccc">{{ item.icon }}</v-icon>
+            <v-icon dense color="#cccccc">mdi-dots-horizontal-circle-outline</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title style="color:#ccc; font-size: 16px">{{ item.name }}</v-list-item-title>
+            <v-list-item-title style="color:#ccc; font-size: 16px">Others</v-list-item-title>
+          </v-list-item-content>
+        </template>
+        <v-list-item
+          style="background: #263238;"
+          v-for="(subs, index) in submenus"
+          :key="index"
+          @click="$router.push({name: subs.path}).catch(() => {})"
+          :class="getUrl == subs.path ? 'active-nav' : '' "
+        >
+          <v-list-item-icon class="ml-5">
+            <v-icon dense small color="#cccccc">{{ subs.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title style="color:#ccc; font-size: 15px">{{ subs.name }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      </v-list>
+      </v-list-group>
       <div class="footer">
         <v-footer
           dark
@@ -53,6 +81,23 @@ export default {
         return{
           navs: null,
           drawer1: true,
+          submenus: [
+            {
+              name: 'Compatibility',
+              icon: 'mdi-checkbox-multiple-marked-outline',
+              path: 'admin-compatibility'
+            },
+            {
+              name: 'Recommendations',
+              icon: 'mdi-message-bulleted',
+              path: 'admin-recommendation'
+            },
+            {
+              name: 'Inventory',
+              icon: 'mdi-clipboard-list-outline',
+              path: 'admin-inventory-report'
+            },
+          ],
           admin: [
             {
               name: 'Dashboard',
@@ -61,11 +106,11 @@ export default {
             },
             {
               name: 'Products',
-              icon: 'mdi-briefcase',
+              icon: 'mdi-devices',
               path: 'admin-product'
             },
             {
-              name: 'Customers Order',
+              name: 'Orders',
               icon: 'mdi-format-list-checks',
               path: 'admin-order'
             },
@@ -79,21 +124,43 @@ export default {
               icon: 'mdi-account-group',
               path: 'admin-customer'
             },
-            {
-              name: 'Compatibility',
-              icon: 'mdi-checkbox-multiple-marked-outline',
-              path: 'admin-compatibility'
-            },
-            {
-              name: 'Recommendation',
-              icon: 'mdi-message-bulleted',
-              path: 'admin-recommendation'
-            },
-            {
-              name: 'Inventory',
-              icon: 'mdi-nas',
-              path: 'admin-inventory-report'
-            },
+            // {
+            //   name: 'Others',
+            //   icon: 'mdi-dots-horizontal-circle-outline',
+            //   // path: 'admin-customer'
+            //   submenus: [
+            //     {
+            //       name: 'Compatibility',
+            //       icon: 'mdi-checkbox-multiple-marked-outline',
+            //       path: 'admin-compatibility'
+            //     },
+            //     {
+            //       name: 'Recommendations',
+            //       icon: 'mdi-message-bulleted',
+            //       path: 'admin-recommendation'
+            //     },
+            //     {
+            //       name: 'Inventory',
+            //       icon: 'mdi-nas',
+            //       path: 'admin-inventory-report'
+            //     },
+            //   ]
+            // },
+            // {
+            //   name: 'Compatibility',
+            //   icon: 'mdi-checkbox-multiple-marked-outline',
+            //   path: 'admin-compatibility'
+            // },
+            // {
+            //   name: 'Recommendations',
+            //   icon: 'mdi-message-bulleted',
+            //   path: 'admin-recommendation'
+            // },
+            // {
+            //   name: 'Inventory',
+            //   icon: 'mdi-nas',
+            //   path: 'admin-inventory-report'
+            // },
           ],
           customer: [
             {
@@ -176,7 +243,7 @@ export default {
   color: #fff !important;
 }
 .active-nav{
-  background: #263238 !important;
+  background: #212121 !important;
 }
 .footer{
   width : 100% !important;
