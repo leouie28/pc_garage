@@ -323,7 +323,7 @@ import productVue from './product.vue';
     }),
     methods: {
       viewOrder(item) {
-        console.log(this.$route)
+        // console.log(this.$route)
         this.$router.push({path: this.$route.fullPath+'/'+item.id})
       },
       resetFilter() {},

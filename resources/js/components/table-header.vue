@@ -136,7 +136,7 @@
                     <v-btn
                         v-bind="attrs"
                         v-on="on"
-                        color="success"
+                        color="primary"
                         @click.stop="$emit('download')"
                         v-if="!hide.includes('download')"
                         :disabled="disable.includes('download')"

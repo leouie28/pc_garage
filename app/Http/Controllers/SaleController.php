@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\SaleFilter;
 use App\Models\Order;
 use App\Models\Sale;
 use Exception;
@@ -18,7 +19,7 @@ class SaleController extends Controller
      */
     public function index()
     {
-        //
+        return (new SaleFilter)->searchable();
     }
 
     /**
@@ -40,32 +41,37 @@ class SaleController extends Controller
             $first_sale = Sale::first(['id']);
 
             if(!$first_sale){
-                $first_order = Order::where('status', '=', 4)->latest()->first(['date_received']);
-                $first_order = $first_order->date_received;
-
-                if($first_order<=$yesterday){
-                    // $orders = Order::where('status', 4)
-                    // ->groupBy('date_received')
-                    // ->sum('total');
-                    
-                    $orders = DB::table('orders')
-                    ->select(DB::raw('date_received, count(id) as order_count, sum(total) as sales'))
-                    ->where('status', 4)
-                    ->groupBy('date_received')
-                    ->get();
-
-                    foreach($orders as $order){
-                        $sale = Sale::create([
-                            'date' => $order->date_received,
-                            'order_count' => $order->order_count,
-                            'sales' => $order->sales
-                        ]);
+                $first_order = Order::where('status', '=', 4)->orderBy('date_received', 'asc')->first(['date_received']);
+                if($first_order){
+                    $first_order = $first_order->date_received;
+    
+                    if($first_order<=$yesterday){
+                        // $orders = Order::where('status', 4)
+                        // ->groupBy('date_received')
+                        // ->sum('total');
+                        
+                        $orders = DB::table('orders')
+                        ->select(DB::raw('date_received, count(id) as order_count, sum(total) as sales'))
+                        ->where('status', 4)
+                        ->whereBetween('date_received', [$first_order, $yesterday])
+                        ->groupBy('date_received')
+                        ->get();
+    
+                        foreach($orders as $order){
+                            $sale = Sale::create([
+                                'date' => $order->date_received,
+                                'order_count' => $order->order_count,
+                                'sales' => $order->sales
+                            ]);
+                        }
+    
+                        return 'Sales created';
                     }
-
-                    return 'Sales created';
-                }
-                else{
-                    return 'No sales yet.';
+                    else{
+                        return 'No sales yet.';
+                    }
+                }else{
+                    return 'No order yet.';
                 }
             }else{
                 $last_sales = Sale::orderBy('date', 'desc')->first(['date']);
@@ -78,20 +84,19 @@ class SaleController extends Controller
                 ->groupBy('date_received')
                 ->get();
 
-                return $unsave_sales;
+                if(count($unsave_sales)>0){
+                    foreach($unsave_sales as $order){
+                        $sale = Sale::create([
+                            'date' => $order->date_received,
+                            'order_count' => $order->order_count,
+                            'sales' => $order->sales
+                        ]);
+                    }
+                    return 'New Sales created';
+                }else{
+                    return 'No unsave sales';
+                }
             }
-    
-            return $first_sale;
-    
-            
-    
-            // $sale = Sale::where('date', '=', $yesterday)->first();
-    
-            // if(!$sale){
-                
-            // }else{
-            //     return 'Already has data.';
-            // }
         }catch(Exception $e){
             return $e->getMessage();
         }
@@ -105,7 +110,26 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            $sale = Sale::create([
+                'date' => $request->date,
+                'order_count' => $request->order_count,
+                'sales' => $request->sales,
+            ]);
+            $sale->save();
+    
+            return [
+                "data" => $sale,
+                "type" => "success",
+                "message" => 'Sales successfully added...',
+            ];
+        }catch(Exception $e){
+            return [
+                "data" => $request,
+                "type" => "error",
+                "message" => $e->getMessage(),
+            ];
+        }
     }
 
     /**
@@ -139,7 +163,21 @@ class SaleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            $sale = Sale::find($id)->update($request->toArray());
+
+            return [
+                "data" => $sale,
+                "type" => "success",
+                "message" => 'Sales successfully updated...',
+            ];
+        }catch(Exception $e){
+            return [
+                "data" => $request,
+                "type" => "error",
+                "message" => $e->getMessage(),
+            ];
+        }
     }
 
     /**
@@ -150,6 +188,13 @@ class SaleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $sale = Sale::find($id);
+        $sale->delete();
+
+        return [
+            "data" => $sale,
+            "type" => "warning",
+            "message" => 'Sales successfully deleted...',
+        ];
     }
 }

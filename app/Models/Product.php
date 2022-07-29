@@ -36,6 +36,11 @@ class Product extends Model
     {
         return $this->hasMany(Stock::class, 'product_id');
     }
+
+    // public function sku_profile()
+    // {
+    //     return $this->belongsToMany(SkuProfile::class, 'product_id');
+    // }
     
     public function order()
     {

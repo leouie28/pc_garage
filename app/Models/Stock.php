@@ -20,6 +20,12 @@ class Stock extends Model
         return $this->belongsTo(Product::class);
     
     }
+
+    public function sku()
+    {
+        return $this->belongsTo(SkuProfile::class);
+    }
+
     public function orderProduct()
     {
         return $this->hasMany(OrderProduct::class, 'stock_id');

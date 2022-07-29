@@ -235,6 +235,8 @@ export default {
         close() {
             this.$emit('cancel')
             this.payload = JSON.parse(JSON.stringify(this.orgPayload))
+            this.raw = ''
+            this.qty = 1
         },
         save() {
             if(!this.payload.product || !this.payload.customer){
@@ -245,6 +247,8 @@ export default {
                 }else{
                     this.$emit('save', this.payload)
                     this.payload = JSON.parse(JSON.stringify(this.orgPayload))
+                    this.raw = ''
+                    this.qty = 1
                 }
                 // console.log(this.payload)
             }

@@ -2,7 +2,7 @@
     <v-navigation-drawer
       v-model="drawer1"
       color="blue-grey darken-3"
-      class=" accent-4"
+      class="pb-16 accent-4"
       width="250"
       dark
       app
@@ -26,8 +26,11 @@
             </v-list-item-content>
           </v-list-item>
       </v-list>
-      <v-list-group
+      <!-- <v-list-group
         :value="false"
+      > -->
+      <v-list-group
+      v-model="child"
       >
         <template v-slot:activator>
           <v-list-item-icon class="pl-3">
@@ -80,6 +83,7 @@ export default {
     data: () => {
         return{
           navs: null,
+          child: false,
           drawer1: true,
           submenus: [
             {
@@ -207,6 +211,12 @@ export default {
           this.navs = this.admin
         }else{
           this.navs = this.customer
+        }
+
+        let url = this.$route.fullPath
+        let path = url.split('/')
+        if(path[2]=='compatibility' || path[2]=='recommendation' || path[2]=='inventory'){
+          this.child = true
         }
       },
     },

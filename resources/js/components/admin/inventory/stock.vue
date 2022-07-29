@@ -8,12 +8,12 @@
         @search="fetchPage"
         @resetFilters="resetFilter"
         @filterRecord="fetchPage"
-        :hide="toHide"
+        :hide="['filter', 'download']"
       >
       </table-header>
       <v-data-table
         :headers="headers"
-        :items="sales"
+        :items="stocks"
         max-height="100%"
         :search="data.keyword"
         :loading="data.isFetching"
@@ -22,7 +22,7 @@
         :options.sync="options"
         :items-per-page="options.itemsPerPage"
         @update:options="fetchPage"
-        @click:row="viewProduct"
+        @click:row="viewItem"
         class="cursor-pointer table-fix-height"
         fixed-header
       >
@@ -38,8 +38,8 @@
             </v-chip>
             <span v-else>No icon</span>
         </template>
-        <template v-slot:[`item.sales`]="{ item }">
-          &#8369; {{ item.sales }}
+        <template v-slot:[`item.created_at`]="{ item }">
+            {{ moment(item.created_at).format('MMMM DD YYYY') }}
         </template>
         <template v-slot:[`item.action`]="{ item }">
           <v-btn
@@ -105,7 +105,7 @@ export default {
   },
   data: () => ({
     data: {
-      title: "Sales",
+      title: "Sku Profile",
       isFetching: false,
       keyword: "",
       filter: {},
@@ -120,9 +120,8 @@ export default {
     deleteForm: false,
     showForm: false,
     dialogDelete: false,
-    toHide: ['filter'],
     item: {},
-    sales: [],
+    stocks: [],
     selectedItem: {},
     selected: [],
     title: "Sales",
@@ -134,22 +133,28 @@ export default {
         value: "id",
       },
       {
-        text: "Date",
+        text: "Name",
         align: "start",
         sortable: true,
-        value: "date",
+        value: "name",
       },
       {
-        text: "Orders",
+        text: "Sku Code",
         align: "center",
         sortable: false,
-        value: "order_count",
+        value: "sku_code",
       },
       {
-        text: "Sales",
+        text: "Products",
         align: "center",
         sortable: false,
-        value: "sales",
+        value: "products_count",
+      },
+      {
+        text: "Date Created",
+        align: "center",
+        sortable: false,
+        value: "created_at",
       },
       {
         text: "Actions",
@@ -160,19 +165,17 @@ export default {
     ],
   }),
   methods: {
-    viewProduct() {},
+    viewItem(item) {
+        this.$router.push({path: this.$route.fullPath+'/'+item.id})
+    },
     resetFilter() {},
     fetchPage() {
       this.data.isFetching = true;
       let params = this._createParams(this.options);
       params = params + this._createFilterParams(this.data.filter);
       if (this.data.keyword) params = params + "&keyword=" + this.data.keyword;
-      axios.get(`/admin-api/sales?${params}`).then(({ data }) => {
-        this.sales = data.data;
-        if(data.data.length==0){
-          let hide = ['filter', 'addNew']
-          this.toHide = hide
-        }
+      axios.get(`/admin-api/sku-profile?${params}`).then(({ data }) => {
+        this.stocks = data.data
         this.total = data.total;
         this.data.isFetching = false;
       });
@@ -210,8 +213,8 @@ export default {
     warning(val){
       this.item = {
         id: val.id,
-        text: val.date,
-        model: 'sales'
+        text: val.name,
+        model: 'sku-profile'
       }
       this.deleteForm = true
     },

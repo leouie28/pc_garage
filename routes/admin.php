@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SkuProfileController;
 use App\Http\Controllers\StockController;
 use App\Models\Recommendation;
 use Illuminate\Support\Facades\Route;
@@ -53,5 +54,6 @@ Route::group(['middleware'=>['auth:admin']],function(){
         'stock' => StockController::class,
         'recommendation' => RecommendationController::class,
         'sales' => SaleController::class,
+        'sku-profile' => SkuProfileController::class,
     ]);
 });

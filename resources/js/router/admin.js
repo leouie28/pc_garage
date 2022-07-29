@@ -59,4 +59,10 @@ export default [
         meta: { requireAuth: true },
         name: 'admin-inventory-stock'
     },
+    {
+        path: '/admin/inventory/stock/:id',
+        component: () => import('../pages/admin/item-profile/stock-profile.vue'),
+        meta: { requireAuth: true },
+        name: 'admin-inventory-stock-profile'
+    },
 ]
