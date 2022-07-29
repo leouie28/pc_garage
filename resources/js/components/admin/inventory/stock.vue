@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="pa-2 my-4">
+    <v-card outlined class="pa-2 my-4">
       <table-header
         :data="data"
         @addNew="addNew"

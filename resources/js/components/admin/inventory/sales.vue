@@ -170,8 +170,10 @@ export default {
       axios.get(`/admin-api/sales?${params}`).then(({ data }) => {
         this.sales = data.data;
         if(data.data.length==0){
-          let hide = ['filter', 'addNew']
+          let hide = ['filter', 'addNew', 'download']
           this.toHide = hide
+        }else{
+          let hide = ['filter']
         }
         this.total = data.total;
         this.data.isFetching = false;

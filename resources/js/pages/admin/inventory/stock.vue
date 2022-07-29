@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-subheader><h1>Inventory</h1></v-subheader>
-        <v-card elevation="0" class="pa-2" >
+        <v-card elevation="0" class="pa-2">
             <v-card-text>
                 <v-tabs
                 v-model="active_tab"

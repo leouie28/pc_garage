@@ -2,7 +2,7 @@
     <v-navigation-drawer
       v-model="drawer1"
       color="blue-grey darken-3"
-      class="pb-16 accent-4"
+      class="accent-4"
       width="250"
       dark
       app
@@ -30,6 +30,7 @@
         :value="false"
       > -->
       <v-list-group
+      class="mb-10"
       v-model="child"
       >
         <template v-slot:activator>
@@ -57,7 +58,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list-group>
-      <div class="footer">
+      <!-- <div class="footer">
         <v-footer
           dark
           padless
@@ -68,12 +69,11 @@
             tile
           >
             <v-card-text class="py-5 text-center">
-              <!-- <small class="font-italic">Powered by:</small><br> -->
               PCGarage
             </v-card-text>
           </v-card>
         </v-footer>
-      </div>
+      </div> -->
     </v-navigation-drawer>
 </template>
 

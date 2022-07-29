@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Filters\SkuProfileFilter;
+use App\Models\SkuProfile;
+use Exception;
 use Illuminate\Http\Request;
 
 class SkuProfileController extends Controller
@@ -46,7 +48,16 @@ class SkuProfileController extends Controller
      */
     public function show($id)
     {
-        //
+        try{
+            // return SkuProfile::find($id);
+            $sku = SkuProfile::where('id', '=', $id)->with('products', function($item) {
+                return $item->with('product');
+            })->first();
+
+            return $sku;
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
     }
 
     /**

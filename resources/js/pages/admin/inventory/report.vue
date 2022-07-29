@@ -20,31 +20,31 @@
                 </v-tabs>
                 <div class="mt-6">
                     <v-row>
-                        <v-col md="4" cols="12">
+                        <v-col md="6" cols="12">
                             <v-card>
                                 <v-card-title>
                                     Orders of the Week
                                 </v-card-title>
                                 <v-card-text>
+                                    <bar-chart :height="260" :chartData="order_chart"></bar-chart>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col md="6" cols="12">
+                            <v-card>
+                                <v-card-title>
+                                    Register Customers of the Week
+                                </v-card-title>
+                                <v-card-text>
                                     <line-chart
                                     :height="260"
                                     :removeLabel="true"
-                                    :chartData="kg_chart_data"
+                                    :chartData="customer_chart"
                                     ></line-chart>
                                 </v-card-text>
                             </v-card>
                         </v-col>
-                        <v-col md="4" cols="12">
-                            <v-card>
-                                <v-card-title>
-                                    New Customer of the Week
-                                </v-card-title>
-                                <v-card-text>
-                                    <bar-chart :height="260" :chartData="subscription_chart"></bar-chart>
-                                </v-card-text>
-                            </v-card>
-                        </v-col>
-                        <v-col md="4" cols="12">
+                        <!-- <v-col md="4" cols="12">
                             <v-card>
                                 <v-card-title>
                                     Order Status of the Week
@@ -53,7 +53,7 @@
                                     <donut-chart :height="260" :chartData="donut_chart"></donut-chart>
                                 </v-card-text>
                             </v-card>
-                        </v-col>
+                        </v-col> -->
                     </v-row>
                     <v-row>
                         <v-col md="12" cols="12">
@@ -93,53 +93,22 @@ export default {
                     icon: 'mdi-package-variant',
                     link: 'admin-inventory-stock'
                 },
-                // {
-                //     name: 'Product',
-                //     icon: 'mdi-desktop-classic',
-                //     link: 'admin-inventory-report'
-                // },
-                // {
-                //     name: 'Orders',
-                //     icon: 'mdi-format-list-checks',
-                //     link: 'admin-inventory-report'
-                // },
-                // {
-                //     name: 'Customers',
-                //     icon: 'mdi-account-group',
-                //     link: 'admin-inventory-report'
-                // },
             ],
-            kg_chart_data: {
-                labels: [
-                'Monday',
-                'Tuesday',
-                'Wednesday',
-                'Thursday',
-                'Friday',
-                'Saturday',
-                'Sunday'
-                ],
+            customer_chart: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                 datasets: [
-                {
-                    label: 'Kg',
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    fill: true,
-                    borderColor: '#1C3B9F',
-                    data: [0, 39, 0, 40, 20],
-                    tension: 0.5
-                },
+                    {
+                        label: 'Customer',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        fill: true,
+                        borderColor: '#1C3B9F',
+                        data: [0, 0, 0, 0, 0, 0, 0],
+                        tension: .5
+                    },
                 ]
             },
-            subscription_chart: {
-                labels: [
-                'Monday',
-                'Tuesday',
-                'Wednesday',
-                'Thursday',
-                'Friday',
-                'Saturday',
-                'Sunday'
-                ],
+            order_chart: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                 datasets: [
                     {
                         label: 'Clients',
@@ -162,7 +131,7 @@ export default {
                             'rgb(201, 203, 207)'
                         ],
                         borderWidth: 1,
-                        data: [3, 7, 2, 9, 3, 7, 0]
+                        data: [0, 0, 0, 0, 0, 0, 0]
                     }
                 ]
             },
@@ -180,13 +149,23 @@ export default {
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
                     'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',                
+                    'rgba(75, 192, 192, 0.2)',                
                     ],
-                    data: [1000,	500,	1500,	1000]
+                    data: [8, 3, 0, 9]
                     }]
             },
         }
     },
+    created() {
+        this.getDatas()
+    },
+    methods: {
+        getDatas(){
+            axios.get(`/admin-api/dashboard/report`).then(({data})=>{
+                this.order_chart.datasets[0].data = data.orders
+                this.customer_chart.datasets[0].data = data.customers
+            });
+        }
+    }
 }
 </script>

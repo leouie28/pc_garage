@@ -26,6 +26,7 @@ Route::group(['middleware'=>['auth:admin']],function(){
         Route::get('dashboard/month-orders', 'monthOrders');
         Route::get('dashboard/orders', 'orders');
         Route::get('dashboard/statistic', 'statistic');
+        Route::get('dashboard/report', 'getDatas');
     });
 
     //order
