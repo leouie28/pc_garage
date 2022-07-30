@@ -95,11 +95,21 @@ class StockController extends Controller
                     "message" => "This sku already exist in the selected product..."
                 ];
             }else{
-                $stock = new Stock([
-                    'sku' => $request->sku,
-                    'product_id' => $request->product_id,
-                ]);
-                $stock->save();
+                if(isset($request->stock)){
+                    $stock = new Stock([
+                        'sku' => $request->sku,
+                        'product_id' => $request->product_id,
+                        'stocks' => $request->stock,
+                    ]);
+                    $stock->save();
+                }else{
+                    $stock = new Stock([
+                        'sku' => $request->sku,
+                        'product_id' => $request->product_id,
+                    ]);
+                    $stock->save();
+                }
+                
                 return [
                     "data" => $stock,
                     "type" => "success",
@@ -157,6 +167,19 @@ class StockController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try{
+            $stock = Stock::find($id)->delete();
+            return [
+                "data" => $stock,
+                "type" => "warning",
+                "message" => 'Stock successfully deleted...',
+            ];
+        }catch(Exception $e){
+            return [
+                "data" => $stock,
+                "type" => "error",
+                "message" => $e->getMessage(),
+            ];
+        }
     }
 }

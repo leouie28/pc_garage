@@ -37,7 +37,34 @@ class SkuProfileController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            $sku = SkuProfile::where('sku_code', $request->code)->first();
+            
+            if($sku){
+                return [
+                    "data" => $request,
+                    "type" => "error",
+                    "message" => 'Sku code already registered...',
+                ];
+            }else{
+                $sku = new SkuProfile([
+                    'sku_code' => $request->code,
+                    'name' => $request->name
+                ]);
+                $sku->save();
+                return [
+                    "data" => $sku,
+                    "type" => "success",
+                    "message" => 'Sku profile successfully added...',
+                ];
+            }
+        }catch(Exception $e){
+            return [
+                "data" => $request,
+                "type" => "error",
+                "message" => $e->getMessage(),
+            ];
+        }
     }
 
     /**
@@ -80,7 +107,25 @@ class SkuProfileController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            $sku = SkuProfile::find($id);
+    
+            $sku->sku_code = $request->code;
+            $sku->name = $request->name;
+            $sku->save();
+
+            return [
+                "data" => $sku,
+                "type" => "success",
+                "message" => 'Sku profile successfully updated...',
+            ];
+        }catch(Exception $e){
+            return [
+                "data" => $request,
+                "type" => "error",
+                "message" => $e->getMessage(),
+            ];
+        }
     }
 
     /**

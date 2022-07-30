@@ -32,6 +32,28 @@ class SaleController extends Controller
         //
     }
 
+    public function salesWeek()
+    {
+        try{
+            $now = Carbon::now();
+            $start = $now->startOfWeek()->toDateString();
+            // $end = $now->endOfWeek()->format('Y-m-d');
+            $counter = 0;
+            $sales = array();
+
+            while($counter < 7){
+                $selector = Carbon::parse($start)->addDay($counter)->toDateString();
+                $sales[] = Sale::whereDate('date', $selector)->sum('sales');
+                $counter++;
+            }
+
+            return $sales;
+            
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
+
     public function checkSales()
     {
         try{

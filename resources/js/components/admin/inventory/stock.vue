@@ -46,8 +46,16 @@
             class="px-2"
             small
             elevation="0"
+            color="secondary"
+          >
+            <v-icon small>mdi-plus-circle</v-icon>
+          </v-btn>
+          <v-btn
+            class="px-2"
+            small
+            elevation="0"
             color="primary"
-            @click="editItem(item)"
+            @click.stop="editItem(item)"
           >
             <v-icon small>mdi-square-edit-outline</v-icon>
           </v-btn>
@@ -56,7 +64,7 @@
             small
             elevation="0"
             color="error"
-            @click="warning(item)"
+            @click.stop="warning(item)"
           >
             <v-icon small>mdi-trash-can</v-icon>
           </v-btn>
@@ -67,7 +75,7 @@
       </v-data-table>
     </v-card>
     <v-dialog v-model="showForm" persistent max-width="500">
-      <sales-form :selectedItem="selectedItem" @cancel="close" @save="save" @update="update"> </sales-form>
+      <sku-form :selectedItem="selectedItem" @cancel="close" @save="save" @update="update"> </sku-form>
     </v-dialog>
     <v-dialog v-model="deleteForm" persistent width="500">
       <delete-dialog :data="item" @close="close" @confirm="confirm"></delete-dialog>
@@ -95,12 +103,12 @@
 
 <script>
 import DeleteDialog from "@/components/deleteDialog.vue";
-import SalesForm from "@/components/admin/inventory/forms/SalesForm.vue"
+import SkuForm from "@/components/admin/inventory/forms/SkuForm.vue"
 import TableHeader from "@/components/table-header.vue";
 export default {
   components: {
     DeleteDialog,
-    SalesForm,
+    SkuForm,
     TableHeader,
   },
   data: () => ({
@@ -186,20 +194,18 @@ export default {
       this.showForm = true
     },
     save(payload) {
-      axios.post(`/admin-api/sales`, payload).then(({ data }) => {
+      axios.post(`/admin-api/sku-profile`, payload).then(({ data }) => {
         this.fetchPage()
         this.newAlert(true, data.type, data.message)
       }).finally(()=>{
         this.showForm = false;
-        this.payload = null;
       })
     },
     update(payload) {
-      axios.put(`/admin-api/sales/${this.selectedItem.id}`, payload).then(({ data }) => {
+      axios.put(`/admin-api/sku-profile/${this.selectedItem.id}`, payload).then(({ data }) => {
         this.showForm = false;
         this.fetchPage()
         this.newAlert(true, data.type, data.message)
-        this.payload = null;
       })
     },
     addNew() {

@@ -324,13 +324,13 @@ export default {
       }
       this.deleteForm = true
     },
-    confirm() {
-      axios.delete(`/admin-api/${this.item.model}/${this.item.id}`).then(({data})=>{
-        this.deleteForm = false
-        this.fetchPage()
-        this.newAlert(true, data.type, data.message)
-      });
-    }
+    // confirm() {
+    //   axios.delete(`/admin-api/${this.item.model}/${this.item.id}`).then(({data})=>{
+    //     this.deleteForm = false
+    //     this.fetchPage()
+    //     this.newAlert(true, data.type, data.message)
+    //   });
+    // }
   },
 };
 </script>

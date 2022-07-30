@@ -28,16 +28,23 @@ class CustomerSeeder extends Seeder
             'status' => true,
         ]);
 
-        DB::table('customers')->insert([
-            'first_name' => Str::random(5),
-            'last_name' => Str::random(5),
-            'Gender' => rand(0, 1) ? 'Male' : 'Female',
-            'birthday' => '2000-02-10',
-            'address' => 'Calbayog City',
-            'phone' => '09'.random_int(000000000, 999999999),
-            'email' => Str::random(5).'@gmail.com',
-            'password' => bcrypt('123'),
-            'status' => true,
-        ]);
+        $counter = 0;
+        while($counter <= 10){
+            DB::table('customers')->insert([
+                'first_name' => Str::random(5),
+                'last_name' => Str::random(5),
+                'Gender' => rand(0, 1) ? 'Male' : 'Female',
+                'birthday' => '2000-02-10',
+                'address' => 'Calbayog City',
+                'phone' => '09'.random_int(000000000, 999999999),
+                'email' => Str::random(5).'@gmail.com',
+                'password' => bcrypt('123'),
+                'status' => true,
+                'created_at' => date('Y-m-d'),
+                'updated_at' => date('Y-m-d'),
+            ]);
+            $counter++;
+        }
+
     }
 }

@@ -42,7 +42,7 @@ export default {
             active_tab: 1,
             tabs: [
                 {
-                    name: 'Reports',
+                    name: 'Sales',
                     icon: 'mdi-finance',
                     link: 'admin-inventory-report'
                 },

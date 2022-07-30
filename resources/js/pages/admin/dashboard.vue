@@ -27,16 +27,36 @@
             </v-row>
             <v-row wrap>
                 <v-col cols="12" md="8">
-                    <v-card elevation="0" class="rounded-lg pa-5 pt-7">
+                    <v-card elevation="0" class="rounded-lg">
+                        <v-card-title>
+                            Orders of the week
+                        </v-card-title>
                         <v-card-text>
-                            <apexchart type="area" height="340" :options="timelineOptions" :series="timelineSeries"></apexchart>
+                            <line-chart
+                            :height="300"
+                            :removeLabel="true"
+                            :chartData="order_chart"
+                            ></line-chart>
                         </v-card-text>
                     </v-card>
                 </v-col>
-                <v-col lg="4" cols="12">
-                    <v-card elevation="0" class="rounded-lg pa-5 pt-7">
+                <v-col md="4" cols="12">
+                    <v-card elevation="0" class="rounded-lg">
+                        <v-card-title>
+                            Orders status of the week
+                        </v-card-title>
                         <v-card-text>
-                            <apexchart type="donut" height="370" :options="donutOptions" :series="donutSeries"></apexchart>
+                            <donut-chart :height="300" :chartData="status_chart"></donut-chart>
+                        </v-card-text>
+                    </v-card>
+                </v-col>
+                <v-col cols="12" md="12">
+                    <v-card elevation="0" class="rounded-lg">
+                        <v-card-title>
+                            New customers of the week
+                        </v-card-title>
+                        <v-card-text>
+                            <bar-chart :height="300" :chartData="customer_chart"></bar-chart>
                         </v-card-text>
                     </v-card>
                 </v-col>
@@ -45,7 +65,15 @@
     </div>
 </template>
 <script>
+import LineChart from '@/components/global/charts/linechart.vue'
+import BarChart from '@/components/global/charts/barchart.vue'
+import DonutChart from '@/components/global/charts/donutchart.vue'
 export default {
+    components: {
+        LineChart,
+        BarChart,
+        DonutChart
+    },
     data(){
         return{
             dashboard: {
@@ -74,91 +102,60 @@ export default {
                     link: ''
                 }
             },
-            timelineSeries: [
-                {
-                    name: 'Orders',
-                    data: []
-                },
-            ],
-            timelineOptions: {
-                chart: {
-                type: 'area',
-                redrawOnParentResize: true
-                },
-                title: {
-                    text: 'Orders of ' +this.moment().format('MMMM')
-                },
-                dataLabels: {
-                enabled: false
-                },
-                stroke: {
-                curve: 'smooth'
-                },
-                markers: {
-                    size: 7,
-                    // colors: ["#000524"],
-                    // strokeColor: "#00BAEC",
-                    // strokeWidth: 3
-                },
-                xaxis: {
-                  type: 'date',
-                  labels: {
-                    show: true,
-                    datetimeFormatter: {
-                        year: 'yyyy',
-                        month: "MMM 'yy",
-                        day: 'dd MMM',
-                    },
-                  },
-                categories: []
-                },
-                tooltip: {
-                x: {
-                    format: 'dd/MM/yy'
-                },
-                },
+            customer_chart: {
+                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                datasets: [
+                    {
+                        label: 'Sales',
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 205, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(201, 203, 207, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgb(255, 99, 132)',
+                            'rgb(255, 159, 64)',
+                            'rgb(255, 205, 86)',
+                            'rgb(75, 192, 192)',
+                            'rgb(54, 162, 235)',
+                            'rgb(153, 102, 255)',
+                            'rgb(201, 203, 207)'
+                        ],
+                        borderWidth: 1,
+                        data: [0, 0, 0, 0, 0, 0, 0]
+                    }
+                ]
             },
-            donutSeries: [],
-            donutOptions: {
-                theme: {
-                    palette: 'palette3'
-                },
-                title: {
-                    text: 'Todays Order'
-                },
-                chart: {
-                    type: 'donut',
-                    height: '360',
-                    toolbar: {
-                        show: true
+            order_chart: {
+                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                datasets: [
+                    {
+                        label: 'Orders',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        fill: true,
+                        borderColor: '#1C3B9F',
+                        data: [0, 0, 0, 0, 0, 0, 0],
+                        tension: .5
                     },
-                },
-                labels: [],
-                plotOptions: {
-                    pie: {
-                        donut: {
-                            size: '55%',
-                            labels: {
-                                show: true,
-                                total: {
-                                    show: true
-                                }
-                            }
-                        }
-                    }
-                },
-                noData: {
-                    text: 'No current order today!',
-                    align: 'center',
-                    verticalAlign: 'middle',
-                    offsetX: 0,
-                    offsetY: 0,
-                    style: {
-                        color: undefined,
-                        fontSize: '24px',
-                        fontFamily: undefined
-                    }
-                }
+                ]
+            },
+            status_chart: {
+                labels: ["Canceled", "Pending", "Confirm", "On Delivery",	"Delivered"],
+                datasets: [{
+                    borderWidth: 1,
+                    backgroundColor: [
+                    '#E57373',
+                    '#616161',
+                    '#00B8D4',
+                    '#FF9800',
+                    '#4DB6AC',                
+                    ],
+                    data: [0, 0, 0, 0, 0]
+                    }]
             },
         }
     },
@@ -166,16 +163,11 @@ export default {
         this.initialize()
     },
     mounted(){
-        this.$nextTick(() => {
-            window.dispatchEvent(new Event('resize'));
-        });
-        // console.log(this.$route)
-        // this.initialize()
+        
     },
     methods: {
         initialize() {
-            this.getMonthOrders()
-            this.getOrders()
+            this.getDatas()
             this.getStatistic()
             this.checkSales()
         },
@@ -192,36 +184,12 @@ export default {
                 this.dashboard.recommendation.item = data.recommendation;
             })
         },
-        getMonthOrders() {
-            axios.get(`/admin-api/dashboard/month-orders`).then(({data})=>{
-                console.log(data)
-                let val = []
-                let cat = []
-                Object.entries(data).forEach(entry => {
-                    var [key, value] = entry;
-                    this.timelineSeries[0].name = 'Days'
-                    this.timelineSeries[0].data.push(parseInt(value))
-                    cat.push(key)
-                })
-                console.log(cat)
-                this.timelineOptions.xaxis.categories = cat
-                // this.timelineSeries[0].data = val
-                console.log(this.timelineOptions.xaxis.categories,'ajkfsjlslkjlksjlfk')
-            })
-        },
-        getOrders() {
-            this.donutSeries = []
-            this.donutOptions.labels = []
-            axios.get(`/admin-api/dashboard/orders`).then(({data})=>{
-                data.forEach(prod => {
-                    if(prod.order_count==null){
-                        prod.order_count = '0'
-                    }
-                    this.donutSeries.push(parseInt(prod.order_count))
-                    this.donutOptions.labels.push(prod.name)
-                });
-                console.log(this.donutSeries)
-            })
+        getDatas(){
+            axios.get(`/admin-api/dashboard/report`).then(({data})=>{
+                this.order_chart.datasets[0].data = data.orders
+                this.status_chart.datasets[0].data = data.status
+                this.customer_chart.datasets[0].data = data.customers
+            });
         }
     },
 }

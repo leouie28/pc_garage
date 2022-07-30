@@ -14,11 +14,27 @@
                         item-text="name"
                         item-value="id"
                         dense
-                        v-model="payload.product"
+                        v-model="payload.product_id"
                         filled
                         hide-details=""
-                        :rules="required"
-                        ></v-autocomplete>
+                        clearable
+                        :item-disabled="disableItem"
+                        :rules="required">
+                            <template v-slot:selection="{ item }">
+                                <v-avatar size="35" style="border: 1px solid #ccc;">
+                                    <img v-if="item.images.length>0" :src="'/images/products/'+item.id+'/'+item.images[0].file_name">
+                                    <v-icon v-else>mdi-camera</v-icon>
+                                </v-avatar>
+                                <span class="pa-2">{{ item.name }}</span>
+                            </template>
+                            <template v-slot:item="{ item }">
+                                <v-avatar size="35" style="border: 1px solid #ccc;">
+                                    <img v-if="item.images.length>0" :src="'/images/products/'+item.id+'/'+item.images[0].file_name">
+                                    <v-icon v-else>mdi-camera</v-icon>
+                                </v-avatar>
+                                <span class="pa-2">{{ item.name }}</span>
+                            </template>
+                        </v-autocomplete>
                     </v-col>
                     <v-col md="12" cols="12">
                         <v-text-field
@@ -68,15 +84,13 @@ export default {
             v => !!v || 'This field is required!',
         ],
         payload: {
-            product: '',
+            sku: '',
+            product_id: '',
             stock: '',
         }
     }),
     props: {
-        selectedItem: {
-            type: Object,
-            default: () => {},
-        }
+        profile: {}
         // formDialog: {}
     },
     created() {
@@ -94,29 +108,31 @@ export default {
             })
         },
         save() {
-            if(!this.payload.date || !this.payload.sales || !this.payload.order_count){
+            if(!this.payload.product_id || !this.payload.stock){
                 alert('Important field are required!')
             }else{
-                if(this.isEdit){
-                    this.$emit('update', this.payload)
-                }else{
-                    this.$emit('save', this.payload)
-                }
+                this.$emit('save', this.payload)
                 this.isEdit = false
                 this.payload = JSON.parse(JSON.stringify(this.newPayload))
                 // console.log(this.payload)
             }
         },
+        disableItem(item) {
+            if(this.profile.products.includes(item.id)){
+                return true
+            }
+        }
     },
     watch: {
-        selectedItem: {
+        profile: {
             handler(val) {
                 if(Object.keys(val).length===0){
                     this.isEdit = false
                     return
                 }
-                this.payload = JSON.parse(JSON.stringify(val))
-                this.isEdit = true
+                this.payload.sku = val.sku
+                // this.payload = JSON.parse(JSON.stringify(val))
+                // this.isEdit = true
             },
             deep: true,
             immediate: true,

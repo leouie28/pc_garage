@@ -45,6 +45,7 @@ Route::group(['middleware'=>['auth:admin']],function(){
     //sales
     Route::controller(SaleController::class)->group(function () {
         Route::get('sales/check-sales', 'checkSales');
+        Route::get('sales/report', 'salesWeek');
     });
 
     Route::resources([

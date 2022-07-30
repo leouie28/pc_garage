@@ -35,7 +35,7 @@
                         </v-col>
                     </v-row>
                 </div>
-                <v-row v-if="isNew">
+                <!-- <v-row v-if="isNew">
                     <v-col class="px-1">
                         <v-text-field
                         v-model="skuPayload.sku"
@@ -47,13 +47,13 @@
                         solo>
                         </v-text-field>
                     </v-col>
-                </v-row>
-                <v-row v-if="!isNew">
+                </v-row> -->
+                <v-row>
                     <v-col class="px-1">
                         <v-btn
                         block
                         color="primary"
-                        @click="isNew = true"
+                        @click="$router.push({path: '/admin/inventory/stock'}).catch(() => {})"
                         large>
                             Add new SKU
                             <v-icon>mdi-plus</v-icon>
@@ -121,15 +121,15 @@ export default {
             })
             // console.log(this.stocks)
         },
-        addSku() {
-            axios.post(`/admin-api/stock`, this.skuPayload).then(({ data }) => {
-                this.getProducSku(this.skuPayload.product_id)
-                if(data.type!='error'){
-                    this.skuPayload.sku = null
-                }
-                this.newAlert(true, data.type, data.message)
-            })
-        },
+        // addSku() {
+        //     axios.post(`/admin-api/stock`, this.skuPayload).then(({ data }) => {
+        //         this.getProducSku(this.skuPayload.product_id)
+        //         if(data.type!='error'){
+        //             this.skuPayload.sku = null
+        //         }
+        //         this.newAlert(true, data.type, data.message)
+        //     })
+        // },
         updateSku(val){
             let stock = this.stocks[val]
             axios.put(`/admin-api/stock/update-sku/${val}?&stocks=${stock}`).then(({ data }) => {

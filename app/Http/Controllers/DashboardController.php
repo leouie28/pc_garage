@@ -47,20 +47,30 @@ class DashboardController extends Controller
             $now = Carbon::now();
             $start = $now->startOfWeek()->toDateString();
             $end = $now->endOfWeek()->format('Y-m-d');
-            $counter = 1;
+            $counter = 0;
             $orders = array();
             $customers = array();
+            $status = array();
 
-            while($counter <= 7){
+            while($counter < 7){
                 $selector = Carbon::parse($start)->addDay($counter)->toDateString();
                 $orders[] = Order::whereDate('created_at', $selector)->count();
                 $customers[] = Customer::whereDate('created_at', $selector)->count();
                 $counter++;
             }
 
+            $counter = 0;
+            while($counter <= 4){
+                $status[] = Order::where('status', $counter)
+                ->whereBetween('updated_at', [$start, $end])
+                ->count();
+                $counter++;
+            }
+
             return [
                 "orders" => $orders,
                 "customers" => $customers,
+                "status" => $status
             ];
             
         }catch(Exception $e){

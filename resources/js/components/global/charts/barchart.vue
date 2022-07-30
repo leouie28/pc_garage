@@ -67,7 +67,7 @@ export default {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          x: {
+          y: {
             grid: {
               display: false
             }
