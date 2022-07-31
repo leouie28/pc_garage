@@ -172,6 +172,100 @@ class OrderController extends Controller
         return $request;
     }
 
+    public function genUpdate(Request $request)
+    {
+        try{
+            if(isset($request->status)){
+                $result = array();
+                $success_id = array();
+                $error_id = array();
+                $stat = array();
+                foreach($request->items as $item){
+                    $stat = $this->updateStatArrival($request, $item);
+                    if($stat['type'] == 'success'){
+                        $success_id[] = $stat['id'];
+                    }else{
+                        $error_id[] = $stat['id'];
+                    }
+                }
+                $result = [
+                    'success' => $success_id,
+                    'serror' => $error_id,
+                ];
+                return [
+                    "data" => $result,
+                    "type" => "success",
+                    "message" => 'Selected orders successfully updated...',
+                ];
+            }else{
+                $orders = array();
+                foreach($request->items as $item){
+                    $order = Order::find($item);
+                    $order->arrival = $request->arrival;
+                    $order->save();
+                    $orders[] = $order->id;
+                }
+                return [
+                    "data" => $orders,
+                    "type" => "success",
+                    "message" => 'Selected orders successfully updated...',
+                ];
+            }
+        }catch(Exception $e){
+            return [
+                "data" => $request,
+                "type" => "error",
+                "message" => $e->getMessage(),
+            ];
+        }
+    }
+
+    public function updateStatArrival($value, $id)
+    {
+        $valid = array(2, 3, 4); 
+        $notValid = array(0, 1);
+        $currentStat = Order::find($id, ['status']);
+
+        if(in_array($currentStat->status, $valid)){
+            if(in_array($value->status, $notValid)){
+                $this->returnStock($value, $id);
+            }else{
+                $order = Order::find($id);
+                if($value->status==4){
+                    $now = date('Y-m-d');
+                    $order->date_received = $now;
+                }
+                $order->status = $value->status;
+                if(isset($value->arrival)){
+                    $order->arrival = $value->arrival;
+                }
+                $order->save();
+
+                return [
+                    "id" => $order->id,
+                    "type" => "success",
+                ];
+            }
+        }else{
+            if(in_array($value->status,  $valid)){
+                return $this->validateOrder($value, $id);
+            }
+            else{
+                $order = Order::find($id);
+                $order->status = $value->status;
+                if(isset($value->arrival)){
+                    $order->arrival = $value->arrival;
+                }
+                $order->save();
+
+                return [
+                    "id" => $order->id,
+                    "type" => "success",
+                ];
+            }
+        }
+    }
+
     public function updateStatus(Request $request, $id)
     {
         try{
@@ -204,6 +298,9 @@ class OrderController extends Controller
                 else{
                     $order = Order::find($id);
                     $order->status = $request->status;
+                    if($request->arrival){
+                        $order->arrival = $request->arrival;
+                    }
                     $order->save();
 
                     return [

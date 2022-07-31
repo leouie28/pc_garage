@@ -4,9 +4,10 @@
             <v-card-title>
                 Update Multiple Order
             </v-card-title>
-            <v-card-subtitle class="mb-0">
-                <v-icon>mdi-alert-circle-outline</v-icon>
-                This will update the selected order...
+            <v-card-subtitle class="mb-0 warning--text">
+                <!-- This will update the selected order... -->
+                Note! This will update the selected orders, if the order has an item that does not enough of stocks, it will be ignored and proceed the next order.
+                <!-- <v-icon>mdi-alert-circle-outline</v-icon> -->
             </v-card-subtitle>
             <v-card-text>
                 <div>
@@ -78,7 +79,7 @@
                                 Cancel
                             </v-btn>
                             <v-btn
-                            @click="$emit('confirm')"
+                            @click="update"
                             color="success"
                             >
                                 Update
@@ -108,7 +109,13 @@ export default {
         ],
     }),
     methods: {
-
+        update() {
+            if(!this.data.arrival && !this.data.status){
+                alert('Please fillup at least one field...')
+            }else{
+                this.$emit('confirm', this.data)
+            }
+        }
     }
 }
 </script>

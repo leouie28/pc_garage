@@ -15,16 +15,21 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public function groupUpd($value)
+    {
+        return $value;
+    }
+
     public function validateOrder($data, $id)
     {
+        // $resul
         $order = Order::with('products')->find($id);
         foreach($order->products as $prod){
             $bal = Product::withSum('stocks', 'stocks.stocks')->find($prod->id);
             if($prod->pivot->quantity > $bal->stocks_sum_stocksstocks){
                 return [
-                    "data" => $data,
+                    "id" => $order->id,
                     "type" => "error",
-                    "message" => 'Failed to update order! Error in stocks of the product. Please check if the product has enough item to make an order...',
                 ];
                 break;
             }
@@ -72,12 +77,14 @@ class Controller extends BaseController
             $stat->date_received = $now;
         }
         $stat->status = $data->status;
+        if(isset($data->arrival)){
+            $order->arrival = $data->arrival;
+        }
         $stat->save();
 
         return [
-            "data" => $stat,
+            "id" => $stat->id,
             "type" => "success",
-            "message" => 'Order successfully updated...',
         ];
     }
 
@@ -111,12 +118,14 @@ class Controller extends BaseController
 
         $stat = Order::find($id);
         $stat->status = $data->status;
+        if(isset($data->arrival)){
+            $order->arrival = $data->arrival;
+        }
         $stat->save();
 
         return [
-            "data" => $stat,
+            "id" => $stat->id,
             "type" => "success",
-            "message" => 'Order successfully updated...',
         ];
     }
 

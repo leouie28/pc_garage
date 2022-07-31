@@ -338,9 +338,23 @@ import productVue from './product.vue';
           this.data.isFetching = false;
         });
       },
-      updateMultiple() {
+      updateMultiple(val) {
+        console.log(val)
         console.log(this.itemsSelected, 'selected')
-        // this.multiple_update = false
+        let groupPayload = {}
+        groupPayload.items = []
+        this.itemsSelected.forEach(elem => {
+          groupPayload.items.push(elem.id)
+        });
+        groupPayload.arrival = val.arrival
+        groupPayload.status = val.status
+        axios.put(`/admin-api/order/group-update`, groupPayload).then(({ data }) => {
+          this.fetchPage()
+          this.itemsSelected = []
+          this.newAlert(true, data.type, data.message)
+        }).finally(()=>{
+        })
+        this.multiple_update = false
       },
       arrivalPicker(val) {
         this.arrivalDatePicker = true

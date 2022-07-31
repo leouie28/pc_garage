@@ -69,7 +69,7 @@
                                     append-icon="mdi-plus"
                                     min="1"
                                     dense
-                                    v-model="stocks"
+                                    v-model="stocks[item.id]"
                                     @click:append="addStocks(item)"
                                     hide-details=""
                                     ></v-text-field>
@@ -147,7 +147,7 @@ export default {
             products: []
         },
         item: {},
-        stocks: '',
+        stocks: [],
         isLoading: true,
         selectedItem: '',
         showForm: false,
@@ -195,8 +195,9 @@ export default {
             })
         },
         addStocks(val) {
+            // console.log(this.stocks[val.id])
             this.isLoading = true
-            axios.put(`/admin-api/stock/update-sku/${val.id}?&stocks=${this.stocks}`).then(({data})=>{
+            axios.put(`/admin-api/stock/update-sku/${val.id}?&stocks=${this.stocks[val.id]}`).then(({data})=>{
                 this.stocks = ''
                 this.show()
                 this.newAlert(true, data.type, data.message)

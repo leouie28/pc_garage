@@ -46,7 +46,7 @@ class DashboardController extends Controller
         try{
             $now = Carbon::now();
             $start = $now->startOfWeek()->toDateString();
-            $end = $now->endOfWeek()->format('Y-m-d');
+            $end = $now->endOfWeek()->toDateString();
             $counter = 0;
             $orders = array();
             $customers = array();
@@ -60,6 +60,7 @@ class DashboardController extends Controller
             }
 
             $counter = 0;
+            $end = Carbon::parse($end)->addDay(1)->toDateString();
             while($counter <= 4){
                 $status[] = Order::where('status', $counter)
                 ->whereBetween('updated_at', [$start, $end])

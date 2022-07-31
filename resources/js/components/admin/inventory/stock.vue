@@ -141,7 +141,7 @@ export default {
         value: "id",
       },
       {
-        text: "Name",
+        text: "Supplier/Name",
         align: "start",
         sortable: true,
         value: "name",

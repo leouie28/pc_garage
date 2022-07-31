@@ -144,7 +144,7 @@ export default {
                 ]
             },
             status_chart: {
-                labels: ["Canceled", "Pending", "Confirm", "On Delivery",	"Delivered"],
+                labels: ["Canceled", "Pending", "Confirmed", "On Delivery",	"Delivered"],
                 datasets: [{
                     borderWidth: 1,
                     backgroundColor: [

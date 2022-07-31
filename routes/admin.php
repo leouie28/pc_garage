@@ -33,6 +33,7 @@ Route::group(['middleware'=>['auth:admin']],function(){
     Route::controller(OrderController::class)->group(function () {
         Route::put('order/update-status/{id}', 'updateStatus');
         Route::put('order/update-arrival/{id}', 'updateArrival');
+        Route::put('order/group-update', 'genUpdate');
         Route::get('order/get-product', 'getProduct');
     });
 
