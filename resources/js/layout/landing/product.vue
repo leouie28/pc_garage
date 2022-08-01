@@ -7,9 +7,10 @@
       dark
     >
       <v-tabs
+        v-model="active"
         centered
         dark
-        class="ml-n9"
+        hide-slider
       >
         <v-tab>
             <v-icon>mdi-devices</v-icon>
@@ -27,12 +28,12 @@
     </v-app-bar>
 
     <v-main class="grey lighten-3">
-      <v-container>
+      <v-container fluid>
         <v-row>
             <v-col
             cols="12"
             class="mx-auto"
-            sm="10"
+            md="10"
             >
                 <v-card elevation="0">
                     <v-card-title>
@@ -126,38 +127,48 @@
         <v-dialog
         v-model="warningDialog"
         persistent
-        max-width="290"
+        max-width="500"
         >
-        <template v-slot:activator="{ on, attrs }">
-            <v-btn
-            color="primary"
-            dark
-            v-bind="attrs"
-            v-on="on"
-            >
-            Open Dialog
-            </v-btn>
-        </template>
         <v-card>
             <v-card-title class="text-h5">
-            Use Google's location service?
-            </v-card-title>
-            <v-card-text>Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.</v-card-text>
-            <v-card-actions>
+            Please login first!
             <v-spacer></v-spacer>
             <v-btn
-                color="green darken-1"
+            small
+            elevation="0"
+            color="secondary"
+            @click=" warningDialog = false, active = 0"
+            fab>
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
+            </v-card-title>
+            <v-card-text>
+                <!-- You are not currently logged in to our system. Please login first to access this page.. -->
+                <v-alert
                 text
-                @click="dialog = false"
+                class="mb-0"
+                prominent
+                type="warning"
+                icon="mdi-cloud-alert"
+                >
+                    You are not currently logged in to our system. Please login first to access this page..
+                </v-alert>
+            </v-card-text>
+            <v-card-actions class="mr-3 pb-4">
+            <v-spacer></v-spacer>
+            <v-btn
+                color="success"
+                link
+                href="register"
             >
-                Disagree
+                Register
             </v-btn>
             <v-btn
-                color="green darken-1"
-                text
-                @click="dialog = false"
+                color="primary"
+                link
+                href="login"
             >
-                Agree
+                Login
             </v-btn>
             </v-card-actions>
         </v-card>
@@ -171,6 +182,7 @@
 export default {
     data: () => ({
         page: 1,
+        active: 0   ,
         warningDialog: false,
         loading: true,
         links: [

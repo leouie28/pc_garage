@@ -2,7 +2,7 @@
     <div>
         <register v-if="getUrl == 'register'"></register>
         <login v-else-if="getUrl == 'login'"></login>
-        <product v-else></product>
+        <product v-else-if="getUrl == false"></product>
     </div>
 </template>
 <script>

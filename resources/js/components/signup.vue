@@ -1,16 +1,16 @@
 <template>
-  <div class="blue-grey lighten-5 pt-16" style="height:100vh;">
+  <div class="blue-grey lighten-5 py-10" style="min-height:100vh;">
     <v-container>
       <v-col cols="12" md="8" class="mx-auto">
         <v-card>
           <v-card-title>
-            <h2>Register</h2>
+            <h3>Register</h3>
           </v-card-title>
           <v-card-text>
             <v-form ref="form" lazy-validation>
               <v-row>
-                <v-col cols="12" md="4" class="d-flex align-center justify-center">
-                  <div class="avatar text-center">
+                <v-col>
+                  <div class="avatar text-center mb-4" >
                     <input
                       ref="file_input"
                       type="file"
@@ -18,20 +18,19 @@
                       accept="image/x-png,image/gif,image/jpeg"
                       @change="onFileChange($event.target.files)"
                     />
-                    <v-avatar size="150" class="pa-2" style="border: 5px solid #607D8B;">
+                    <v-avatar size="120" style="border:4px solid #BDBDBD">
                       <img
                         v-if="image_base64" 
                         :src="image_base64" 
-                        alt="John" 
+                        alt="Profie" 
                         @click="triggerUpload"
                         />
-                        <v-icon  @click="triggerUpload" size="80" v-else>
-                          mdi-account-circle
+                        <v-icon  @click="triggerUpload" class="pa-2" size="100" v-else>
+                          mdi-image-size-select-actual
                         </v-icon>
                     </v-avatar>
                   </div>
-                </v-col>
-                <v-col cols="12" md="8">
+                  <v-divider></v-divider>
                   <div class="my-4">
                     <span class="text-h6">Basic Information</span>
                   </div>
@@ -144,7 +143,9 @@
           </v-card-text>
           <v-card-actions class="mr-3 pb-4">
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="$router.push({name: 'login'})">Login</v-btn>
+            <v-btn color="primary" text @click="$router.push({name: 'login'})">
+              Already have account?
+            </v-btn>
             <v-btn color="success" @click="save">Register</v-btn>
           </v-card-actions>
         </v-card>

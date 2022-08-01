@@ -1,6 +1,6 @@
 <template>
     <v-app v-if="!fetching" id="inspire">
-        <div v-if="isAuth">
+        <div v-if="isAuth=='admin'">
             <div v-if="!loading">
                 <Header @handDrawer="drawer = !drawer" @logout="logout"></Header>
                 <Sidebar :drawer="drawer" :role="isAuth"></Sidebar>
@@ -14,6 +14,7 @@
             </div>
             <Loading v-else></Loading>
         </div>
+        <customer-main v-else-if="isAuth=='customer'"></customer-main>
         <landing v-else></landing>
         <!-- <Login v-else></Login> -->
         <!-- <div  v-if="!isAuth && !loading">
@@ -25,6 +26,7 @@
 </template>
 
 <script>
+import CustomerMain from './customer/CustomerMain.vue'
 import Landing from './landing/index.vue'
 import Login from "./login.vue";
 import Header from "./header.vue";
@@ -33,6 +35,7 @@ import Sidebar from "./sidebar.vue";
 import Register from "../components/signup.vue"
 export default {
     components: {
+        CustomerMain,
         Landing,
         Login,
         Header,
@@ -60,7 +63,7 @@ export default {
         axios.get(`/admin-api/check-auth`).then(({data})=>{
             this.fetching = false
             this.isAuth = data
-            console.log(this.data,'auth')
+            console.log(data,'auth')
         }).finally(()=>{
             // this.loading = false
         })
@@ -90,7 +93,7 @@ export default {
   watch:{
     isAuth(val) {
       localStorage.rol = val
-      console.log(localStorage.role, 'user role')
+      console.log(val, 'user role')
     },
     $route (to, from){
         this.checkAuth()
