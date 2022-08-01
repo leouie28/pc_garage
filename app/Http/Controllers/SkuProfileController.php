@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Filters\SkuProfileFilter;
 use App\Models\SkuProfile;
+use App\Models\Stock;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -136,6 +137,24 @@ class SkuProfileController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try{
+            $sku = SkuProfile::find($id);
+            $stocks = Stock::where('sku', $sku->sku_code)->get();
+            foreach($stocks as $stock){
+                $stock->delete();
+            }
+            $sku->delete();
+            return [
+                "data" => $sku,
+                "type" => "warning",
+                "message" => 'Sku profile successfully deleted...',
+            ];
+        }catch(Exception $e){
+            return [
+                "data" => $sku,
+                "type" => "error",
+                "message" => $e->getMessage(),
+            ];
+        }
     }
 }

@@ -46,20 +46,22 @@
         </template>
         <template v-slot:[`item.action`]="{ item }">
           <v-btn
+            class="px-2"
             small
             elevation="0"
             color="primary"
             @click="editItem(item)"
           >
-            Edit
+            <v-icon small>mdi-square-edit-outline</v-icon>
           </v-btn>
           <v-btn
+            class="px-2"
             small
             elevation="0"
             color="error"
             @click="warning(item)"
           >
-            Delete
+            <v-icon small>mdi-trash-can</v-icon>
           </v-btn>
         </template>
         <template v-slot:no-data>

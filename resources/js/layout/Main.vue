@@ -14,7 +14,8 @@
             </div>
             <Loading v-else></Loading>
         </div>
-        <Login v-else></Login>
+        <landing v-else></landing>
+        <!-- <Login v-else></Login> -->
         <!-- <div  v-if="!isAuth && !loading">
             <Register></Register>
             <Login ></Login>
@@ -24,6 +25,7 @@
 </template>
 
 <script>
+import Landing from './landing/index.vue'
 import Login from "./login.vue";
 import Header from "./header.vue";
 import Loading from "./loading.vue";
@@ -31,28 +33,29 @@ import Sidebar from "./sidebar.vue";
 import Register from "../components/signup.vue"
 export default {
     components: {
-    Login,
-    Header,
-    Loading,
-    Sidebar,
-    Register
-},
-data() {
-    return {
-        drawer: false,
-        login: false,
-        isAuth: false,
-        fetching: true,
-        loading: false,
-    };
-},
-mounted(){
-    // console.log(this.to)
-    // // this.checkAuth()
-    // console.log(this.fetching)
-  },
-  methods:{
-    checkAuth(){
+        Landing,
+        Login,
+        Header,
+        Loading,
+        Sidebar,
+        Register
+    },
+    data() {
+        return {
+            drawer: false,
+            login: false,
+            isAuth: false,
+            fetching: true,
+            loading: false,
+        };
+    },
+    mounted(){
+        // console.log(this.to)
+        // // this.checkAuth()
+        // console.log(this.fetching)
+    },
+    methods:{
+        checkAuth(){
         // this.loading = true
         axios.get(`/admin-api/check-auth`).then(({data})=>{
             this.fetching = false

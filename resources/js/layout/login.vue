@@ -31,9 +31,9 @@
                                             </v-form>
                                             <!-- <a href="https://google.com" target="_blank" style="text-decoration: none; color: black;"><h3 class="text-center mt-3">Forgot your password ?</h3></a> -->
                                         </v-card-text>
-                                        <v-flex class="class-text" md10>
-                                            <small v-if="iserror" class="errormessege">Invalid email or password</small>
-                                        </v-flex>
+                                        <div class="text-center" v-if="iserror">
+                                            <span class="red--text">Invalid email or password</span>
+                                        </div>
                                         <div class="text-center mt-3">
                                             <v-btn color="teal accent-3" dark @click="login">SIGN IN</v-btn>
                                         </div>
@@ -105,5 +105,12 @@ export default {
 <style lang="scss" scoped>
     .signup-btn{
         cursor: pointer;
+        color: #616161;
+        // text-decoration: underline;
+        // color: blue;
+    }
+    .signup-btn:hover{
+        text-decoration: underline;
+        color: #00B0FF;
     }
 </style>

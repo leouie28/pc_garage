@@ -16,6 +16,9 @@
         <v-icon size="30"> mdi-cart </v-icon>
       </v-avatar>
     </v-badge>
+    
+    <admin-notification></admin-notification>
+    
     <div class="text-center">
       <v-menu offset-y style="z-index: 10" rounded="0">
         <template v-slot:activator="{ on, attrs }">
@@ -66,8 +69,13 @@
 </template>
 
 <script>
+import AdminNotification from '@/components/global/notification/adminNotification.vue'
 import { mapGetters } from "vuex";
+// import { component } from 'vue/types/umd';
 export default {
+  components: {
+    AdminNotification
+  },
   data: () => ({
     dialog: false,
     user: {},

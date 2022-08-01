@@ -16,17 +16,17 @@ class CustomerSeeder extends Seeder
      */
     public function run()
     {
-        // Customer::create([
-        //     'first_name' => 'Customer',
-        //     'last_name' => 'Testing',
-        //     'Gender' => 'Male',
-        //     'birthday' => '2022-02-10',
-        //     'address' => 'Calbayog City',
-        //     'phone' => '0983743746',
-        //     'email' => 'customer@gmail.com',
-        //     'password' => bcrypt('123'),
-        //     'status' => true,
-        // ]);
+        Customer::create([
+            'first_name' => 'Customer',
+            'last_name' => 'Testing',
+            'Gender' => 'Male',
+            'birthday' => '2022-02-10',
+            'address' => 'Calbayog City',
+            'phone' => '0983743746',
+            'email' => 'customer@gmail.com',
+            'password' => bcrypt('123'),
+            'status' => true,
+        ]);
 
         $counter = 0;
         while($counter <= 10){
