@@ -14,20 +14,20 @@
         dark
         hide-slider
       >
-        <v-tab>
+        <v-tab @click="$router.push({name: 'product'}).catch(() => {})">
             <v-icon>mdi-devices</v-icon>
-            <h4 class="ml-2">Products</h4>
+            <h4 class="ml-2 toHide">Products</h4>
         </v-tab>
-        <v-tab>
+        <v-tab @click="cartDialog = true">
             <v-icon>mdi-cart</v-icon>
             <v-badge color="primary" content="2">
-                <h4 class="ml-2">Cart</h4>
+                <h4 class="ml-2 toHide">Cart</h4>
             </v-badge>
         </v-tab>
-        <v-tab>
+        <v-tab @click="$router.push({name: 'orders'}).catch(() => {})">
             <v-icon>mdi-format-list-checks</v-icon>
             <v-badge color="success" content="13">
-                <h4 class="ml-2">Order</h4>
+                <h4 class="ml-2 toHide">Order</h4>
             </v-badge>
         </v-tab>
         <v-menu offset-y open-on-hover>
@@ -38,7 +38,7 @@
                 >
                     <v-icon>mdi-account-circle-outline</v-icon>
                     <v-badge color="warning" content="3">
-                        <h4 class="ml-2">Account</h4>
+                        <h4 class="ml-2 toHide">Account</h4>
                     </v-badge>
                     <v-icon small>mdi-chevron-down</v-icon>
                 </v-tab>
@@ -82,15 +82,23 @@
       <v-container fluid>
         <router-view></router-view>
       </v-container>
+      <v-dialog v-model="cartDialog" max-width="600" persistent>
+        <cart @cancel="close"></cart>
+      </v-dialog>
     </v-main>
   </v-app>
 </template>
 
 <script>
+import Cart from '@/components/customer/cart.vue'
 export default {
+    components: {
+        Cart,
+    },
     data: () => ({
+        cartDialog: false,
         page: 1,
-        active: 0   ,
+        active: null,
         warningDialog: false,
         loading: true,
         links: [
@@ -122,7 +130,10 @@ export default {
         }, 1000)
     },
     methods: {
-
+        close() {
+            this.active = null
+            this.cartDialog = false
+        }
     }
 }
 </script>
@@ -142,5 +153,11 @@ export default {
     -webkit-line-clamp: 2; /* number of lines to show */
             line-clamp: 2; 
     -webkit-box-orient: vertical;
+}
+
+@media screen and (max-width: 800px){
+    .toHide{
+        display: none !important;
+    }
 }
 </style>
