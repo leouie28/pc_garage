@@ -20,6 +20,13 @@
     background: #b30000; 
 } */
 
+/* @import url(https://fonts.googleapis.com/css?family=Lato:400,300,700);
+body,html {
+  height:100%;
+  margin:0;
+  font-family:lato !important;
+} */
+
 .v-application--is-ltr .v-list-item__icon:first-child {
     margin-right: 10px !important;
 }

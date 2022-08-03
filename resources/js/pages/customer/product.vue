@@ -70,13 +70,13 @@
                                     color="primary"
                                     >
                                         Cart
-                                        <v-icon>mdi-cart-outline</v-icon>
+                                        <v-icon small>mdi-cart-outline</v-icon>
                                     </v-btn>
                                     <v-btn
                                     color="success"
                                     >
                                         Buy
-                                        <v-icon>mdi-currency-php</v-icon>
+                                        <v-icon small>mdi-currency-php</v-icon>
                                     </v-btn>
                                 </v-card-actions>
                             </v-card>
