@@ -29,4 +29,10 @@ export default [
         meta: { requireAuth: true },
         name: 'recommendations'
     },
+    {
+        path: '/checkout',
+        component: () => import('../pages/customer/checkout.vue'),
+        meta: { requireAuth: true },
+        name: 'checkout'
+    },
 ]

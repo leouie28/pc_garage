@@ -4,6 +4,12 @@
             <v-card-title>
                 My Cart
                 <v-icon class="ml-2">mdi-cart</v-icon>
+                <v-spacer></v-spacer>
+                <v-btn
+                large
+                icon>
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text class="py-0 px-8">
@@ -54,7 +60,7 @@
                 <v-btn elevation="0" color="secondary" @click=" $emit('cancel')">
                     Remove
                 </v-btn>
-                <v-btn elevation="0" color="error">
+                <v-btn elevation="0" color="error" link href="checkout">
                     Checkout &#8369; 87
                 </v-btn>
             </v-card-actions>
