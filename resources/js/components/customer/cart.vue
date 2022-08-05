@@ -15,17 +15,20 @@
             <v-card-text class="py-0 px-8">
                 <div class="my-2">
                     <v-checkbox
+                    v-model="all"
                     hide-details=""
+                    @change="checkAll"
                     label="Select all"
                     ></v-checkbox>
                 </div>
                 <v-divider></v-divider>
                 <div
                 v-for="cart in carts" :key="cart.id" style="border-bottom: 1px dotted #ccc;"
-                @click="checkItem(cart)"
                 :class="cart.product.stocks_sum_stocksstocks==null || cart.product.stocks_sum_stocksstocks==0 ? 'd-flex justify-space-between align-center mt-4 cus-hover cus-disable' : 'd-flex justify-space-between align-center mt-4 cus-hover' ">
                     <div class="d-flex align-center">
                         <v-checkbox
+                        :id="'item-'+cart.id"
+                        v-model="item[cart.id]"
                         ></v-checkbox>
                         <div class="mb-2 d-flex justify-center ml-3 align-center">
                             <v-avatar height="60" width="80" tile>
@@ -40,9 +43,6 @@
                             <h3 class="cus-font text--primary oneline">
                                 {{ cart.product.name }}
                             </h3>
-                            <!-- <div class="cus-font secondary--text">
-
-                            </div> -->
                             <v-chip
                             v-if="cart.product.stocks_sum_stocksstocks==null || cart.product.stocks_sum_stocksstocks==0" 
                             label outlined color="red" small class="py-0">
@@ -65,15 +65,16 @@
                         min="1"
                         >
                     </div>
-                </div>  
+                </div>
             </v-card-text>
+            <v-divider></v-divider>
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn elevation="0" color="secondary" @click=" $emit('cancel')">
                     Remove
                 </v-btn>
                 <v-btn elevation="0" color="error" link href="checkout">
-                    Checkout &#8369; 87
+                    Checkout &#8369; {{ total }}
                 </v-btn>
             </v-card-actions>
         </v-card>
@@ -83,11 +84,18 @@
   export default {
     data () {
       return {
-        total: '',
+        item: [],
+        quantities: [],
+        selectedItems: [],
+        all: false,
+        total: '0',
         carts: [],
+        headers: [
+            { text: 'Select all', sortable: false, value: 'id' },
+        ]
       }
     },
-    created() {
+    mounted() {
         this.getCart()
     },
     methods: {
@@ -96,9 +104,29 @@
                 this.carts = data
             });
         },
-        checkItem(){
-
+        checkAll(){
+            if(this.all==true){
+                this.carts.forEach(elem => {
+                    if(elem.product.stocks_sum_stocksstocks>0){
+                        document.getElementById('item-'+elem.id).click()
+                    }
+                });
+            }else{
+                this.carts.forEach(elem => {
+                    if(elem.product.stocks_sum_stocksstocks>0){
+                        document.getElementById('item-'+elem.id).click()
+                    }
+                });
+            }
         }
+        // checkItem(id){
+        //     let link = document.getElementById('item-'+id);
+        //     link.click()
+        //     console.log(this.item[id])
+        // }
+    },
+    watch: {
+
     }
   }
 </script>
@@ -147,5 +175,10 @@
 .cus-disable{
     opacity: .5;
     pointer-events: none;
+}
+.v-data-table-header tr th{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
 }
 </style>
