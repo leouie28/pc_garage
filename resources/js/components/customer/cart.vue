@@ -20,27 +20,39 @@
                     ></v-checkbox>
                 </div>
                 <v-divider></v-divider>
-                <div class="d-flex justify-space-between align-center mt-4"
-                v-for="n in 3" :key="n" style="border-bottom: 1px dotted #ccc;">
+                <div
+                v-for="cart in carts" :key="cart.id" style="border-bottom: 1px dotted #ccc;"
+                @click="checkItem(cart)"
+                :class="cart.product.stocks_sum_stocksstocks==null || cart.product.stocks_sum_stocksstocks==0 ? 'd-flex justify-space-between align-center mt-4 cus-hover cus-disable' : 'd-flex justify-space-between align-center mt-4 cus-hover' ">
                     <div class="d-flex align-center">
                         <v-checkbox
                         ></v-checkbox>
                         <div class="mb-2 d-flex justify-center ml-3 align-center">
                             <v-avatar height="60" width="80" tile>
                             <v-img
-                            src="https://picsum.photos/id/11/500/300"
+                            :src="cart.product.images.length?'/images/products/' + cart.product.id + '/' + cart.product.images[0].file_name:'/images/default/noimage.png'"
                             ></v-img>
                             </v-avatar>
                             <div class="ml-3">
                             <h3 class="cus-font secondary--text">
-                                &#8369; 34
+                                &#8369; {{ cart.product.price }}
                             </h3>
-                            <h3 class="cus-font text--primary">
-                                Testing Title
+                            <h3 class="cus-font text--primary oneline">
+                                {{ cart.product.name }}
                             </h3>
-                            <div class="cus-font secondary--text">
-                                Cart at 2022-07-29
-                            </div>
+                            <!-- <div class="cus-font secondary--text">
+
+                            </div> -->
+                            <v-chip
+                            v-if="cart.product.stocks_sum_stocksstocks==null || cart.product.stocks_sum_stocksstocks==0" 
+                            label outlined color="red" small class="py-0">
+                                Out of Stocks
+                            </v-chip>
+                            <v-chip
+                            v-else
+                            label outlined color="secondary" small class="py-0">
+                                Stocks: {{ cart.product.stocks_sum_stocksstocks }}
+                            </v-chip>
                             </div>
                         </div>
                     </div>
@@ -49,7 +61,7 @@
                         <input
                         class="qty"
                         type="number"
-                        value="1"
+                        :value="cart.quantity"
                         min="1"
                         >
                     </div>
@@ -64,78 +76,30 @@
                     Checkout &#8369; 87
                 </v-btn>
             </v-card-actions>
-            </v-card>
-        <!-- <v-card color="blue-grey ">
-            <v-card-title class="white--text">
-                My Cart
-                <v-icon class="ml-2 white--text">mdi-cart</v-icon>
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-card-text class="white">
-                <div>
-                    <v-checkbox
-                    dense
-                    label="Select all"
-                    ></v-checkbox>
-                </div>
-                <v-divider></v-divider>
-                <div>
-                    <v-list
-                    v-for="n in 3"
-                    :key="n"
-                    subheader
-                    two-line>
-                        <v-list-item>
-                            <v-checkbox
-                            ></v-checkbox>
-                            <v-list-item-avatar tile height="60" width="80" class="mr-3 ml-4">
-                                <v-img
-                                src="https://picsum.photos/id/11/500/300"
-                                ></v-img>
-                            </v-list-item-avatar>
-                            <v-list-item-content>
-                                <v-list-item-title>
-                                    Hello world
-                                </v-list-item-title>
-                                <v-list-item-subtitle>
-                                    <p style="font-size:18px;" class="text--primary">&#8369; 34</p>
-                                </v-list-item-subtitle>
-                            </v-list-item-content>
-                            <v-list-item-action>
-                                <v-list-item-action-text>
-                                    Qty
-                                    <input
-                                    class="qty"
-                                    type="number"
-                                    value="1"
-                                    min="1"
-                                    >
-                                </v-list-item-action-text>
-                            </v-list-item-action>
-                        </v-list-item>
-                        <v-divider></v-divider>
-                    </v-list>
-                </div>
-            </v-card-text>
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn large color="secondary" @click=" $emit('cancel') ">
-                    Cancel
-                </v-btn>
-                <v-btn large color="error">
-                    Checkout &#8369; 34
-                </v-btn>
-            </v-card-actions>
-        </v-card> -->
+        </v-card>
     </div>
 </template>
 <script>
   export default {
     data () {
       return {
-        
+        total: '',
+        carts: [],
       }
     },
+    created() {
+        this.getCart()
+    },
+    methods: {
+        getCart() {
+            axios.get(`/customer-api/cart`).then(({ data }) => {
+                this.carts = data
+            });
+        },
+        checkItem(){
+
+        }
+    }
   }
 </script>
 
@@ -167,5 +131,21 @@
     border: 2px solid rgb(117, 117, 117);
     box-sizing: border-box;
     font-size: 16px;
+}
+.oneline{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* number of lines to show */
+            line-clamp: 1; 
+    -webkit-box-orient: vertical;
+}
+.cus-hover:hover{
+    background: rgb(240, 240, 240) !important;
+    cursor: pointer;
+}
+.cus-disable{
+    opacity: .5;
+    pointer-events: none;
 }
 </style>

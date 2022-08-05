@@ -2,69 +2,130 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\Filters\CartFilter;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
-use App\Models\Order;
-use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        return (new CartFilter)->searchable();
+        try{
+            $user = Auth::guard('web')->user();
+            $cart = Cart::where('client_id', '=', $user->id)
+            ->with('product', function($item) {
+                return $item->withSum('stocks', 'stocks.stocks');
+            })->get();
+    
+            return $cart;
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
-        Cart::create([
-            'client_id' => Auth::guard('web')->user()->id,
-            'product_id' => $request->product_id
-        ]);
+        try{
+            $user = Auth::guard('web')->user();
+            $cart = Cart::where([
+                ['client_id', '=', $user->id],
+                ['product_id', '=', $request->product_id]
+            ])->first();
+            if($cart){
+                $cart->quantity = $cart->quantity + $request->quantity;
+                $cart->save();
 
-        return Cart::where('client_id',Auth::guard('web')->user()->id)->count();
-    }
+                return [//return alert
+                    "data" => $cart,
+                    "type" => "success",
+                    "message" => "Cart successfully updated!",
+                ];
+            }else{
+                $cart = Cart::create([
+                    'client_id' => Auth::guard('web')->user()->id,
+                    'product_id' => $request->product_id
+                ]);
 
-    public function cartCount()
-    {
-        return Cart::where('client_id',Auth::guard('web')->user()->id)->count();
-    }
-
-    public function updateCart(Request $request, $id)
-    {
-        $cart = Cart::where('id', $id)->first();
-        if($request->quantity < 1){
-            $cart->delete();
-            
-        }else{
-            $cart->update(['quantity' => $request->quantity]);
+                return [//return alert
+                    "data" => $cart,
+                    "type" => "success",
+                    "message" => "Cart successfully added!",
+                ];
+            }
+        }catch(Exception $e){
+            return [//return alert
+                "data" => $request,
+                "type" => "error",
+                "message" => $e->getMessage(),
+            ];
         }
-        return Cart::where('client_id',Auth::guard('web')->user()->id)->count();
     }
 
-    public function removeCart($id)
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
     {
-        $cart = Cart::where('id', $id)->first();
-        $cart->delete();
+        //
     }
 
-    public function checkout(Request $request)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
     {
-        $order = Order::create([
-            'total' => $request->total,
-            'customer_id' => Auth::guard('web')->user()->id,
-        ]);
+        //
+    }
 
-        $carts = Cart::where('client_id',Auth::guard('web')->user()->id)->get();
-        foreach ($carts as $key => $cart) {
-            $order->products()->attach($cart->product_id, ['quantity' => $cart->quantity]);
-            $product = Product::where('id', $cart->product_id)->first();
-            $product->update([
-                'stocks' => $product->stocks - $cart->quantity
-            ]);
-            $cart->delete();
-        }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
     }
 }

@@ -43,24 +43,24 @@
                         </div>
                         <div v-else class="d-flex flex-wrap justify-center">
                             <v-card
-                            v-for="n in 10"
-                            :key="n"
+                            v-for="product in products"
+                            :key="product.id"
                             class="mr-4 mb-4"
                             max-width="300"
                             >
                                 <v-img
                                 height="250"
-                                src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+                                :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'"
                                 ></v-img>
-                                <v-card-title class="pb-3">
-                                    Cafe Badilico
+                                <v-card-title class="oneline pb-3">
+                                    {{ product.name }}
                                 </v-card-title>
                                 <v-card-text>
                                     <div class="text-h6 text--primary">
-                                        &#8369; 43
+                                        &#8369; {{ product.price }}
                                     </div>
                                     <div class="item-desc">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                        {{product.description }}
                                     </div>
                                 </v-card-text>
                                 <v-divider class="mx-2"></v-divider>
@@ -68,12 +68,14 @@
                                     <v-spacer></v-spacer>
                                     <v-btn
                                     color="primary"
+                                    @click="addCart(product)"
                                     >
                                         Cart
                                         <v-icon small>mdi-cart-outline</v-icon>
                                     </v-btn>
                                     <v-btn
                                     color="success"
+                                    @click="checkout(product)"
                                     >
                                         Buy
                                         <v-icon small>mdi-currency-php</v-icon>
@@ -93,15 +95,46 @@
                 </v-card>
             </v-col>
         </v-row>
+        <v-dialog
+        v-model="cartDialog"
+        max-width="800">
+            <cart-checkout :item="item" :checkout="isCheckout" @save="saveCart" @cancel="cartDialog = false"></cart-checkout>
+        </v-dialog>
+        <v-snackbar
+        v-model="alert.trigger"
+        multi-line
+        elevation="12"
+        :color="alert.color"
+        transition="scroll-x-reverse-transition"
+        top
+        right>
+        <div class="d-flex justify-space-between">
+            <div class="mr-2">
+            <v-icon large>info</v-icon>
+            {{ alert.text }}
+            </div>
+            <v-btn @click="alert.trigger = false">
+            Close
+            </v-btn>
+        </div>
+        </v-snackbar>
     </div>
 </template>
 <script>
+import CartCheckout from '@/components/customer/product/CartOrCheckout.vue'
 export default {
+    components: {
+        CartCheckout,
+    },
     data: () => ({
+        isCheckout: true,
         page: 1,
-        active: 0   ,
+        active: 0,
+        item: {},
         warningDialog: false,
         loading: true,
+        cartDialog: false,
+        products: [],
         links: [
             {
                 title: 'Products',
@@ -126,12 +159,35 @@ export default {
         ],
     }),
     mounted() {
-        setTimeout(() => {
-            this.loading = false
-        }, 1000)
+        this.getProducts()
     },
     methods: {
-
+        getProducts() {
+            let params = 'per_page=15'
+            axios.get(`/customer-api/products?${params}`).then(({ data }) => {
+                this.products = data.data
+            }).finally(()=>{
+                setTimeout(() => {
+                    this.loading = false
+                }, 1000)
+            })
+        },
+        saveCart(data) {
+            axios.post(`/customer-api/cart`, data).then(({ data }) => {
+                this.newAlert(true, data.type, data.message)
+                this.cartDialog = false
+            });
+        },
+        addCart(item){
+            this.item = item
+            this.isCheckout = false
+            this.cartDialog = true
+        },
+        checkout(item){
+            this.item = item
+            this.isCheckout = true
+            this.cartDialog = true
+        }
     }
 }
 </script>
@@ -150,6 +206,15 @@ export default {
     display: -webkit-box;
     -webkit-line-clamp: 2; /* number of lines to show */
             line-clamp: 2; 
+    -webkit-box-orient: vertical;
+}
+.oneline{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 2.5rem;
+    -webkit-line-clamp: 1; /* number of lines to show */
+            line-clamp: 1; 
     -webkit-box-orient: vertical;
 }
 </style>
