@@ -118,6 +118,22 @@ class CartController extends Controller
         //
     }
 
+    public function removeCarts(Request $request)
+    {
+        try{
+            $val = array();
+            foreach($request->ids as $cart){
+                // $val[] = $cart;
+                $del = Cart::find($cart);
+                $del->delete();
+            }
+            // return $request;
+            return $this->index();
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
+
     /**
      * Remove the specified resource from storage.
      *

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Customer\CartController;
+use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,14 @@ Route::group(['middleware'=>['auth:web']],function(){
     // Route::post('store-cart', [CartController::class, 'store']);
     // Route::post('cart-checkout', [CartController::class, 'checkout']);
     // Route::get('orders', [OrderController::class, 'index']);
+
+    Route::controller(CartController::class)->group(function () {
+        Route::post('cart/remove-cart', 'removeCarts');
+    });
+
+    Route::controller(CheckoutController::class)->group(function () {
+        Route::get('checkout', 'getItems');
+    });
 
     Route::resources([
         'products' => ProductController::class,
