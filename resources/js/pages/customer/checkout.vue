@@ -52,24 +52,47 @@
                         class="qty"
                         type="number"
                         v-model="product.quantity"
-                        min="1"
-                        >
+                        @change="computeTotal"
+                        :max="product.stocks_sum_stocksstocks"
+                        min="1">
                     </div>
-                </div>  
+                </div>
+                <div v-if="!addNote" class="mt-2 mx-4">
+                  <v-btn
+                  @click="addNote = true"
+                  outlined
+                  block
+                  color="secondary">
+                    Add Note
+                    <v-icon class="ml-2">mdi-message-processing-outline</v-icon>
+                  </v-btn>
+                </div>
+                <v-textarea
+                v-else
+                clearable
+                class="mt-2 mx-4"
+                height="100"
+                outlined
+                v-model="payload.note"
+                dense
+                label="Note (optional)"
+                hide-details=""
+                placeholder="Add note about the order ..."
+                ></v-textarea>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions class="white">
               <v-spacer></v-spacer>
               <div class="text-right">
                 <div class="mb-2">
-                  <span class="text-h6 cus-font">Order Total: &#8369; 7878</span>
+                  <span class="text-h6 cus-font">Order Total: &#8369; {{ payload.total }}</span>
                   <div class="text-caption">+ shipping fee(depend on your location)</div>
                 </div>
                 <div>
                   <v-btn elevation="0" color="secondary" @click=" $emit('cancel')">
                       Cancel
                   </v-btn>
-                  <v-btn elevation="0" color="success" link href="checkout">
+                  <v-btn elevation="0" color="success" @click="confirm = true">
                       Place Order
                   </v-btn>
                 </div>
@@ -78,6 +101,46 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-dialog
+    v-model="confirm"
+    persistent
+    max-width="400">
+      <v-card color="">
+        <v-card-title>
+          <v-icon class="mr-1">mdi-alert-circle-outline</v-icon>
+          Please confirm your order!
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-actions class="white">
+          <div class="mx-auto">
+            <v-btn color="secondary" @click="confirm = false">
+              Cancel
+            </v-btn>
+            <v-btn color="primary" @click="placeOrder">
+              Confirm
+            </v-btn>
+          </div>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-snackbar
+    v-model="alert.trigger"
+    multi-line
+    elevation="12"
+    :color="alert.color"
+    transition="scroll-x-reverse-transition"
+    top
+    right>
+      <div class="d-flex justify-space-between">
+        <div class="mr-2">
+          <v-icon large>info</v-icon>
+          {{ alert.text }}
+        </div>
+        <v-btn @click="alert.trigger = false">
+          Close
+        </v-btn>
+      </div>
+    </v-snackbar>
   </div>
 </template>
 <script>
@@ -85,7 +148,16 @@ export default {
   data () {
     return {
       items: [],
+      addNote: false,
+      confirm: false,
+      linkParams: '',
       tab: 0,
+      payload: {
+        products: [],
+        total: 0,
+        note: '',
+        status: 1,
+      },
       tabs: [
         'pending',
         'delivery',
@@ -98,10 +170,19 @@ export default {
   },
   methods: {
     getData(){
-      let params = this.$route.query.items
-      console.log(params)
-      axios.get(`/customer-api/checkout?items=${params}`).then(({ data }) => {
+      this.linkParams = this.$route.query.items
+      axios.get(`/customer-api/checkout?items=${this.linkParams}`).then(({ data }) => {
         this.items = data
+        this.computeTotal()
+      });
+    },
+    placeOrder() {
+      axios.post(`/customer-api/orders`, this.payload).then(({ data }) => {
+        this.confirm = false
+        if(data.type=='success'){
+          window.location.replace('orders?success=1')
+        }
+        this.newAlert(true, data.type, data.message)
       });
     },
     remove(val){
@@ -112,7 +193,7 @@ export default {
           newParams += elem+','
         }
       });
-      newParams = newParams.slice(0, -1);
+      this.linkParams = newParams.slice(0, -1);
       let link = JSON.parse(JSON.stringify(this.$route.query));
       link.items = newParams
       console.log(newParams)
@@ -120,6 +201,14 @@ export default {
       setTimeout(() => {
         this.getData()
       }, 200)
+    },
+    computeTotal() {
+      let compute = 0
+      this.items.forEach(elem => {
+        this.payload.products.push({id: elem.id, quantity: elem.quantity})
+        compute += elem.price * elem.quantity
+      });
+      this.payload.total = compute
     }
   },
   computed: {
@@ -127,6 +216,11 @@ export default {
     //   let params = this.$route.query
     //   return params
     // }
+  },
+  watch: {
+    linkParams(val){
+      this.computeTotal()
+    }
   }
 }
 </script>
@@ -166,7 +260,6 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    
 }
 /* .oneline{
     white-space: nowrap;

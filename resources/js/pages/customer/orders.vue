@@ -16,66 +16,25 @@
               <v-tabs grow v-model="tab" background-color="transparent">
                 <v-tab
                 v-for="tab in tabs"
-                :key="tab">
+                :key="tab.name">
                   <v-badge
-                  color="blue-grey"
-                  content="3">
-                    <h5>{{ tab }}</h5>
+                  v-if="tab.content>0"
+                  :color="tab.color"
+                  :content="tab.content">
+                    <h5>{{ tab.name }}</h5>
                   </v-badge>
+                  <h5 v-else>{{ tab.name }}</h5>
                 </v-tab>
               </v-tabs>
               <v-tabs-items v-model="tab" class="grey lighten-5">
-                <v-tab-item
-                class="py-3"
-                v-for="item in tabs"
-                :key="item">
-                  <v-card elevation="0" outlined>
-                    <v-card-title class="py-2">
-                      Order Code: #353563 
-                    </v-card-title>
-                    <v-card-text class="white pt-4">
-                      <div class="d-flex justify-space-between">
-                        <div class="mb-2 d-flex justify-center align-center">
-                          <v-avatar height="60" width="80" tile>
-                            <v-img
-                            src="https://picsum.photos/id/11/500/300"
-                            ></v-img>
-                          </v-avatar>
-                          <div class="ml-3">
-                            <h3 class="cus-font text--primary">
-                              Testing Title
-                            </h3>
-                              <!-- <span class="cus-font text-h6 text--primary">
-                                  Testing Title
-                              </span> -->
-                            <div class="cus-font secondary--text">
-                              Description item
-                            </div>
-                          <!-- <p class="text-h6 cus-font">Quantity: 8</p> -->
-                          </div>
-                        </div>
-                        <div class="d-flex">
-                          <!-- <span class="text-h6 cus-font">&#8369; 89</span> -->
-                          <span class="mr-2">Qty: 3x</span>
-                          <h3>&#8369; 89</h3>
-                        </div>
-                      </div>
-                    <v-btn block outlined text>
-                      +3 more products
-                    </v-btn>
-                    </v-card-text>
-                    <v-divider></v-divider>
-                    <v-card-actions class="py-2 ">
-                      <div>Date Order 2022-07-28</div>
-                      <v-spacer></v-spacer>
-                      <span class="text-h6 mr-2">Total:</span>
-                      <v-sheet rounded="" color="error">
-                        <span class="white--text text-h6 px-2">
-                          &#8369; 462
-                        </span>
-                      </v-sheet>
-                    </v-card-actions>
-                  </v-card>
+                <v-tab-item>
+                  <pending></pending>
+                </v-tab-item>
+                <v-tab-item >
+                  <delivery></delivery>
+                </v-tab-item>
+                <v-tab-item >
+                  <received></received>
                 </v-tab-item>
               </v-tabs-items>
             </v-card-text>
@@ -85,17 +44,53 @@
   </div>
 </template>
 <script>
+import Pending from '@/components/customer/order/pending.vue'
+import Delivery from '@/components/customer/order/delivery.vue'
+import Received from '@/components/customer/order/received.vue'
 export default {
+  components: {
+    Pending,
+    Delivery,
+    Received
+  },
   data () {
     return {
       tab: 0,
       tabs: [
-        'pending',
-        'delivery',
-        'received'
+        {
+          name: 'pending',
+          color: 'blue-grey',
+          content: 0
+        },
+        {
+          name: 'delivery',
+          color: 'primary',
+          content: 0
+        },
+        {
+          name: 'received',
+          color: 'success',
+          content: 0
+        }
       ]
     }
   },
+  mounted() {
+    this.orderStat()
+  },
+  methods: {
+    orderStat() {
+      axios.get(`/customer-api/order-stat`).then(({ data }) => {
+        this.tabs.forEach((elem, index) => {
+          if(elem.name=='pending'){
+            this.tabs[index].content = data.pending
+          }else if(elem.name=='delivery'){
+            this.tabs[index].content = data.delivery
+          }
+        });
+      });
+    }
+  }
 }
 </script>
 
@@ -105,5 +100,11 @@ export default {
 .cus-font{
   /* font-family: lato !important; */
   font-family: 'Inter', sans-serif !important;
+}
+.text-max-width{
+    max-width: 320px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>

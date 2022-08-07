@@ -25,9 +25,14 @@ Route::group(['middleware'=>['auth:web']],function(){
         Route::get('checkout', 'getItems');
     });
 
+    Route::controller(OrderController::class)->group(function () {
+        Route::get('order-stat', 'orderStat');
+    });
+
     Route::resources([
         'products' => ProductController::class,
-        'cart' => CartController::class
+        'cart' => CartController::class,
+        'orders' => OrderController::class,
     ]);
 
 });
