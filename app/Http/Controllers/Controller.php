@@ -23,13 +23,20 @@ class Controller extends BaseController
     public function validateOrder($data, $id)
     {
         // $resul
+        $stockOut = array();
         $order = Order::with('products')->find($id);
         foreach($order->products as $prod){
             $bal = Product::withSum('stocks', 'stocks.stocks')->find($prod->id);
             if($prod->pivot->quantity > $bal->stocks_sum_stocksstocks){
+                $stockOut[] = $prod->id;
+                // return [
+                //     "id" => $order->id,
+                //     "type" => "error",
+                // ];
                 return [
-                    "id" => $order->id,
-                    "type" => "error",
+                    'data' => $order,
+                    'type' => 'error',
+                    'message' => 'Order has an item that doeas not have enough of stocks'
                 ];
                 break;
             }
@@ -46,7 +53,10 @@ class Controller extends BaseController
                 $key = array_rand($available);
                 $stock = Stock::find($available[$key]);
                 $stock->update(['stocks' => $stock->stocks - $prod->pivot->quantity]);
-                $order->products()->sync([ $prod->id => ['price' => $prod->price, 'quantity' => $prod->pivot->quantity, 'stock_id' => $stock->id, 'sku' => $stock->sku] ]);
+                $order->products()->syncWithoutDetaching([
+                    $prod->id => ['price' => $prod->price, 'quantity' => $prod->pivot->quantity, 'stock_id' => $stock->id, 'sku' => $stock->sku]
+                ]);
+                // $order->products()->updateExistingPivot($prod->id, ['price' => $prod->price, 'quantity' => $prod->pivot->quantity, 'stock_id' => $stock->id, 'sku' => $stock->sku]);
             }else{
                 $ord_qty = $prod->pivot->quantity;
                 $toDl = $prod->pivot->id;
@@ -82,9 +92,14 @@ class Controller extends BaseController
         }
         $stat->save();
 
+        // return [
+        //     "id" => $stat->id,
+        //     "type" => "success",
+        // ];
         return [
-            "id" => $stat->id,
-            "type" => "success",
+            'data' => $stat,
+            'type' => 'success',
+            'message' => 'Order successfully updated...'
         ];
     }
 
@@ -112,7 +127,9 @@ class Controller extends BaseController
         foreach($order->products as $prod){
             if(!in_array($prod->id, $check)){
                 $check[] = $prod->id;
-                $order->products()->sync([ $prod->id => ['price' => $prod->price, 'quantity' => $prod_stocks[$prod->id], 'stock_id' => null, 'sku' => null]] );
+                $order->products()->syncWithoutDetaching([
+                    $prod->id => ['price' => $prod->price, 'quantity' => $prod_stocks[$prod->id], 'stock_id' => null, 'sku' => null],
+                ]);
             }
         }
 
@@ -124,8 +141,9 @@ class Controller extends BaseController
         $stat->save();
 
         return [
-            "id" => $stat->id,
-            "type" => "success",
+            'data' => $stat,
+            'type' => 'success',
+            'message' => 'Order successfully updated...'
         ];
     }
 

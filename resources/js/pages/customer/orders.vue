@@ -93,16 +93,9 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-@import url(https://fonts.googleapis.com/css?family=Lato:400,300,700);
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
-.cus-font{
-  /* font-family: lato !important; */
-  font-family: 'Inter', sans-serif !important;
-}
+<style>
 .text-max-width{
-    max-width: 320px !important;
+    max-width: 360px !important;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

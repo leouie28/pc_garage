@@ -25,7 +25,7 @@ class OrderController extends Controller
                     return Order::where([
                         ['status', 1],
                         ['customer_id', Auth::guard('web')->user()->id]
-                    ])->with('products')->get();
+                    ])->with('products')->orderBy('id', 'desc')->get();
                 }elseif(Request()->status=='delivery'){
                     return Order::where([
                         ['status', 2],
@@ -33,12 +33,12 @@ class OrderController extends Controller
                     ])->orWhere([
                         ['status', 3],
                         ['customer_id', Auth::guard('web')->user()->id]
-                    ])->with('products')->get();
+                    ])->with('products')->orderBy('id', 'desc')->get();
                 }elseif(Request()->status=='received'){
                     return Order::where([
                         ['status', 4],
                         ['customer_id', Auth::guard('web')->user()->id]
-                    ])->with('products')->get();
+                    ])->with('products')->orderBy('id', 'desc')->get();
                 }
             }
         }catch(Exception $e){
@@ -152,6 +152,30 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    public function cancelOrder($id)
+    {
+        try{
+            $order = Order::find($id);
+            $order->status = 0;
+            $order->save();
+
+            return [//return alert
+                "data" => Order::where([
+                                ['status', 1],
+                                ['customer_id', Auth::guard('web')->user()->id]
+                            ])->with('products')->get(),
+                "type" => "success",
+                "message" => "Order ".$order->order_code." successfully cenceled...",
+            ];
+        }catch(Exception $e){
+            return [//return alert
+                "data" => $id,
+                "type" => "error",
+                "message" => $e->getMessage(),
+            ];
+        }
     }
 
     /**

@@ -125,11 +125,17 @@ export default {
         ],
     }),
     mounted() {
+        this.getStat()
         setTimeout(() => {
             this.loading = false
         }, 1000)
     },
     methods: {
+        getStat() {
+            axios.get(`customer-api/user/nav-stat`).then(({data})=>{
+
+            })
+        },
         close() {
             this.active = null
             this.cartDialog = false

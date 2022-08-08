@@ -16,14 +16,26 @@ class StockSeeder extends Seeder
     {
         Stock::create([
             'sku' => 'TEST7357',
-            'stocks' => 3,
+            'stocks' => 22,
             'product_id' => 3
         ]);
 
         Stock::create([
             'sku' => 'JL83OP2',
-            'stocks' => 4,
+            'stocks' => 10,
             'product_id' => 3
+        ]);
+
+        Stock::create([
+            'sku' => 'JL83OP2',
+            'stocks' => 22,
+            'product_id' => 2
+        ]);
+
+        Stock::create([
+            'sku' => 'JL83OP2',
+            'stocks' => 20,
+            'product_id' => 1
         ]);
     }
 }

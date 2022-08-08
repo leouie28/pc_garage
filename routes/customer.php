@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\CheckoutController;
+use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,10 @@ Route::group(['middleware'=>['auth:web']],function(){
     // Route::post('cart-checkout', [CartController::class, 'checkout']);
     // Route::get('orders', [OrderController::class, 'index']);
 
+    Route::controller(CustomerController::class)->group(function () {
+        Route::get('user/nav-stat', 'navStat');
+    });
+
     Route::controller(CartController::class)->group(function () {
         Route::post('cart/remove-cart', 'removeCarts');
     });
@@ -27,6 +32,7 @@ Route::group(['middleware'=>['auth:web']],function(){
 
     Route::controller(OrderController::class)->group(function () {
         Route::get('order-stat', 'orderStat');
+        Route::put('orders/cancel/{id}', 'cancelOrder');
     });
 
     Route::resources([

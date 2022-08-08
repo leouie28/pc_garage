@@ -18,6 +18,12 @@ export default [
         name: 'orders'
     },
     {
+        path: '/orders/:id',
+        component: () => import('../components/customer/order/order-profile.vue'),
+        name: 'order-profile',
+        meta: { requireAuth: true },
+    },
+    {
         path: '/cart',
         component: () => import('../components/customer/checkout.vue'),
         meta: { requireAuth: true },

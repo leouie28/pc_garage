@@ -3,11 +3,11 @@
         <div class="pt-3"
         v-for="order in orders"
         :key="order.id">
-            <v-card elevation="0" outlined>
+            <v-card elevation="0" outlined @click="$router.push({path: 'orders/'+order.id})">
                 <v-card-title class="py-2">
                 Order Code: {{ order.order_code }}
                 <v-spacer></v-spacer>
-                <v-btn color="grey darken-1" small outlined elevation="0">
+                <v-btn color="grey darken-1" @click.stop="warning = true" small outlined elevation="0">
                     Cancel Order
                 </v-btn>
                 </v-card-title>
@@ -45,7 +45,7 @@
                 <div>Date Order 2022-07-28</div>
                 <v-spacer></v-spacer>
                 <span class="text-h6 mr-2">Total:</span>
-                <v-sheet rounded="" color="secondary">
+                <v-sheet rounded="" color="primary">
                     <span class="white--text text-h6 px-2">
                     &#8369; {{ order.total }}
                     </span>
@@ -53,6 +53,37 @@
                 </v-card-actions>
             </v-card>
         </div>
+        <v-dialog
+        v-model="warning"
+        persistent
+        max-width="500">
+            <v-card color="">
+                <!-- <v-card-title>
+                    <div style="word-break: keep-all;" class="text-center">
+                        <v-icon class="mr-1">mdi-alert-circle-outline</v-icon>
+                        Sorry! This order is already confirmed by seller and it's on delivery.
+                    </div>
+                </v-card-title> -->
+                <v-card-text class="py-4 mb-0">
+                    <v-alert
+                    class="mb-0"
+                    type="error"
+                    outlined
+                    prominent
+                    border="left"
+                    >
+                        Sorry! This order is already confirmed by seller and it's on delivery.
+                    </v-alert>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions class="white">
+                    <v-spacer></v-spacer>
+                    <v-btn color="secondary" @click="warning = false">
+                        Close
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
     <empty v-else></empty>
 </template>
@@ -65,6 +96,7 @@ export default {
     data () {
         return {
         tab: 0,
+        warning: false,
         orders: [],
         }
     },

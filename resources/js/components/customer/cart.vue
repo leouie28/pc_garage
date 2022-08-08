@@ -68,6 +68,7 @@
                     </div>
                 </div> -->
                 <v-data-table
+                v-if="carts.length"
                 v-model="selected"
                 :headers="headers"
                 :items="available"
@@ -131,6 +132,7 @@
                         </div>
                     </template>
                 </v-data-table>
+                <empty v-else></empty>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
@@ -146,7 +148,13 @@
     </div>
 </template>
 <script>
+import Empty from '@/components/global/empty.vue'
+import empty from '../global/empty.vue'
   export default {
+  components: { empty },
+    comments: {
+        Empty,
+    },
     data () {
       return {
         item: [],

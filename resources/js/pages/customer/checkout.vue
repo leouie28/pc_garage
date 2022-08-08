@@ -204,6 +204,8 @@ export default {
     },
     computeTotal() {
       let compute = 0
+      let newItem = []
+      this.payload.products = []
       this.items.forEach(elem => {
         this.payload.products.push({id: elem.id, quantity: elem.quantity})
         compute += elem.price * elem.quantity
