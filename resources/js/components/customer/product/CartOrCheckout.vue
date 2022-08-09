@@ -61,8 +61,8 @@
             <v-divider></v-divider>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="secondary" @click="$emit('cancel')">Cancel</v-btn>
-                <v-btn color="error" v-if="isCheckout">Checkout</v-btn>
+                <v-btn color="secondary" @click="close">Cancel</v-btn>
+                <v-btn color="error" v-if="isCheckout" link :href="params">Checkout</v-btn>
                 <v-btn color="primary" @click="addCart" v-else>Add to Cart</v-btn>
             </v-card-actions>
         </v-card>
@@ -72,6 +72,7 @@
 export default {
     data: () => ({
         isCheckout: '',
+        params: '',
         qty: 1,
         total: '',
         data: {
@@ -85,11 +86,18 @@ export default {
         checkout: '',
     },
     mounted() {
-        
+        this.makeLink()
     },
     methods: {
         addCart() {
             this.$emit('save', this.data)
+        },
+        makeLink() {
+            this.params = 'checkout?items='+this.data.product_id+'~'+this.qty
+        },
+        close() {
+            this.qty = 1
+            this.$emit('cancel')
         }
     },
     watch: {
@@ -110,10 +118,11 @@ export default {
             immediate:true
         },
         qty(val){
-            this.data.quantity = parseInt(val)
+            this.makeLink()
+            this.data.quantity = val
             this.total = this.product.price * val
         }
-    }
+    },
 }
 </script>
 

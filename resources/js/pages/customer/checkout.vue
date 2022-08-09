@@ -89,7 +89,7 @@
                   <div class="text-caption">+ shipping fee(depend on your location)</div>
                 </div>
                 <div>
-                  <v-btn elevation="0" color="secondary" @click=" $emit('cancel')">
+                  <v-btn elevation="0" color="secondary" @click="$router.go(-1)">
                       Cancel
                   </v-btn>
                   <v-btn elevation="0" color="success" @click="confirm = true">

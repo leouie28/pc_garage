@@ -14,7 +14,10 @@ class Feedback extends Model
         'customer_id',
         'rating',
         'text',
-        'image',
+    ];
+
+    protected $with = [
+        // 'customer'
     ];
 
     public function product()
@@ -25,5 +28,10 @@ class Feedback extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imagable');
     }
 }

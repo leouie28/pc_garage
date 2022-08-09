@@ -3,13 +3,17 @@
         <div class="pt-3"
         v-for="order in orders"
         :key="order.id">
-            <v-card elevation="0" outlined>
+            <v-card elevation="0" outlined @click="$router.push({path: 'orders/'+order.id})">
                 <v-card-title class="py-2">
                 Order Code: {{ order.order_code }}
                 <v-spacer></v-spacer>
-                <v-btn color="grey darken-1" small outlined elevation="0">
+                <!-- <v-btn color="grey darken-1" small outlined elevation="0">
                     Cancel Order
-                </v-btn>
+                </v-btn> -->
+                <v-chip label color="success" small>
+                    <v-icon small class="mr-1">mdi-check-circle-outline</v-icon>
+                    Received: {{ moment(order.date_received).format('MM/DD/YY') }}
+                </v-chip>
                 </v-card-title>
                 <v-card-text class="white pt-4">
                 <div class="d-flex justify-space-between">

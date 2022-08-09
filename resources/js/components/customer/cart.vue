@@ -140,7 +140,7 @@
                 <v-btn elevation="0" @click="removeCart" :disabled="selected.length>=1 ? false : true" color="secondary">
                     Remove
                 </v-btn>
-                <v-btn :disabled="total>0 ? false : true" elevation="0" color="error" link :href="'checkout?items='+checkOut">
+                <v-btn :disabled="total>0 ? false : true" elevation="0" color="error" link :href="'../checkout?items='+checkOut">
                     Checkout &#8369; {{ total }}
                 </v-btn>
             </v-card-actions>
@@ -169,6 +169,9 @@ import empty from '../global/empty.vue'
             { text: 'Select all', sortable: false, value: 'id' },
         ]
       }
+    },
+    props: {
+        event: {}
     },
     created() {
         this.getCart()
@@ -237,6 +240,13 @@ import empty from '../global/empty.vue'
         selected(val){
             this.computeTotal()
         },
+        event(val){
+            if(val==true){
+                this.carts = []
+                this.selected = []
+                this.getCart()
+            }
+        }
     }
   }
 </script>

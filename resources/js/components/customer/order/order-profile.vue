@@ -47,7 +47,7 @@
                                         v-if="order.status==4"
                                         color="success">
                                             Delivered
-                                            <v-icon class="ml-1">mdi-basket-check-outline</v-icon>
+                                            <v-icon class="ml-1">mdi-check-all</v-icon>
                                         </v-chip>
                                     </h4>
                                 </div>
@@ -140,6 +140,7 @@
                                         <v-tooltip top v-if="order.status==4">
                                             <template v-slot:activator="{ on, attrs }">
                                                 <v-btn
+                                                @click="feedback(product)"
                                                 v-bind="attrs"
                                                 v-on="on"
                                                 icon>
@@ -181,11 +182,20 @@
                 </v-row>
             </v-card-text>
         </v-card>
+        <v-dialog v-model="feedbackForm" max-width="500" persistent>
+            <feedback-form :show="item" @close="feedbackForm=false"></feedback-form>
+        </v-dialog>
     </div>
 </template>
 <script>
+import FeedbackForm from './feedback-form.vue'
 export default {
+    components: {
+        FeedbackForm,
+    },
     data: () => ({
+        feedbackForm: false,
+        item: {},
         order: {
             customer: ''
         },
@@ -200,6 +210,10 @@ export default {
                 this.order = data
                 console.log(data)
             })
+        },
+        feedback(val){
+            this.item = val
+            this.feedbackForm = true
         }
     }
 }

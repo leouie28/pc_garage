@@ -8,7 +8,7 @@
                 Order Code: {{ order.order_code }}
                 <v-spacer></v-spacer>
                 <v-btn color="grey darken-1" @click.stop="warning = true" small outlined elevation="0">
-                    Cancel Order
+                    Order Received
                 </v-btn>
                 </v-card-title>
                 <v-card-text class="white pt-4">

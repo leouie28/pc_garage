@@ -66,7 +66,8 @@ class CartController extends Controller
             }else{
                 $cart = Cart::create([
                     'client_id' => Auth::guard('web')->user()->id,
-                    'product_id' => $request->product_id
+                    'product_id' => $request->product_id,
+                    'quantity' => $request->quantity
                 ]);
 
                 return [//return alert

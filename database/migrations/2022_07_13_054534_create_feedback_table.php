@@ -18,8 +18,7 @@ class CreateFeedbackTable extends Migration
             $table->foreignId('product_id')->constrained();
             $table->foreignId('customer_id')->constrained();
             $table->integer('rating')->default(1);
-            $table->string('text')->nullable();
-            $table->string('image')->nullable();
+            $table->longText('text')->nullable();
             $table->timestamps();
         });
     }

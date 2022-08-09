@@ -84,7 +84,7 @@
         <router-view @event="getStat"></router-view>
       </v-container>
       <v-dialog v-model="cartDialog" max-width="600">
-        <cart @cancel="close"></cart>
+        <cart :event="cartDialog" @cancel="close"></cart>
       </v-dialog>
     </v-main>
   </v-app>
@@ -133,7 +133,7 @@ export default {
         this.getStat()
         setTimeout(() => {
             this.loading = false
-        }, 1000)
+        }, 600)
     },
     methods: {
         getStat() {
@@ -142,15 +142,11 @@ export default {
             })
         },
         close() {
+            this.getStat()
             this.active = null
             this.cartDialog = false
         }
     },
-    watch: {
-        data(){
-            this.close()
-        }
-    }
 }
 </script>
 

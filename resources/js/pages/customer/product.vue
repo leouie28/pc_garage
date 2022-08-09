@@ -169,7 +169,7 @@ export default {
             }).finally(()=>{
                 setTimeout(() => {
                     this.loading = false
-                }, 1000)
+                }, 600)
             })
         },
         saveCart(data) {
