@@ -3,11 +3,11 @@
         <div class="pt-3"
         v-for="order in orders"
         :key="order.id">
-            <v-card elevation="0" outlined>
+            <v-card elevation="0" outlined @click="$router.push({path: 'orders/'+order.id})" style="cursor: pointer;">
                 <v-card-title class="py-2">
                 Order Code: {{ order.order_code }}
                 <v-spacer></v-spacer>
-                <v-btn color="grey darken-1" @click="warning = true, selected = order" small outlined elevation="0">
+                <v-btn color="grey darken-1" @click.stop="warning = true, selected = order" small outlined elevation="0">
                     Cancel Order
                 </v-btn>
                 </v-card-title>

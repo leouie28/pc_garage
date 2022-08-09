@@ -27,14 +27,32 @@
                                         Status: 
                                         <v-chip
                                         label
-                                        color="primary">
+                                        outlined
+                                        v-if="order.status==1"
+                                        color="secondary">
                                             Pending
                                             <v-icon class="ml-1">mdi-alert-circle-outline</v-icon>
+                                        </v-chip>
+                                        <v-chip
+                                        label
+                                        outlined
+                                        v-if="order.status==2 || order.status==3"
+                                        color="primary">
+                                            Delivery
+                                            <v-icon class="ml-1">mdi-truck-delivery-outline</v-icon>
+                                        </v-chip>
+                                        <v-chip
+                                        label
+                                        outlined
+                                        v-if="order.status==4"
+                                        color="success">
+                                            Delivered
+                                            <v-icon class="ml-1">mdi-basket-check-outline</v-icon>
                                         </v-chip>
                                     </h4>
                                 </div>
                             </div>
-                            <h4>Customer Information:</h4>
+                            <h4>Shipping Information:</h4>
                             <div class="mb-4">
                                 <v-timeline
                                 dense
@@ -43,7 +61,6 @@
                                     <v-timeline-item
                                     class="py-0 ma-0"
                                     left
-                                    small
                                     icon="mdi-account">
                                         <p class="text-h5 text--primary">
                                             {{ order.customer.first_name }}
@@ -52,7 +69,6 @@
                                     <v-timeline-item
                                     class="py-0 ma-0"
                                     left
-                                    small
                                     icon="mdi-map-marker">
                                         <p class="text-h5 text--primary">
                                             {{ order.customer.address }}
@@ -61,7 +77,6 @@
                                     <v-timeline-item
                                     class="py-0 ma-0"
                                     left
-                                    small
                                     icon="mdi-phone">
                                         <p class="text-h5 text--primary">
                                             {{ order.customer.phone }}
@@ -73,13 +88,16 @@
                                 <div>
                                     <h4>Date Order:</h4>
                                     <p class="text-h5 text--primary">
-                                        {{ moment(order.created_at).format('MMMM DD YYYY') }}
+                                        {{ moment(order.created_at).format('MMM Do YY') }}
                                     </p>
                                 </div>
                                 <div>
                                     <h4>Date Arrival:</h4>
-                                    <p class="text-h5 primary--text">
-                                        {{ moment(order.arrival).format('MMMM DD YYYY') }}
+                                    <p class="text-h5 primary--text" v-if="order.arrival">
+                                        {{ moment(order.arrival).format('MMM Do YY') }}
+                                    </p>
+                                    <p class="text-h5 primary--text" v-else>
+                                        Not set..
                                     </p>
                                 </div>
                             </div>
@@ -97,7 +115,42 @@
                             </v-card-title>
                             <v-card-text>
                                 <v-divider></v-divider>
-                                <div
+                                <div class="d-flex justify-space-between align-center py-4 my-0 px-8"
+                                    v-for="product in order.products" :key="product.id" style="border-bottom: 1px dotted #ccc;">
+
+                                    <div class="mb-2 d-flex justify-center ml-3 align-center">
+                                        <v-avatar height="60" width="80" tile>
+                                            <v-img
+                                            :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'"
+                                            ></v-img>
+                                        </v-avatar>
+                                        <div class="ml-3">
+                                            <h3 class="cus-font secondary--text">
+                                                &#8369; {{ product.price }}
+                                            </h3>
+                                            <h3 class="cus-font text--primary oneline">
+                                                {{ product.name }}
+                                            </h3>
+                                            <div class="cus-font secondary--text twoline">
+                                                {{ product.description }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <v-tooltip top v-if="order.status==4">
+                                            <template v-slot:activator="{ on, attrs }">
+                                                <v-btn
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon>
+                                                <v-icon>mdi-message-processing-outline</v-icon>
+                                                </v-btn>
+                                            </template>
+                                            <span>Add Feedback</span>
+                                        </v-tooltip>
+                                    </div>
+                                </div>
+                                <!-- <div
                                 v-for="product in order.products"
                                 :key="product.pivot.id">
                                     <div class="my-2 d-flex justify-space-between">
@@ -118,11 +171,10 @@
                                         </div>
                                         <v-sheet class="pa-4 text-right">
                                             <h2>&#8369; {{ product.pivot.price }}</h2>
-                                            <div class="font-italic ext-subtitle-1">SKU: {{ product.pivot.sku ? product.pivot.sku : 'Pending' }}</div>
                                         </v-sheet>
                                     </div>
                                     <v-divider></v-divider>
-                                </div>
+                                </div> -->
                             </v-card-text>
                         </v-card>
                     </v-col>
@@ -144,7 +196,7 @@ export default {
     methods: {
         show() {
             let id = this.$route.params.id
-            axios.get(`/admin-api/order/${id}`).then(({data})=>{
+            axios.get(`/customer-api/orders/${id}`).then(({data})=>{
                 this.order = data
                 console.log(data)
             })
@@ -154,7 +206,14 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
 .cus-border{
     border-left: 1px solid #ccc;
+}
+.oneline, .twoline{
+    max-width: 290px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>

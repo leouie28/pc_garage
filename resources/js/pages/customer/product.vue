@@ -176,6 +176,7 @@ export default {
             axios.post(`/customer-api/cart`, data).then(({ data }) => {
                 this.newAlert(true, data.type, data.message)
                 this.cartDialog = false
+                this.$emit('event')
             });
         },
         addCart(item){
