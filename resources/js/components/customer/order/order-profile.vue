@@ -183,7 +183,7 @@
             </v-card-text>
         </v-card>
         <v-dialog v-model="feedbackForm" max-width="500" persistent>
-            <feedback-form :show="item" @close="feedbackForm=false"></feedback-form>
+            <feedback-form :show="item" @submit="submit" @close="feedbackForm=false"></feedback-form>
         </v-dialog>
     </div>
 </template>
@@ -196,6 +196,7 @@ export default {
     data: () => ({
         feedbackForm: false,
         item: {},
+        default: {},
         order: {
             customer: ''
         },
@@ -210,6 +211,13 @@ export default {
                 this.order = data
                 console.log(data)
             })
+        },
+        submit(payload) {
+            this.feedbackForm = false
+            axios.post(`/customer-api/feedback`, payload).then(({data})=>{
+                
+                })
+            this.show()
         },
         feedback(val){
             this.item = val

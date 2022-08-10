@@ -129,7 +129,10 @@ class OrderController extends Controller
     public function show($id)
     {
         try{
-            $order = Order::with('products')->with('customer')->find($id);
+            $order = Order::with('customer')
+            ->with('products', function($item) {
+                return $item->with('feedback');
+            })->find($id);
             return $order;
         }catch(Exception $e){
             return $e->getMessage();

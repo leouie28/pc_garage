@@ -25,6 +25,7 @@
                 <div class="text-center my-2">
                     <v-rating
                     :value="0"
+                    v-model="payload.rating"
                     color="yellow darken-3"
                     background-color="grey darken-1"
                     empty-icon="mdi-star-outline"
@@ -40,6 +41,7 @@
                     placeholder="Feedback about the product..."
                     hide-details=""
                     outlined
+                    v-model="payload.text"
                     dense
                     height="100"
                     ></v-textarea>
@@ -48,9 +50,11 @@
                     label="Image"
                     accept="image/*"
                     dense
+                    v-model="img"
                     filled
                     prepend-icon=""
                     prepend-inner-icon="mdi-upload"
+                    @change="onFileChange"
                     hide-details="auto"
                     ></v-file-input>
                 </div>
@@ -58,7 +62,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="secondary" @click="$emit('close')">Close</v-btn>
-                <v-btn color="primary">
+                <v-btn color="primary" @click="save">
                     Submit Feedback
                 </v-btn>
             </v-card-actions>
@@ -68,7 +72,15 @@
 <script>
 export default {
     data: () => ({
-        item: {}
+        item: {},
+        img: null,
+        payload: {
+            product_id: '',
+            order_id: '',
+            rating: 0,
+            text: '',
+            image: null
+        }
     }),
     props: {
         show: {}
@@ -77,12 +89,33 @@ export default {
         
     },
     methods: {
-        
+        save() {
+            if(!this.payload.rating && !this.payload.text && !this.img){
+                alert('Important field required to fill up')
+            }else{
+                this.payload.product_id = this.item.id
+                this.payload.order_id = this.item.pivot.order_id
+                this.$emit('submit', this.payload)
+                this.payload = {}
+            }
+        },
+        createImg(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+            this.payload.image = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        },
+        onFileChange(file) {
+            if (!file) {
+                return;
+            }
+            this.createImg(file);
+        },
     },
     watch: {
         show:{
             handler(val){
-                console.log(val)
                 this.item = val
             },
             deep: true,

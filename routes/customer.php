@@ -3,6 +3,7 @@
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\Customer\FeedbackController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,7 @@ Route::group(['middleware'=>['auth:web']],function(){
         'products' => ProductController::class,
         'cart' => CartController::class,
         'orders' => OrderController::class,
+        'feedback' => FeedbackController::class,
     ]);
 
 });
