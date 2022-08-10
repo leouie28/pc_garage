@@ -10,8 +10,9 @@ class Feedback extends Model
     use HasFactory;
 
     protected $fillable = [
-        'produc_id',
+        'product_id',
         'customer_id',
+        'order_id',
         'rating',
         'text',
     ];
@@ -28,7 +29,7 @@ class Feedback extends Model
 
     public function customer()
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
     public function images()

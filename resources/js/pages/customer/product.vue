@@ -177,6 +177,7 @@ export default {
                 this.newAlert(true, data.type, data.message)
                 this.cartDialog = false
                 this.$emit('event')
+                this.item = {}
             });
         },
         addCart(item){

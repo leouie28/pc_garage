@@ -130,8 +130,13 @@ class OrderController extends Controller
     {
         try{
             $order = Order::with('customer')
-            ->with('products', function($item) {
-                return $item->with('feedback');
+            ->with('products', function($item) use ($id) {
+                return $item->with('feedback', function($fb) use ($id) {
+                    $fb->where([
+                        ['customer_id', '=', Auth::guard('web')->user()->id],
+                        ['order_id', '=', $id]
+                    ]);
+                });
             })->find($id);
             return $order;
         }catch(Exception $e){

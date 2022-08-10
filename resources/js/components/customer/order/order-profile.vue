@@ -136,8 +136,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div>
-                                        <v-tooltip top v-if="order.status==4">
+                                    <div v-if="order.status==4">
+                                        <v-tooltip top v-if="product.feedback.length<1">
                                             <template v-slot:activator="{ on, attrs }">
                                                 <v-btn
                                                 @click="feedback(product)"
@@ -149,6 +149,7 @@
                                             </template>
                                             <span>Add Feedback</span>
                                         </v-tooltip>
+                                        <v-icon v-else color="success">mdi-comment-check</v-icon>
                                     </div>
                                 </div>
                                 <!-- <div
@@ -185,6 +186,24 @@
         <v-dialog v-model="feedbackForm" max-width="500" persistent>
             <feedback-form :show="item" @submit="submit" @close="feedbackForm=false"></feedback-form>
         </v-dialog>
+        <v-snackbar
+        v-model="alert.trigger"
+        multi-line
+        elevation="12"
+        :color="alert.color"
+        transition="scroll-x-reverse-transition"
+        top
+        right>
+        <div class="d-flex justify-space-between">
+            <div class="mr-2">
+            <v-icon large>info</v-icon>
+            {{ alert.text }}
+            </div>
+            <v-btn @click="alert.trigger = false">
+            Close
+            </v-btn>
+        </div>
+        </v-snackbar>
     </div>
 </template>
 <script>
@@ -215,8 +234,8 @@ export default {
         submit(payload) {
             this.feedbackForm = false
             axios.post(`/customer-api/feedback`, payload).then(({data})=>{
-                
-                })
+                this.newAlert(true, data.type, data.message)
+            })
             this.show()
         },
         feedback(val){

@@ -16,7 +16,8 @@
               <v-tabs grow v-model="tab" background-color="transparent">
                 <v-tab
                 v-for="tab in tabs"
-                :key="tab.name">
+                :key="tab.name"
+                @click="route(tab.name)">
                   <v-badge
                   v-if="tab.content>0"
                   :color="tab.color"
@@ -60,7 +61,7 @@ export default {
         {
           name: 'pending',
           color: 'blue-grey',
-          content: 0
+          content: 0,
         },
         {
           name: 'delivery',
@@ -79,6 +80,12 @@ export default {
     this.orderStat()
   },
   methods: {
+    route(link) {
+      let params = JSON.parse(JSON.stringify(this.$route.query));
+      console.log(params)
+      params.link = link
+      this.$router.replace({ query: params }).catch(() => {})
+    },
     orderStat() {
       axios.get(`/customer-api/order-stat`).then(({ data }) => {
         this.tabs.forEach((elem, index) => {
@@ -89,7 +96,27 @@ export default {
           }
         });
       });
+      let params = JSON.parse(JSON.stringify(this.$route.query));
+      if(params.link=='received'){
+        this.tab = 2
+      }else if(params.link=='delivery'){
+        this.tab = 1
+      }else{
+        this.tab = 0
+      }
     }
+  },
+  computed: {
+    // curlink() {
+    //   let params = JSON.parse(JSON.stringify(this.$route.query));
+    //   if(params.link=='received'){
+    //     this.tab = 2
+    //   }else if(params.link=='delivery'){
+    //     this.tab = 1
+    //   }else{
+    //     this.tab = 0
+    //   }
+    // }
   }
 }
 </script>

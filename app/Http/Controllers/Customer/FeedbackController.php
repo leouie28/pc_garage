@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Feedback;
+use App\Models\Image;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FeedbackController extends Controller
 {
@@ -37,9 +40,36 @@ class FeedbackController extends Controller
     public function store(Request $request)
     {
         try{
-            return $request;
+            $fb = Feedback::create([
+                'product_id' => $request->product_id,
+                'customer_id' => Auth::guard('web')->user()->id,
+                'order_id' => $request->order_id,
+                'rating' => $request->rating,
+                'text' => $request->text,
+            ]);
+            if($request->image){
+                $file = uploadImage(
+                    $request->image,
+                    'images/feedback/' . $fb->id . '/'
+                );
+                // $product->images()->attach($file);
+                $image = Image::create([
+                    'imagable_id' => $fb->id,
+                    'imagable_type' => 'App\Models\Feedback',
+                    'file_name' => $file
+                ]);
+            }
+            return [
+                "data" => $fb,
+                "type" => "success",
+                "message" => 'Feedback submitted...',
+            ];
         }catch(Exception $e){
-            return $e->getMessage();
+            return [
+                "data" => $request,
+                "type" => "error",
+                "message" => $e->getMessage(),
+            ];
         }
     }
 
