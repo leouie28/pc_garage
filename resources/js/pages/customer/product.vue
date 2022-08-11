@@ -191,7 +191,7 @@ export default {
             }).finally(()=>{
                 setTimeout(() => {
                     this.loading = false
-                }, 600)
+                }, 400)
             })
         },
         saveCart(data) {

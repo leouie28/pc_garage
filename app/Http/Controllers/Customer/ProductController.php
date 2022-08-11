@@ -62,9 +62,9 @@ class ProductController extends Controller
             foreach($product->categories as $id){
                 $cat[] = $id->id;
             }
-            $similar = Product::whereHas('categories', function($same) {
-                return $same->where('product.id', 3);
-            });
+            $similar = Product::whereHas('categories', function($same) use ($cat){
+                return $same->whereIn('category_id', $cat);
+            })->where('id', '!=', $product->id)->withCount('rating')->limit(8)->get();
             return [
                 "product" => $product,
                 "similar" => $similar

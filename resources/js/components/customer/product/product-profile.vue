@@ -33,8 +33,11 @@
                                 {{ product.name }}
                             </span>
                             <div class="d-flex py-3">
-                                <div class="text-h5">Price: &#8369; {{ product.price }}</div>
-                                <div class="text-h6 ml-4">Stocks: {{ product.price }}</div>
+                                <div class="text-h5 mr-2">Price: &#8369; {{ product.price }}</div>
+                                <v-chip label outlined color="secondary">
+                                    Stocks: {{ product.price }}
+                                </v-chip>
+                                <!-- <div class="text-h6 ml-4">Stocks: {{ product.price }}</div> -->
                             </div>
                             <v-sheet color="grey lighten-3" rounded="" class="pa-3">
                                 <h4 class="text-uppercase">Description</h4>
@@ -53,11 +56,27 @@
                                     {{category.name}}
                                 </v-chip>
                             </h4>
+                            <div class="d-flex justify-end">
+                                <v-btn
+                                color="primary"
+                                class="mr-2"
+                                >
+                                    Add to Cart
+                                    <v-icon small class="ml-2">mdi-cart-outline</v-icon>
+                                </v-btn>
+                                <v-btn
+                                v-if="product.stocks_sum_stocksstocks>0"
+                                color="success"
+                                >
+                                    Buy Now
+                                    <v-icon small class="ml-2">mdi-currency-php</v-icon>
+                                </v-btn>
+                            </div>
                         </v-col>
                     </v-row>
                     <v-divider></v-divider>
                     <v-subheader>
-                        Feedback
+                        <h3>Feedback</h3>
                     </v-subheader>
                     <div v-if="product.feedback.length>0">
                         <div class="d-flex fb" v-for="fb in product.feedback" :key="fb.id">
@@ -98,8 +117,52 @@
                     <v-subheader>
                         <h3>Recommended Products</h3>
                     </v-subheader>
-                    <div>
-                        
+                    <div :class="similar.length>8 ? 'd-flex justify-center py-4 flex-wrap' : 'd-flex justify-start py-4 flex-wrap'">
+                        <v-card
+                        v-for="product in similar"
+                        :key="product.id"
+                        class="mr-4 mb-4"
+                        max-width="200"
+                        @click="$router.push({name: 'product/'+product.id})"
+                        >
+                            <v-img
+                            height="150"
+                            :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'"
+                            ></v-img>
+                            <v-card-text>
+                                <h4 class="oneline">
+                                    {{ product.name }}
+                                </h4>
+                                <h3 class="text--primary">
+                                    &#8369; {{ product.price }}
+                                </h3>
+                                <!-- <div class="text--primary text-subtitle-2">
+                                    &#8369; {{ product.price }}
+                                </div> -->
+                                <div class="d-flex">
+                                    <v-rating
+                                    class="cus-rate mr-1"
+                                    :value="product.rates"
+                                    readonly
+                                    color="yellow darken-3"
+                                    background-color="grey darken-1"
+                                    empty-icon="mdi-star-outline"
+                                    size="16"
+                                    ></v-rating>
+                                    <span>({{product.rating_count}})</span>
+                                </div>
+                                <!-- <div class="item-desc">
+                                    {{product.description }}
+                                </div> -->
+                            </v-card-text>
+                            <v-divider class="mx-2"></v-divider>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn block small color="secondary">
+                                    View Details
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
                     </div>
                 </v-card-text>
             </v-card>
@@ -112,7 +175,8 @@ import moment from 'moment'
 
 export default {
     data: () => ({
-        product: {}
+        product: {},
+        similar: []
     }),
     props: {
         selectedItem: {}
@@ -125,6 +189,7 @@ export default {
             let id = this.$route.params.id
             axios.get(`/customer-api/products/${id}`).then(({data})=>{
                 this.product = data.product
+                this.similar = data.similar
             })
         },
         pars(val){
@@ -147,6 +212,14 @@ export default {
 }
 .cus-rate{
     margin-top: 0 !important;
+}
+.oneline{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* number of lines to show */
+            line-clamp: 1; 
+    -webkit-box-orient: vertical;
 }
 .fb >>> .cus-rate{
     margin-top: -5px !important;

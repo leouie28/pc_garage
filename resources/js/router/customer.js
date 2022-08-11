@@ -12,6 +12,12 @@ export default [
         name: 'product'
     },
     {
+        path: '/product/:id',
+        component: () => import('../components/customer/product/product-profile.vue'),
+        meta: { requireAuth: true },
+        name: 'product-profile'
+    },
+    {
         path: '/orders',
         component: () => import('../pages/customer/orders.vue'),
         meta: { requireAuth: true },
