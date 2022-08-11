@@ -24,6 +24,7 @@
                 </div>
                 <div class="text-center my-2">
                     <v-rating
+                    class="cus-rate"
                     :value="0"
                     v-model="payload.rating"
                     color="yellow darken-3"
@@ -130,4 +131,7 @@ export default {
   /* font-family: lato !important; */
   font-family: 'Inter', sans-serif !important;
 }
+/* .cus-rate >>> .v-icon{
+    padding: 5px !important;
+} */
 </style>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Customer;
 
 use App\Filters\ProductFilter;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -47,7 +49,29 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        try{
+            $product = Product::with('categories')
+            ->with('feedback')
+            ->withSum('sold', 'order_product.quantity')
+            ->withSum('toDeliver', 'order_product.quantity')
+            ->withSum('pending', 'order_product.quantity')
+            ->withSum('canceled', 'order_product.quantity')
+            ->withSum('stocks', 'stocks.stocks')
+            ->find($id);
+            $cat = array();
+            foreach($product->categories as $id){
+                $cat[] = $id->id;
+            }
+            $similar = Product::whereHas('categories', function($same) {
+                return $same->where('product.id', 3);
+            });
+            return [
+                "product" => $product,
+                "similar" => $similar
+            ];
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
     }
 
     /**

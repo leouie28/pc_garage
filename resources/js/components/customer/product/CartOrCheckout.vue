@@ -91,7 +91,6 @@ export default {
     methods: {
         addCart() {
             this.qty = 1
-            this.data.product_id = ''
             this.$emit('save', this.data)
         },
         makeLink() {

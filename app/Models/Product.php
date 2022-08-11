@@ -22,6 +22,10 @@ class Product extends Model
         // 'order',
     ];
 
+    protected $appends = [
+        'rates'
+    ];
+
     public function categories()
     {
         return $this->belongsToMany(Category::class);
@@ -76,4 +80,24 @@ class Product extends Model
     {
         return $this->hasMany(Feedback::class);
     }
+
+    public function rating()
+    {
+        return $this->feedback()->whereNotNull('rating');
+    }
+
+    public function getRatesAttribute()
+    {
+        if($this->rating->count()>0){
+            $total = $this->rating->sum('rating') / $this->rating->count();
+            return $total;
+        }else{
+            return 0;
+        }
+    }
+
+    // public function similar()
+    // {
+    //     return $this->categories();
+    // }
 }

@@ -22,6 +22,10 @@ class Feedback extends Model
         // 'customer'
     ];
 
+    protected $appends = [
+        'CustomerName',
+    ];
+
     public function product()
     {
         return $this->belongsTo(Product::class);
@@ -35,5 +39,10 @@ class Feedback extends Model
     public function images()
     {
         return $this->morphMany(Image::class, 'imagable');
+    }
+
+    public function getCustomerNameAttribute()
+    {
+        return $this->customer->first_name . ' ' . $this->customer->last_name;
     }
 }

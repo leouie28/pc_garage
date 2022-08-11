@@ -47,17 +47,30 @@
                             :key="product.id"
                             class="mr-4 mb-4"
                             max-width="300"
+                            @click="$router.push({path: 'product/'+product.id})"
                             >
                                 <v-img
                                 height="250"
                                 :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'"
                                 ></v-img>
-                                <v-card-title class="oneline pb-3">
+                                <v-card-title class="oneline py-0 pt-3">
                                     {{ product.name }}
                                 </v-card-title>
                                 <v-card-text>
                                     <div class="text-h6 text--primary">
                                         &#8369; {{ product.price }}
+                                    </div>
+                                    <div class="d-flex">
+                                        <v-rating
+                                        class="cus-rate mr-1"
+                                        :value="product.rates"
+                                        readonly
+                                        color="yellow darken-3"
+                                        background-color="grey darken-1"
+                                        empty-icon="mdi-star-outline"
+                                        size="20"
+                                        ></v-rating>
+                                        <span>({{product.rating_count}})</span>
                                     </div>
                                     <div class="item-desc">
                                         {{product.description }}
@@ -68,15 +81,24 @@
                                     <v-spacer></v-spacer>
                                     <v-btn
                                     color="primary"
-                                    @click="addCart(product)"
+                                    @click.stop="addCart(product)"
                                     >
                                         Cart
                                         <v-icon small>mdi-cart-outline</v-icon>
                                     </v-btn>
                                     <v-btn
+                                    v-if="product.stocks_sum_stocksstocks>0"
                                     color="success"
-                                    @click="checkout(product)"
+                                    @click.stop="checkout(product)"
                                     >
+                                        Buy
+                                        <v-icon small>mdi-currency-php</v-icon>
+                                    </v-btn>
+                                    <v-btn
+                                    v-else
+                                    disabled
+                                    @click.stop="false"
+                                    color="success">
                                         Buy
                                         <v-icon small>mdi-currency-php</v-icon>
                                     </v-btn>
@@ -214,9 +236,11 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    line-height: 2.5rem;
     -webkit-line-clamp: 1; /* number of lines to show */
             line-clamp: 1; 
     -webkit-box-orient: vertical;
+}
+.cus-rate >>> .v-icon{
+    padding: 0 !important;
 }
 </style>
