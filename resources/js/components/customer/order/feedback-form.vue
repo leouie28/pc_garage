@@ -91,7 +91,7 @@ export default {
     },
     methods: {
         save() {
-            if(!this.payload.rating && !this.payload.text && !this.img){
+            if(!this.payload.rating){
                 alert('Important field required to fill up')
             }else{
                 this.payload.product_id = this.item.id

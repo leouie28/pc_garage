@@ -117,7 +117,7 @@
                     <v-subheader>
                         <h3>Recommended Products</h3>
                     </v-subheader>
-                    <div :class="similar.length>8 ? 'd-flex justify-center py-4 flex-wrap' : 'd-flex justify-start py-4 flex-wrap'">
+                    <div :class="similar.length>8 ? 'd-flex justify-center py-2 flex-wrap' : 'd-flex justify-start py-2 flex-wrap'">
                         <v-card
                         v-for="product in similar"
                         :key="product.id"

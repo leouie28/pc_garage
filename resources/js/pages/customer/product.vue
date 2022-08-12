@@ -36,74 +36,113 @@
                             <v-skeleton-loader
                             class="mr-4 mb-4"
                             v-for="n in 12"
-                            width="300"
+                            width="200"
                             :key="n"
                             type="image, article, list-item-two-line"
                             ></v-skeleton-loader>
                         </div>
-                        <div v-else class="d-flex flex-wrap justify-center">
-                            <v-card
-                            v-for="product in products"
-                            :key="product.id"
-                            class="mr-4 mb-4"
-                            max-width="300"
-                            @click="$router.push({path: 'product/'+product.id})"
-                            >
-                                <v-img
-                                height="250"
-                                :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'"
-                                ></v-img>
-                                <v-card-title class="oneline py-0 pt-3">
-                                    {{ product.name }}
-                                </v-card-title>
-                                <v-card-text>
-                                    <div class="text-h6 text--primary">
-                                        &#8369; {{ product.price }}
-                                    </div>
-                                    <div class="d-flex">
-                                        <v-rating
-                                        class="cus-rate mr-1"
-                                        :value="product.rates"
-                                        readonly
-                                        color="yellow darken-3"
-                                        background-color="grey darken-1"
-                                        empty-icon="mdi-star-outline"
-                                        size="20"
-                                        ></v-rating>
-                                        <span>({{product.rating_count}})</span>
-                                    </div>
-                                    <div class="item-desc">
-                                        {{product.description }}
-                                    </div>
-                                </v-card-text>
-                                <v-divider class="mx-2"></v-divider>
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                    color="primary"
-                                    @click.stop="addCart(product)"
+                        <div v-else>
+                            <div class="mb-3">
+                                <v-subheader>
+                                    <h2>Top Selling Product</h2>
+                                </v-subheader>
+                                <v-sheet
+                                    class="mx-auto"
+                                >
+                                    <v-slide-group
+                                    class="px-1"
+                                    active-class="success"
+                                    show-arrows
                                     >
-                                        Cart
-                                        <v-icon small>mdi-cart-outline</v-icon>
-                                    </v-btn>
-                                    <v-btn
-                                    v-if="product.stocks_sum_stocksstocks>0"
-                                    color="success"
-                                    @click.stop="checkout(product)"
+                                    <v-slide-item
+                                        v-for="n in 5"
+                                        :key="n"
                                     >
-                                        Buy
-                                        <v-icon small>mdi-currency-php</v-icon>
-                                    </v-btn>
-                                    <v-btn
-                                    v-else
-                                    disabled
-                                    @click.stop="false"
-                                    color="success">
-                                        Buy
-                                        <v-icon small>mdi-currency-php</v-icon>
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
+                                        <v-card
+                                        color="primary"
+                                        class="ma-4"
+                                        height="170"
+                                        width="300">
+                                        </v-card>
+                                    </v-slide-item>
+                                    </v-slide-group>
+                                </v-sheet>
+                            </div>
+                            <div class="d-flex justify-center">
+                                <v-subheader>
+                                    <h2>Latest Product</h2>
+                                </v-subheader>
+                            </div>
+                            <div class="d-flex flex-wrap justify-center">
+                                <v-card
+                                v-for="product in products"
+                                :key="product.id"
+                                class="mr-4 mb-4"
+                                max-width="200"
+                                @click="$router.push({path: 'product/'+product.id})"
+                                >
+                                    <v-img
+                                    height="150"
+                                    :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'"
+                                    ></v-img>
+                                    <!-- <v-card-title class="oneline py-0 pt-1">
+                                        {{ product.name }}
+                                    </v-card-title> -->
+                                    <v-card-text class="px-2 pt-2 pb-0">
+                                        <h4 class="oneline">
+                                            {{ product.name }}
+                                        </h4>
+                                        <div class="text--primary price">
+                                            &#8369; {{ product.price }}
+                                        </div>
+                                        <div class="d-flex">
+                                            <v-rating
+                                            class="cus-rate mr-1"
+                                            :value="product.rates"
+                                            readonly
+                                            color="yellow darken-3"
+                                            background-color="grey darken-1"
+                                            empty-icon="mdi-star-outline"
+                                            size="16"
+                                            ></v-rating>
+                                            <span>({{product.rating_count}})</span>
+                                        </div>
+                                        <div class="item-desc text-caption">
+                                            {{product.description }}
+                                        </div>
+                                    </v-card-text>
+                                    <v-divider class="mx-2"></v-divider>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                        small
+                                        color="primary"
+                                        @click.stop="addCart(product)"
+                                        >
+                                            Cart
+                                            <v-icon small>mdi-cart-outline</v-icon>
+                                        </v-btn>
+                                        <v-btn
+                                        small
+                                        v-if="product.stocks_sum_stocksstocks>0"
+                                        color="success"
+                                        @click.stop="checkout(product)"
+                                        >
+                                            Buy
+                                            <v-icon small>mdi-currency-php</v-icon>
+                                        </v-btn>
+                                        <v-btn
+                                        v-else
+                                        small
+                                        disabled
+                                        @click.stop="false"
+                                        color="success">
+                                            Buy
+                                            <v-icon small>mdi-currency-php</v-icon>
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </div>
                         </div>
                     </v-card-text>
                     <v-card-actions>
@@ -217,6 +256,9 @@ export default {
 </script>
 
 <style scoped>
+.price{
+    font-size: 17px !important;
+}
 .product-header{
     width: 600px;
 }
@@ -228,8 +270,8 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* number of lines to show */
-            line-clamp: 2; 
+    -webkit-line-clamp: 1; /* number of lines to show */
+            line-clamp: 1; 
     -webkit-box-orient: vertical;
 }
 .oneline{
