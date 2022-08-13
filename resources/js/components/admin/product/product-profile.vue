@@ -16,7 +16,7 @@
                             <v-img
                             class="mb-6"
                             alt="image"
-                            :src="product.images?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'">
+                            :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'">
                             </v-img>
                             <v-sheet color="primary" rounded="" dark class="py-2">
                                 <span class="text-h5">Price: &#8369; {{ product.price }}</span>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\CustomerController;
@@ -36,11 +37,17 @@ Route::group(['middleware'=>['auth:web']],function(){
         Route::put('orders/cancel/{id}', 'cancelOrder');
     });
 
+    Route::controller(ProductController::class)->group(function () {
+        Route::get('products/best-selling', 'bestSell');
+        Route::get('products/search', 'customSearch');
+    });
+
     Route::resources([
         'products' => ProductController::class,
         'cart' => CartController::class,
         'orders' => OrderController::class,
         'feedback' => FeedbackController::class,
+        'categories' => CategoryController::class,
     ]);
 
 });

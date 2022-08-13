@@ -8,41 +8,45 @@
             >
                 <v-card elevation="0">
                     <v-card-title>
-                        <div>
-                            <div class="d-flex product-header">
-                                <v-text-field
-                                class="mr-1"
-                                clearable
-                                placeholder="Search..."
-                                append-icon="mdi-magnify"
-                                hide-details=""
-                                outlined
-                                dense
-                                ></v-text-field>
-                                <v-select
-                                class="cat"
-                                prepend-inner-icon="mdi-filter"
-                                placeholder="Category"
-                                hide-details=""
-                                outlined
-                                dense
-                                ></v-select>
-                            </div>
-                        </div>
+                        <Head></Head>
                     </v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
-                        <div v-if="loading" class="d-flex flex-wrap justify-center">
-                            <v-skeleton-loader
-                            class="mr-4 mb-4"
-                            v-for="n in 12"
-                            width="200"
-                            :key="n"
-                            type="image, article, list-item-two-line"
-                            ></v-skeleton-loader>
+                        <div v-if="loading">
+                            <div v-if="page==1">
+                                <v-subheader>
+                                    <h2>Top Selling Product</h2>
+                                </v-subheader>
+                                <div class="d-flex">
+                                    <v-skeleton-loader
+                                    class="ma-4"
+                                    elevation="0"
+                                    width="500"
+                                    v-for="n in 3"
+                                    :key="n"
+                                    height="250"
+                                    type="image, list-item-two-line"
+                                    ></v-skeleton-loader>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-center mt-3">
+                                <v-subheader>
+                                    <h2>Latest Product</h2>
+                                </v-subheader>
+                            </div>
+                            <div class="d-flex flex-wrap justify-center">
+                                <v-skeleton-loader
+                                class="mr-4 mb-4"
+                                v-for="n in 15"
+                                elevation="4"
+                                width="200"
+                                :key="n"
+                                type="image, article"
+                                ></v-skeleton-loader>
+                            </div>
                         </div>
                         <div v-else>
-                            <div class="mb-3">
+                            <div class="mb-3" v-if="page==1">
                                 <v-subheader>
                                     <h2>Top Selling Product</h2>
                                 </v-subheader>
@@ -55,93 +59,121 @@
                                     show-arrows
                                     >
                                     <v-slide-item
-                                        v-for="n in 5"
-                                        :key="n"
+                                        v-for="prod in best"
+                                        :key="prod.id"
                                     >
                                         <v-card
                                         color="primary"
                                         class="ma-4"
-                                        height="170"
-                                        width="300">
+                                        height="250"
+                                        width="500">
+                                            <div class="best-overlay white--text">
+                                                <v-chip label color="blue-grey lighten-5">
+                                                    Sold: 3 
+                                                    <v-icon>mdi-trophy-award</v-icon>
+                                                </v-chip>
+                                                <!-- <h3 class="">Sold: 3 
+                                                    <v-icon>mdi-trophy-award</v-icon>
+                                                </h3> -->
+                                            </div>
+                                            <v-img
+                                            class="ft-img"
+                                            height="250"
+                                            width="500"
+                                            :src="'/images/system/best-filter.png'"
+                                            ></v-img>
+                                            <v-img
+                                            height="250"
+                                            width="500"
+                                            position="center center"
+                                            :alt="prod.name"
+                                            :src="prod.images.length?'/images/products/' + prod.id + '/' + prod.images[0].file_name:'/images/default/noimage.png'"
+                                            ></v-img>
                                         </v-card>
                                     </v-slide-item>
                                     </v-slide-group>
                                 </v-sheet>
                             </div>
                             <div class="d-flex justify-center">
-                                <v-subheader>
+                                <v-subheader v-if="page<=1">
                                     <h2>Latest Product</h2>
                                 </v-subheader>
+                                <v-subheader v-else>
+                                    <h2>Page {{ page }}</h2>
+                                </v-subheader>
                             </div>
-                            <div class="d-flex flex-wrap justify-center">
-                                <v-card
-                                v-for="product in products"
-                                :key="product.id"
-                                class="mr-4 mb-4"
-                                max-width="200"
-                                @click="$router.push({path: 'product/'+product.id})"
-                                >
-                                    <v-img
-                                    height="150"
-                                    :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'"
-                                    ></v-img>
-                                    <!-- <v-card-title class="oneline py-0 pt-1">
-                                        {{ product.name }}
-                                    </v-card-title> -->
-                                    <v-card-text class="px-2 pt-2 pb-0">
-                                        <h4 class="oneline">
+                            <div class="mx-auto">
+                                <div class="d-flex flex-wrap justify-center">
+                                    <v-card
+                                    color="grey lighten-3"
+                                    v-for="product in products"
+                                    :key="product.id"
+                                    class="mr-4 mb-4"
+                                    max-width="200"
+                                    @click="$router.push({path: 'product/'+product.id})"
+                                    >
+                                        <v-img
+                                        height="150"
+                                        :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'"
+                                        ></v-img>
+                                        <!-- <v-card-title class="oneline py-0 pt-1">
                                             {{ product.name }}
-                                        </h4>
-                                        <div class="text--primary price">
-                                            &#8369; {{ product.price }}
-                                        </div>
-                                        <div class="d-flex">
-                                            <v-rating
-                                            class="cus-rate mr-1"
-                                            :value="product.rates"
-                                            readonly
-                                            color="yellow darken-3"
-                                            background-color="grey darken-1"
-                                            empty-icon="mdi-star-outline"
-                                            size="16"
-                                            ></v-rating>
-                                            <span>({{product.rating_count}})</span>
-                                        </div>
-                                        <div class="item-desc text-caption">
-                                            {{product.description }}
-                                        </div>
-                                    </v-card-text>
-                                    <v-divider class="mx-2"></v-divider>
-                                    <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn
-                                        small
-                                        color="primary"
-                                        @click.stop="addCart(product)"
-                                        >
-                                            Cart
-                                            <v-icon small>mdi-cart-outline</v-icon>
-                                        </v-btn>
-                                        <v-btn
-                                        small
-                                        v-if="product.stocks_sum_stocksstocks>0"
-                                        color="success"
-                                        @click.stop="checkout(product)"
-                                        >
-                                            Buy
-                                            <v-icon small>mdi-currency-php</v-icon>
-                                        </v-btn>
-                                        <v-btn
-                                        v-else
-                                        small
-                                        disabled
-                                        @click.stop="false"
-                                        color="success">
-                                            Buy
-                                            <v-icon small>mdi-currency-php</v-icon>
-                                        </v-btn>
-                                    </v-card-actions>
-                                </v-card>
+                                        </v-card-title> -->
+                                        <v-card-text class="px-2 pt-2 pb-0 white">
+                                            <h4 class="oneline">
+                                                {{ product.name }}
+                                            </h4>
+                                            <div class="text--primary price">
+                                                &#8369; {{ product.price }}
+                                            </div>
+                                            <div class="d-flex">
+                                                <v-rating
+                                                class="cus-rate mr-1"
+                                                :value="product.rates"
+                                                readonly
+                                                color="yellow darken-3"
+                                                background-color="grey darken-1"
+                                                empty-icon="mdi-star-outline"
+                                                size="16"
+                                                ></v-rating>
+                                                <span>({{product.rating_count}})</span>
+                                            </div>
+                                            <div class="item-desc text-caption">
+                                                {{product.description }}
+                                            </div>
+                                        </v-card-text>
+                                        <v-divider class="mx-2"></v-divider>
+                                        <v-card-actions class="white">
+                                            <v-spacer></v-spacer>
+                                            <v-btn
+                                            small
+                                            color="primary"
+                                            @click.stop="addCart(product)"
+                                            >
+                                                Cart
+                                                <v-icon small>mdi-cart-outline</v-icon>
+                                            </v-btn>
+                                            <v-btn
+                                            small
+                                            v-if="product.stocks_sum_stocksstocks>0"
+                                            color="success"
+                                            @click.stop="checkout(product)"
+                                            >
+                                                Buy
+                                                <v-icon small>mdi-currency-php</v-icon>
+                                            </v-btn>
+                                            <v-btn
+                                            v-else
+                                            small
+                                            disabled
+                                            @click.stop="false"
+                                            color="success">
+                                                Buy
+                                                <v-icon small>mdi-currency-php</v-icon>
+                                            </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </div>
                             </div>
                         </div>
                     </v-card-text>
@@ -149,7 +181,9 @@
                         <div class="text-cente mx-auto">
                             <v-pagination
                             v-model="page"
-                            :length="1"
+                            :length="data.length"
+                            @input="changePage"
+                            :total-visible="7"
                             ></v-pagination>
                         </div>
                     </v-card-actions>
@@ -182,9 +216,11 @@
     </div>
 </template>
 <script>
+import Head from '@/components/customer/product/product-header.vue'
 import CartCheckout from '@/components/customer/product/CartOrCheckout.vue'
 export default {
     components: {
+        Head,
         CartCheckout,
     },
     data: () => ({
@@ -195,6 +231,8 @@ export default {
         warningDialog: false,
         loading: true,
         cartDialog: false,
+        data: {},
+        best: [],
         products: [],
         links: [
             {
@@ -223,15 +261,28 @@ export default {
         this.getProducts()
     },
     methods: {
-        getProducts() {
-            let params = 'per_page=15'
+        getProducts(page) {
+            if(page<=1||!page)this.getBestSell()
+            let params = ''
+            if(page) params = 'per_page=15&page='+page
+            else params = 'per_page=15'
             axios.get(`/customer-api/products?${params}`).then(({ data }) => {
                 this.products = data.data
+                this.data.length = data.last_page
             }).finally(()=>{
                 setTimeout(() => {
                     this.loading = false
                 }, 400)
             })
+        },
+        getBestSell(){
+            axios.get(`/customer-api/products/best-selling`).then(({ data }) => {
+                this.best = data
+            });
+        },
+        changePage() {
+            this.loading = true
+            this.getProducts(this.page)
         },
         saveCart(data) {
             axios.post(`/customer-api/cart`, data).then(({ data }) => {
@@ -259,13 +310,6 @@ export default {
 .price{
     font-size: 17px !important;
 }
-.product-header{
-    width: 600px;
-}
-.product-header .cat{
-    width: 10px !important;
-    min-width: unset !important;
-}
 .item-desc{
     overflow: hidden;
     text-overflow: ellipsis;
@@ -284,5 +328,30 @@ export default {
 }
 .cus-rate >>> .v-icon{
     padding: 0 !important;
+}
+.best-overlay{
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+.ft-img{
+    opacity: 0.8 !important;
+    position: absolute !important;
+    z-index: 50;
+    bottom: 0;
+}
+.best-overlay{
+    position: absolute !important;
+    z-index: 100;
+    padding: 10px;
+    bottom: 0 !important;
+    right: 0 !important;
+}
+.best-overlay >>> .v-chip{
+    margin: 10px !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    z-index: 200 !important;
 }
 </style>

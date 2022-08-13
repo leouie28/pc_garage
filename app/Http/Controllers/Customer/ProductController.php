@@ -20,6 +20,41 @@ class ProductController extends Controller
         return (new ProductFilter)->searchable();
     }
 
+    public function bestSell()
+    {
+        try{
+            return Product::whereHas('sold')->limit(10)->get();
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
+
+    public function customSearch(Request $request)
+    {
+        try{
+            $key = $request->key;
+            $res = Product::where('name', 'LIKE', '%' . $key . '%')
+            ->orWhere('description', 'LIKE', '%' . $key . '%')
+            ->orWhereHas('categories', function($cat)use($key) {
+                return $cat->where('name', $key);
+            })
+            ->orderBy('id', 'desc')->limit(10)->get(['id', 'name']);
+
+            if(count($res)>0){
+                return $res;
+            }else{
+                $empty[] = [
+                    'id' => 0,
+                    'name' => 'Search not found...'
+                ];
+
+                return $empty;
+            }
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *

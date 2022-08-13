@@ -149,6 +149,9 @@ body,html {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+/* .v-application--is-ltr .v-rating .v-icon{
+    padding: 0;
+} */
 
 @media screen and (max-width: 800px){
     .v-data-table__wrapper td {

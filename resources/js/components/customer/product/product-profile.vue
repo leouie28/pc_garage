@@ -16,7 +16,7 @@
                             <v-img
                             class="mb-6"
                             alt="image"
-                            :src="product.images?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'">
+                            :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'">
                             </v-img>
                             <!-- <v-sheet color="primary" rounded="" dark class="py-2">
                                 <span class="text-h5">Price: &#8369; {{ product.price }}</span>
@@ -34,8 +34,8 @@
                             </span>
                             <div class="d-flex py-3">
                                 <div class="text-h5 mr-2">Price: &#8369; {{ product.price }}</div>
-                                <v-chip label outlined color="secondary">
-                                    Stocks: {{ product.price }}
+                                <v-chip label outlined :color="product.stocks_sum_stocksstocks>0? 'secondary' : 'error'">
+                                    Stocks: {{ product.stocks_sum_stocksstocks>0 ? product.stocks_sum_stocksstocks : 'Out of Stocks' }}
                                 </v-chip>
                                 <!-- <div class="text-h6 ml-4">Stocks: {{ product.price }}</div> -->
                             </div>
@@ -74,7 +74,7 @@
                             </div>
                         </v-col>
                     </v-row>
-                    <v-divider></v-divider>
+                    <v-divider class="mt-4"></v-divider>
                     <v-subheader>
                         <h3>Feedback</h3>
                     </v-subheader>
@@ -117,7 +117,7 @@
                     <v-subheader>
                         <h3>Recommended Products</h3>
                     </v-subheader>
-                    <div :class="similar.length>8 ? 'd-flex justify-center py-2 flex-wrap' : 'd-flex justify-start py-2 flex-wrap'">
+                    <div :class="similar.length>=8 ? 'd-flex justify-center py-2 flex-wrap' : 'd-flex justify-start py-2 flex-wrap'">
                         <v-card
                         v-for="product in similar"
                         :key="product.id"
