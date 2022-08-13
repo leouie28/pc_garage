@@ -8,6 +8,7 @@
                 v-model="search"
                 placeholder="Search..."
                 append-icon="mdi-magnify"
+                @click:append="searchItem"
                 hide-details=""
                 outlined
                 dense
@@ -31,11 +32,21 @@
                     </v-list-item-title>
                 </v-list-item>
                 <div v-else>
-                    <v-list-item v-if="items.length">
-                        <v-list-item-title>
-                            <span class="grey--text">Item</span>
-                        </v-list-item-title>
-                    </v-list-item>
+                    <div v-if="items.length>0">
+                        <template v-for="item in items">
+                            <v-list-item :key="item.id" @click=" item.id>=1 ? $router.push({path: 'product/'+item.id}) : false">
+                                <v-list-item-avatar tile v-if="item.id!=0">
+                                    <v-img
+                                    :src="item.images.length?'/images/products/' + item.id + '/' + item.images[0].file_name:'/images/default/noimage.png'"
+                                    ></v-img>
+                                </v-list-item-avatar>
+                                <v-list-item-content>
+                                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                    <!-- <v-list-item-subtitle></v-list-item-subtitle> -->
+                                </v-list-item-content>
+                            </v-list-item>
+                        </template>
+                    </div>
                     <v-list-item v-else>
                         <v-list-item-title>
                             <span class="grey--text">Product name or brand name...</span>
@@ -62,6 +73,7 @@
             prepend-inner-icon="mdi-filter"
             placeholder="Category"
             hide-details=""
+            @change="filter"
             outlined
             dense
             ></v-select>
@@ -83,25 +95,39 @@ export default {
     },
     methods: {
         searchItem() {
-            setTimeout(() => {
-                this.loading = true
-            },500)
-            if(!this.searchWait){
+            if(this.search.length>0||this.search){
                 setTimeout(() => {
-                    axios.get(`/customer-api/products/search?key=${this.search}`).then(({ data }) => {
-                        this.items = data
-                    });
-                    this.loading = false
-                    this.searchWait = false
-                },2500)
+                    this.loading = true
+                },500)
+                if(!this.searchWait){
+                    setTimeout(() => {
+                        axios.get(`/customer-api/products/search?key=${this.search}`).then(({ data }) => {
+                            this.items = data
+                        });
+                        this.loading = false
+                        this.searchWait = false
+                    },2500)
+                }
+                this.searchWait = true
+            }else{
+                this.items = []
             }
-            this.searchWait = true
         },
         getCategory() {
             axios.get(`/customer-api/categories`).then(({ data }) => {
                 this.category = data.data
                 this.category.push({id:0, name: 'All Category'})
             });
+        },
+        filter() {
+            this.$emit('filter', this.catSelected)
+        }
+    },
+    watch: {
+        search(val) {
+            if(val.length<=0){
+                this.items = []
+            }
         }
     }
 }

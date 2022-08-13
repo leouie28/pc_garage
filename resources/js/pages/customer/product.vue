@@ -8,7 +8,7 @@
             >
                 <v-card elevation="0">
                     <v-card-title>
-                        <Head></Head>
+                        <Head @filter="filter"></Head>
                     </v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
@@ -52,6 +52,7 @@
                                 </v-subheader>
                                 <v-sheet
                                     class="mx-auto"
+                                    v-if="best.length>0"
                                 >
                                     <v-slide-group
                                     class="px-1"
@@ -93,6 +94,7 @@
                                     </v-slide-item>
                                     </v-slide-group>
                                 </v-sheet>
+                                <empty v-else class="mx-10"></empty>
                             </div>
                             <div class="d-flex justify-center">
                                 <v-subheader v-if="page<=1">
@@ -224,6 +226,7 @@ export default {
         CartCheckout,
     },
     data: () => ({
+        catFilter: '',
         isCheckout: true,
         page: 1,
         active: 0,
@@ -261,12 +264,11 @@ export default {
         this.getProducts()
     },
     methods: {
-        getProducts(page) {
-            if(page<=1||!page)this.getBestSell()
-            let params = ''
-            if(page) params = 'per_page=15&page='+page
-            else params = 'per_page=15'
-            axios.get(`/customer-api/products?${params}`).then(({ data }) => {
+        getProducts(params) {
+            if(this.page<=1||!this.page)this.getBestSell()
+            if(params) params = '&'+params
+            else params = ''
+            axios.get(`/customer-api/products?per_page=15${params}`).then(({ data }) => {
                 this.products = data.data
                 this.data.length = data.last_page
             }).finally(()=>{
@@ -275,6 +277,14 @@ export default {
                 }, 400)
             })
         },
+        filter(val) {
+            if(val>0){
+                this.page = 1
+                let params = 'page='+this.page+'&category='+val
+                this.catFilter = val
+                this.getProducts(params)
+            }
+        },
         getBestSell(){
             axios.get(`/customer-api/products/best-selling`).then(({ data }) => {
                 this.best = data
@@ -282,7 +292,10 @@ export default {
         },
         changePage() {
             this.loading = true
-            this.getProducts(this.page)
+            let params = ''
+            if(this.catFilter!="") params = 'page='+this.page+'&category='+this.catFilter
+            else params = 'page='+this.page
+            this.getProducts(params)
         },
         saveCart(data) {
             axios.post(`/customer-api/cart`, data).then(({ data }) => {

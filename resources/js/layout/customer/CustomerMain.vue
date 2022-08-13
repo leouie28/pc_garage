@@ -44,7 +44,7 @@
                     <v-icon small>mdi-chevron-down</v-icon>
                 </v-tab>
             </template>
-            <v-list width="180">
+            <v-list width="200">
                 <v-list-item>
                     <v-list-item-icon>
                         <v-icon>mdi-account</v-icon>
@@ -58,12 +58,21 @@
                         <v-icon>mdi-bell</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>
-                    <v-badge
+                        Notification
+                    <!-- <v-badge
                     color="warning"
                     content="3"
                     >
                         Notification
-                    </v-badge>
+                    </v-badge> -->
+                    </v-list-item-title>
+                </v-list-item>
+                <v-list-item>
+                    <v-list-item-icon>
+                        <v-icon>mdi-message-text</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>
+                        Recommendation
                     </v-list-item-title>
                 </v-list-item>
                 <v-list-item>

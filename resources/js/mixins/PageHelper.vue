@@ -1,7 +1,11 @@
 <script>
+import Empty from '@/components/global/empty.vue'
 import moment from "moment";
 moment.locale("en");
 export default {
+    components: {
+        Empty
+    },
     data(vm) {
         return {
             active_route: "/",
