@@ -22,4 +22,15 @@ class CustomerController extends Controller
             return $e->getMessage();
         }
     }
+
+    public function customerProfile()
+    {
+        try{
+            return [
+                'profile' => Auth::guard('web')->user(),
+            ];
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
 }

@@ -22,6 +22,7 @@ Route::group(['middleware'=>['auth:web']],function(){
 
     Route::controller(CustomerController::class)->group(function () {
         Route::get('user/nav-stat', 'navStat');
+        Route::get('profile', 'customerProfile');
     });
 
     Route::controller(CartController::class)->group(function () {

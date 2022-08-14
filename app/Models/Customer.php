@@ -28,11 +28,17 @@ class Customer extends Authenticatable
 
     protected $with = [
         // 'orders',
+        'images'
     ];
     
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imagable');
     }
 
     public function carts()

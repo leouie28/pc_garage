@@ -185,7 +185,6 @@
                             v-model="page"
                             :length="data.length"
                             @input="changePage"
-                            :total-visible="7"
                             ></v-pagination>
                         </div>
                     </v-card-actions>
@@ -278,10 +277,15 @@ export default {
             })
         },
         filter(val) {
+            this.loading = true
             if(val>0){
                 this.page = 1
-                let params = 'page='+this.page+'&category='+val
+                let params = 'page='+this.page+'&filter=categories~'+val
                 this.catFilter = val
+                this.getProducts(params)
+            }else{
+                let params = 'page=1'
+                this.catFilter = ""
                 this.getProducts(params)
             }
         },
@@ -293,7 +297,7 @@ export default {
         changePage() {
             this.loading = true
             let params = ''
-            if(this.catFilter!="") params = 'page='+this.page+'&category='+this.catFilter
+            if(this.catFilter!="") params = 'page='+this.page+'&filter=categories~'+this.catFilter
             else params = 'page='+this.page
             this.getProducts(params)
         },

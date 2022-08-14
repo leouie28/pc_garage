@@ -47,4 +47,10 @@ export default [
         meta: { requireAuth: true },
         name: 'checkout'
     },
+    {
+        path: '/profile',
+        component: () => import('../pages/customer/profile.vue'),
+        meta: { requireAuth: true },
+        name: 'profile'
+    },
 ]

@@ -3,6 +3,7 @@
 namespace App\Filters;
 
 use App\Models\Product;
+use Illuminate\Support\Facades\Request;
 
 class ProductFilter
 {
@@ -15,6 +16,7 @@ class ProductFilter
   public function searchable()
   {
     $this->searchColumns();
+    $this->filter();
     $this->sortBy();
     $per_page = Request()->per_page;
     if ($per_page == '-1' || !isset(Request()->per_page)) return $this->model->paginate($this->model->count());
@@ -40,6 +42,18 @@ class ProductFilter
           $this->model->orWhere($column, 'like', "%" . $keyword . "%");
         }
       }
+    }
+  }
+
+  public function filter()
+  {
+    if(Request()->filter && Request()->filter != null){
+      $filter = explode("~", Request()->filter);
+      $key = $filter[1];
+      
+      $this->model->whereHas($filter[0], function($item) use ($key) {
+        return $item->where('category_id', $key);
+      });
     }
   }
 

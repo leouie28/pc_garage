@@ -45,7 +45,7 @@
                 </v-tab>
             </template>
             <v-list width="200">
-                <v-list-item>
+                <v-list-item @click="$router.push({path: '/profile'})">
                     <v-list-item-icon>
                         <v-icon>mdi-account</v-icon>
                     </v-list-item-icon>
