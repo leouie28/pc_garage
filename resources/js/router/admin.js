@@ -42,6 +42,12 @@ export default [
         name: 'admin-compatibility'
     },
     {
+        path: '/admin/compatibility/:id',
+        component: () => import('../pages/admin/item-profile/compatibility-profile.vue'),
+        meta: { requireAuth: true },
+        name: 'admin-compatibility-profile'
+    },
+    {
         path: '/admin/recommendation',
         component: () => import('../pages/admin/recommendation.vue'),
         meta: { requireAuth: true },

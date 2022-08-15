@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SetController;
 use App\Http\Controllers\SkuProfileController;
 use App\Http\Controllers\StockController;
 use App\Models\Recommendation;
@@ -49,6 +50,10 @@ Route::group(['middleware'=>['auth:admin']],function(){
         Route::get('sales/report', 'salesWeek');
     });
 
+    Route::controller(SetController::class)->group(function () {
+        Route::get('compatibility/search-item', 'searchItem');
+    });
+
     Route::resources([
         'category' => CategoryController::class,
         'product' => ProductController::class,
@@ -58,5 +63,6 @@ Route::group(['middleware'=>['auth:admin']],function(){
         'recommendation' => RecommendationController::class,
         'sales' => SaleController::class,
         'sku-profile' => SkuProfileController::class,
+        'compatibility' => SetController::class,
     ]);
 });

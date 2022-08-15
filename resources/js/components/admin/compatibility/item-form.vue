@@ -1,0 +1,157 @@
+<template>
+    <div>
+       <v-card>
+            <v-card-title>
+            <span class="text-h5">Compatibility Item Info</span>
+            </v-card-title>
+            <v-card-text>
+            <v-container>
+                <v-row>
+                    <v-col md="12" cols="12">
+                         <v-combobox
+                        label="Component Type*"
+                        dense
+                        :items="part"
+                        filled
+                        hide-details=""
+                        :rules="required"
+                        ></v-combobox>
+                    </v-col>
+                    <v-col md="12" cols="12">
+                        <v-menu offset-y tile>
+                            <template v-slot:activator="{ on }">
+                                <v-text-field
+                                label="Item/Product Name*"
+                                dense
+                                @keyup="searchItem"
+                                v-model="payload.name"
+                                placeholder="Item/Product Name"
+                                filled
+                                hide-details=""
+                                v-on="on"
+                                :rules="required"
+                                ></v-text-field>
+                            </template>
+                            <v-list v-if="items.length>0">
+                                <v-list-item
+                                v-for="item in items" :key="item.id"
+                                @click="payload.id = item.id, payload.name = item.name">
+                                    <v-list-item-title>
+                                        {{ item.name }}
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
+                    </v-col>
+                    <v-col md="12" cols="12">
+                         <v-textarea
+                        label="Description*"
+                        dense
+                        placeholder="Item decription.."
+                        filled
+                        hide-details=""
+                        :rules="required"
+                        required
+                        ></v-textarea>
+                    </v-col>
+                </v-row>
+                <v-row justify="end">
+                    <v-btn
+                        color="secondary"
+                        @click="close"
+                    >
+                        Cancel
+                    </v-btn>
+                    <v-btn
+                        class="mx-2"
+                        color="success"
+                        @click="save"
+                    >
+                        Add Item
+                    </v-btn>
+                </v-row>
+            </v-container>
+            </v-card-text>
+            <v-card-actions>
+            <v-spacer></v-spacer>
+            
+            </v-card-actions>
+        </v-card>
+    </div>
+</template>
+
+<script>
+export default {
+    data: () => ({
+        items: [],
+        payload: {
+            id: '',
+            type: '',
+            name: '',
+            decription: ''
+        },
+        typeWaiting: false,
+        part: [
+            'motherboard',
+            'cpu/processor',
+            'ram/memory',
+            'hard drive/storage',
+            'power supply',
+            'gpu/graphics card',
+            'peripherals',
+        ],
+        required: [
+                v => !!v || 'This field is required!',
+            ],
+    }),
+    created() {
+        this.searchItem
+    },
+    methods: {
+        close() {
+            this.$emit('close')
+            // this.payload = JSON.parse(JSON.stringify(this.newPayload))
+        },
+        searchItem() {
+            console.log(this.payload.name)
+            if(this.payload.name.length<1||this.payload.name){
+                if(!this.typeWaiting){
+                    setTimeout(() => {
+                        let key = this.payload.name
+                        axios.get(`/admin-api/compatibility/search-item?key=${key}`).then(({ data }) => {
+                            this.items = data
+                        })
+                        this.typeWaiting = false
+                    },800)
+                }
+                this.typeWaiting = true
+            }
+        },
+        save() {
+            if(!this.payload.name){
+                alert('Important field need to fillup...')
+            }else{
+                if(this.isEdit){
+                    this.$emit('update', this.payload)
+                }else{
+                    this.$emit('save', this.payload)
+                }
+                this.isEdit = false
+                this.payload = JSON.parse(JSON.stringify(this.newPayload))
+                // console.log(this.payload)
+            }
+        },
+    },
+    watch: {
+        // part: {
+        //     handler(val) {
+        //         if(val) {
+
+        //         }
+        //     },
+        //     deep: true,
+        //     immediate: true,
+        // },
+    }
+}
+</script>

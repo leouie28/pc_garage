@@ -1,26 +1,37 @@
 <template>
     <div>
-        <v-card max-width="700" color="grey lighten-5" elevation="0" class="mx-auto">
-            <v-card-title>
+        <v-card max-width="560" color="grey lighten-5" elevation="0" class="py-3 mx-auto">
+            <!-- <v-card-title>
                 <h3 class="mx-auto">
                     <v-icon>mdi-account</v-icon>
                     Profile
                 </h3>
             </v-card-title>
-            <v-divider></v-divider>
+            <v-divider></v-divider> -->
             <v-card-text>
                 <v-img
-                class="mx-auto"
+                class="mx-auto cover"
                 lazy-src="https://picsum.photos/id/11/10/6"
-                max-height="300"
-                max-width="300"
+                max-height="120"
+                max-width="494"
                 src="https://picsum.photos/id/11/500/300"
                 ></v-img>
                 <v-card rounded="lg" max-width="500" class="pa-4 mx-auto mt-n6" elevation="4">
+                    <div class="text-center profile">
+                        <v-avatar size="160" class="elevation-4 text-center">
+                            <v-img
+                            class="mx-auto"
+                            lazy-src="https://picsum.photos/id/11/10/6"
+                            max-height="300"
+                            max-width="300"
+                            src="https://picsum.photos/id/11/500/300"
+                            ></v-img>
+                        </v-avatar>
+                    </div>
                     <v-card-text>
                         <v-row>
-                            <v-col md="12" cols="12">
-                                <v-card-title class="pb-0 mb-0">
+                            <v-col md="12" cols="12" class="pt-0">
+                                <v-card-title class="py-0 mb-0">
                                     <h5>
                                         <v-icon class="mr-1">mdi-information</v-icon>
                                         Basic Information
@@ -59,6 +70,7 @@
                             <v-col md="6" cols="12">
                                 <v-text-field
                                 dense
+                                :outlined="readonly==true ? false : true"
                                 v-model="profile.first_name"
                                 :readonly="readonly"
                                 hide-details="auto"
@@ -68,6 +80,7 @@
                             <v-col md="6" cols="12">
                                 <v-text-field
                                 dense
+                                :outlined="readonly==true ? false : true"
                                 v-model="profile.last_name"
                                 :readonly="readonly"
                                 hide-details="auto"
@@ -77,6 +90,7 @@
                             <v-col md="6" cols="12">
                                 <v-select
                                 dense
+                                :outlined="readonly==true ? false : true"
                                 v-model="profile.genger"
                                 :readonly="readonly"
                                 hide-details="auto"
@@ -98,6 +112,7 @@
                                         v-model="profile.birthday"
                                         label="Birthday"
                                         readonly
+                                        :outlined="readonly==true ? false : true"
                                         hide-details=""
                                         dense
                                         v-bind="attrs"
@@ -130,6 +145,7 @@
                             <v-col md="12" cols="12">
                                 <v-text-field
                                 dense
+                                :outlined="readonly==true ? false : true"
                                 v-model="profile.address"
                                 :readonly="readonly"
                                 hide-details="auto"
@@ -139,6 +155,7 @@
                             <v-col md="12" cols="12">
                                 <v-text-field
                                 dense
+                                :outlined="readonly==true ? false : true"
                                 v-model="profile.phone"
                                 :readonly="readonly"
                                 hide-details="auto"
@@ -156,6 +173,7 @@
                             <v-col md="12" cols="12">
                                 <v-text-field
                                 dense
+                                :outlined="readonly==true ? false : true"
                                 v-model="profile.email"
                                 :readonly="readonly"
                                 hide-details="auto"
@@ -165,9 +183,11 @@
                             <v-col md="12" cols="12">
                                 <v-text-field
                                 dense
+                                :outlined="readonly==true ? false : true"
                                 v-model="password"
                                 :readonly="readonly"
                                 hide-details="auto"
+                                type="password"
                                 label="Password"
                                 ></v-text-field>
                             </v-col>
@@ -202,3 +222,17 @@ export default {
     }
 }
 </script>
+<style scoped>
+.profile{
+    margin-top: -100px !important;
+}
+.profile >>> .v-avatar{
+    border: 4px solid #fff;
+}
+.cover{
+    overflow: hidden !important;
+    opacity: .8;
+    filter: blur(4px);
+    -webkit-filter: blur(4px);
+}
+</style>
