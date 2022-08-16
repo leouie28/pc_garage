@@ -36,12 +36,6 @@ export default [
         name: 'cart'
     },
     {
-        path: '/recommendations',
-        component: () => import('../pages/customer/recommendation.vue'),
-        meta: { requireAuth: true },
-        name: 'recommendations'
-    },
-    {
         path: '/checkout',
         component: () => import('../pages/customer/checkout.vue'),
         meta: { requireAuth: true },
@@ -52,5 +46,11 @@ export default [
         component: () => import('../pages/customer/profile.vue'),
         meta: { requireAuth: true },
         name: 'profile'
+    },
+    {
+        path: '/recommendations',
+        component: () => import('../pages/customer/recommendation.vue'),
+        meta: { requireAuth: true },
+        name: 'recommendations'
     },
 ]

@@ -8,6 +8,11 @@
                     Add Item
                     <v-icon>mdi-plus</v-icon>
                 </v-btn>
+                <v-btn color="secondary" class="ml-2"
+                @click="$router.go(-1)">
+                    <v-icon class="mr-2">mdi-backspace</v-icon>
+                    Back
+                </v-btn>
             </v-card-title>
             <v-card-text>
                 <v-row>

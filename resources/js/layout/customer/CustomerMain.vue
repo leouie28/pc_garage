@@ -59,6 +59,11 @@
                     </v-list-item-icon>
                     <v-list-item-title>
                         Notification
+                        <v-badge
+                        class="ml-1"
+                        color="error"
+                        content="3"
+                        ></v-badge>
                     <!-- <v-badge
                     color="warning"
                     content="3"
@@ -67,7 +72,7 @@
                     </v-badge> -->
                     </v-list-item-title>
                 </v-list-item>
-                <v-list-item>
+                <v-list-item @click="$router.push({path: '/recommendations'})">
                     <v-list-item-icon>
                         <v-icon>mdi-message-text</v-icon>
                     </v-list-item-icon>
@@ -75,7 +80,7 @@
                         Recommendation
                     </v-list-item-title>
                 </v-list-item>
-                <v-list-item>
+                <v-list-item @click="logout">
                     <v-list-item-icon>
                         <v-icon>mdi-logout-variant</v-icon>
                     </v-list-item-icon>
@@ -154,7 +159,18 @@ export default {
             this.getStat()
             this.active = null
             this.cartDialog = false
-        }
+        },
+        logout(){
+            // this.loading = true
+            axios.get(`/admin-api/logout`).then(({data})=>{
+                this.isAuth = false
+                localStorage.role = 0
+                this.$router.push({name:'login'})
+            }).finally(()=>{
+                // this.loading = false
+            })
+            localStorage.role = '0'
+        },
     },
 }
 </script>

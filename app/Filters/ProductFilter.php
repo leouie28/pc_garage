@@ -45,18 +45,6 @@ class ProductFilter
     }
   }
 
-  public function filter()
-  {
-    if(Request()->filter && Request()->filter != null){
-      $filter = explode("~", Request()->filter);
-      $key = $filter[1];
-      
-      $this->model->whereHas($filter[0], function($item) use ($key) {
-        return $item->where('category_id', $key);
-      });
-    }
-  }
-
   public function sortBy()
   {
     if (Request()->sortBy) {

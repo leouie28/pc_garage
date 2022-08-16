@@ -25,7 +25,7 @@
         :options.sync="options"
         :items-per-page="options.itemsPerPage"
         @update:options="fetchPage"
-        @click:row="viewProduct"
+        @click:row="viewItem"
         class="cursor-pointer table-fix-height"
         fixed-header
       >
@@ -193,7 +193,9 @@ export default {
     ],
   }),
   methods: {
-    viewProduct() {},
+    viewItem(item) {
+      this.$router.push({path: this.$route.fullPath+'/'+item.id})
+    },
     resetFilter() {},
     fetchPage() {
       this.data.isFetching = true;

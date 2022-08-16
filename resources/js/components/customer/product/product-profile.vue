@@ -57,9 +57,13 @@
                                 </v-chip>
                             </h4>
                             <div class="d-flex justify-end">
+                                <v-btn color="secondary">
+                                    Compatibility
+                                    <v-icon small class="ml-2">mdi-play</v-icon>
+                                </v-btn>
                                 <v-btn
                                 color="primary"
-                                class="mr-2"
+                                class="mx-2"
                                 >
                                     Add to Cart
                                     <v-icon small class="ml-2">mdi-cart-outline</v-icon>
