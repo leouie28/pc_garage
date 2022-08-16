@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Filters\SetFilter;
+use App\Models\Category;
 use App\Models\DummyProduct;
 use App\Models\Product;
 use App\Models\Set;
@@ -66,6 +67,28 @@ class SetController extends Controller
         }
     }
 
+    public function addItem(Request $request)
+    {
+        try{
+            if($request->id||$request->id!=null){
+                $item = Product::find($request->id);
+                $item->sets()->attach($item, ['settable_part' => $request->type, 'set_id' => $request->set_id]);
+
+                return [
+                    'data' => $item,
+                    'type' => 'success',
+                    'message' => 'Item successfully added...'
+                ];
+            }
+        }catch(Exception $e){
+            return [
+                'data' => $request,
+                'type' => 'error',
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
     /**
      * Display the specified resource.
      *
@@ -76,11 +99,31 @@ class SetController extends Controller
     {
         try{
             $set = Set::find($id);
-            $items= array();
-
+            $items = array();
+            $isEmpty = 0;
+            $category = Category::all();
+            
+            foreach($category as $cat) {
+                $key = $cat->name;
+                $arr1 = Product::whereHas('sets', function($item)use($key,$id){
+                    $item->where([
+                        ['settables.settable_part', $key],
+                        ['settables.set_id', $id]
+                    ]);
+                })->get(['id', 'name', 'description']);
+                $arr2 = DummyProduct::whereHas('sets', function($item)use($key,$id){
+                    $item->where([
+                        ['settables.settable_part', $key],
+                        ['settables.set_id', $id]
+                    ]);
+                })->get(['id', 'name', 'description']);
+                $items[$key] = $arr1->merge($arr2);
+                $isEmpty += count($arr1) + count($arr2);
+            }
             return [
                 'data' => $set,
-                'items' => $items
+                'items' => $items,
+                'isEmpty' => $isEmpty
             ];
         }catch(Exception $e){
             return $e->getMessage();

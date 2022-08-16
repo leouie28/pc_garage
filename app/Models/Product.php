@@ -100,4 +100,9 @@ class Product extends Model
     // {
     //     return $this->categories();
     // }
+
+    public function sets()
+    {
+        return $this->morphToMany(Set::class, 'settable');
+    }
 }

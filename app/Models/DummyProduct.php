@@ -12,6 +12,10 @@ class DummyProduct extends Model
     protected $fillable = [
         'name',
         'description',
-        'part'
     ];
+
+    public function sets()
+    {
+        return $this->morphToMany(Set::class, 'settable');
+    }
 }

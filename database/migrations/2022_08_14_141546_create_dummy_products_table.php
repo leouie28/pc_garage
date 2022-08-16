@@ -17,7 +17,6 @@ class CreateDummyProductsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->string('part');
             $table->timestamps();
         });
     }

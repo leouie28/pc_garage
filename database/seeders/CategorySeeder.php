@@ -14,17 +14,20 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        Category::create([
-            'name' => 'Case',
-            'color' => 'primary',
-        ]);
-        Category::create([
-            'name' => 'Processor',
-            'color' => 'success',
-        ]);
-        Category::create([
-            'name' => 'Storage',
-            'color' => 'error',
-        ]);
+        $part = [
+            'motherboard',
+            'cpu/processor',
+            'ram/memory',
+            'hard drive/storage',
+            'power supply',
+            'gpu/graphics card',
+            'peripherals',
+        ];
+        
+        foreach($part as $cat) {
+            Category::create([
+                'name' => $cat,
+            ]);
+        }
     }
 }

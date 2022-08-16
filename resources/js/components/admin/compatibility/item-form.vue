@@ -12,6 +12,7 @@
                         label="Component Type*"
                         dense
                         :items="part"
+                        v-model="payload.type"
                         filled
                         hide-details=""
                         :rules="required"
@@ -43,12 +44,13 @@
                             </v-list>
                         </v-menu>
                     </v-col>
-                    <v-col md="12" cols="12">
+                    <v-col md="12" cols="12" v-if="!payload.id||payload.id==''">
                          <v-textarea
                         label="Description*"
                         dense
-                        placeholder="Item decription.."
+                        placeholder="Item description.."
                         filled
+                        v-model="payload.description"
                         hide-details=""
                         :rules="required"
                         required
@@ -88,7 +90,13 @@ export default {
             id: '',
             type: '',
             name: '',
-            decription: ''
+            description: ''
+        },
+        original: {
+            id: '',
+            type: '',
+            name: '',
+            description: ''
         },
         typeWaiting: false,
         part: [
@@ -104,16 +112,20 @@ export default {
                 v => !!v || 'This field is required!',
             ],
     }),
+    props: {
+        type: ''
+    },
     created() {
         this.searchItem
     },
     methods: {
         close() {
             this.$emit('close')
+            this.payload = JSON.parse(JSON.stringify(this.original))
             // this.payload = JSON.parse(JSON.stringify(this.newPayload))
         },
         searchItem() {
-            console.log(this.payload.name)
+            this.payload.id = ''
             if(this.payload.name.length<1||this.payload.name){
                 if(!this.typeWaiting){
                     setTimeout(() => {
@@ -128,30 +140,25 @@ export default {
             }
         },
         save() {
-            if(!this.payload.name){
+            if(!this.payload.name && !this.payload.type){
                 alert('Important field need to fillup...')
             }else{
-                if(this.isEdit){
-                    this.$emit('update', this.payload)
-                }else{
-                    this.$emit('save', this.payload)
-                }
-                this.isEdit = false
-                this.payload = JSON.parse(JSON.stringify(this.newPayload))
+                this.$emit('save', this.payload)
+                this.payload = JSON.parse(JSON.stringify(this.original))
                 // console.log(this.payload)
             }
         },
     },
     watch: {
-        // part: {
-        //     handler(val) {
-        //         if(val) {
-
-        //         }
-        //     },
-        //     deep: true,
-        //     immediate: true,
-        // },
+        type: {
+            handler(val) {
+                if(val) {
+                    this.payload.type = val
+                }
+            },
+            deep: true,
+            immediate: true,
+        },
     }
 }
 </script>

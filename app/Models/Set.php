@@ -14,4 +14,14 @@ class Set extends Model
         'description',
         'status'
     ];
+
+    public function products()
+    {
+        return $this->morphedByMany(Product::class, 'settable');
+    }
+
+    public function dummyProducts()
+    {
+        return $this->morphedByMany(Product::class, 'settable');
+    }
 }
