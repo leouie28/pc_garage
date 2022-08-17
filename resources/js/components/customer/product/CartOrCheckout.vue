@@ -10,7 +10,7 @@
                     <v-col md="6" cols="12">
                         <v-img
                         alt="Feature Image"
-                        :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'"
+                        :src="product.images.length>0 ? '/images/products/' + product.id + '/' + product.images[0].file_name : '/images/default/noimage.png'"
                         ></v-img>
                     </v-col>
                     <v-col md="6" cols="12">
@@ -79,18 +79,19 @@ export default {
             product_id: '',
             quantity: 1
         },
-        product: {}
+        product: {
+            images: []
+        }
     }),
     props: {
         item: {},
         checkout: '',
     },
-    mounted() {
+    created() {
         this.makeLink()
     },
     methods: {
         addCart() {
-            this.qty = 1
             this.$emit('save', this.data)
         },
         makeLink() {
@@ -104,25 +105,33 @@ export default {
     watch: {
         item:{
             handler(val){
-                this.product = val
-                this.data.product_id = val.id
-                this.total = val.price
+                if(val){
+                    this.qty = 1
+                    this.product = val
+                    this.data.product_id = val.id
+                    this.total = val.price
+                    this.makeLink()
+                }
             },
             deep: true,
             immediate:true
         },
         checkout:{
             handler(val){
-                this.isCheckout = val
+                if(val){
+                    this.isCheckout = val
+                }
             },
             deep: true,
             immediate:true
         },
         qty(val){
-            this.makeLink()
-            this.data.quantity = val
-            this.total = this.product.price * val
-        }
+            if(val){
+                this.makeLink()
+                this.data.quantity = val
+                this.total = this.product.price * val
+            }
+            }
     },
 }
 </script>

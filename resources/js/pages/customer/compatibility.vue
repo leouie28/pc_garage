@@ -47,8 +47,8 @@
                                         {{ part.item.name }}
                                     </v-chip>
                                     <v-btn small color="secondary" @click="selectedComponent=part.component, showForm=true" outlined v-else>
-                                        <v-icon class="mr-1">mdi-plus</v-icon>
                                         {{ part.component }}
+                                        <v-icon class="ml-1" small>mdi-plus-circle</v-icon>
                                     </v-btn>
                                 </td>
                                 <td class="text-center">

@@ -19,12 +19,18 @@
                 <v-card rounded="lg" max-width="500" class="pa-4 mx-auto mt-n6" elevation="4">
                     <div class="text-center profile">
                         <v-avatar size="160" class="elevation-4 text-center">
+                            <v-fab-transition>
+                            <v-btn v-if="readonly==false" absolute rounded bottom class="profile-btn">
+                                edit
+                                <v-icon>mdi-camera</v-icon>
+                            </v-btn>
+                            </v-fab-transition>
                             <v-img
+                            style="background-color:white;"
                             class="mx-auto"
-                            lazy-src="https://picsum.photos/id/11/10/6"
                             max-height="300"
                             max-width="300"
-                            src="https://picsum.photos/id/11/500/300"
+                            src="/images/default/person.png"
                             ></v-img>
                         </v-avatar>
                     </div>
@@ -91,7 +97,8 @@
                                 <v-select
                                 dense
                                 :outlined="readonly==true ? false : true"
-                                v-model="profile.genger"
+                                v-model="profile.gender"
+                                :items="gender"
                                 :readonly="readonly"
                                 hide-details="auto"
                                 label="Genger"
@@ -201,11 +208,14 @@
 <script>
 export default {
     data: () => ({
-        profile: {},
+        profile: {
+            images: []
+        },
         password: '',
         readonly: true,
         date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
         menu: false,
+        gender: ['Female', 'Male', 'Hide']
     }),
     mounted() {
         this.getProfile()
@@ -234,5 +244,8 @@ export default {
     opacity: .8;
     filter: blur(4px);
     -webkit-filter: blur(4px);
+}
+.profile-btn{
+    z-index: 5 !important;
 }
 </style>

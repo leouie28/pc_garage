@@ -82,7 +82,7 @@
                     <v-subheader>
                         <h3>Feedback</h3>
                     </v-subheader>
-                    <div v-if="product.feedback">
+                    <div v-if="product.feedback.length>0">
                         <div class="d-flex fb" v-for="fb in product.feedback" :key="fb.id">
                             <v-avatar size="36" color="blue-grey" class="mr-2 mt-1">
                                 <v-img
@@ -174,11 +174,11 @@
 
 <script>
 import moment from 'moment'
-
 export default {
     data: () => ({
         product: {
-            images: []
+            images: [],
+            feedback: []
         },
         similar: []
     }),

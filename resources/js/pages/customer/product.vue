@@ -13,7 +13,7 @@
                     <v-divider></v-divider>
                     <v-card-text>
                         <div v-if="loading">
-                            <div v-if="page==1">
+                            <div v-if="page==1&&catFilter==''">
                                 <v-subheader>
                                     <h2>Top Selling Product</h2>
                                 </v-subheader>
@@ -46,7 +46,7 @@
                             </div>
                         </div>
                         <div v-else>
-                            <div class="mb-3" v-if="page==1">
+                            <div class="mb-3" v-if="page==1&&catFilter==''">
                                 <v-subheader>
                                     <h2>Top Selling Product</h2>
                                 </v-subheader>
@@ -104,7 +104,7 @@
                                     <h2>Page {{ page }}</h2>
                                 </v-subheader>
                             </div>
-                            <div class="text-center d-inline mx-auto">
+                            <div class="d-inline mx-auto">
                                 <div class="d-flex flex-wrap justify-center">
                                 <!-- <div class="d-inline text-left"> -->
                                     <v-card
@@ -288,7 +288,11 @@ export default {
                 let params = 'page=1'
                 this.catFilter = ""
                 this.getProducts(params)
+                setTimeout(() => {
+                    this.page = 1
+                }, 1000)
             }
+            console.log(this.catFilter)
         },
         getBestSell(){
             axios.get(`/customer-api/products/best-selling`).then(({ data }) => {
@@ -307,7 +311,6 @@ export default {
                 this.newAlert(true, data.type, data.message)
                 this.cartDialog = false
                 this.$emit('event')
-                this.item = {}
             });
         },
         addCart(item){

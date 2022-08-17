@@ -106,20 +106,28 @@
     persistent
     max-width="400">
       <v-card color="">
-        <v-card-title>
-          <v-icon class="mr-1">mdi-alert-circle-outline</v-icon>
-          Please confirm your order!
-        </v-card-title>
-        <v-divider></v-divider>
-        <v-card-actions class="white">
-          <div class="mx-auto">
-            <v-btn color="secondary" @click="confirm = false">
-              Cancel
-            </v-btn>
-            <v-btn color="primary" @click="placeOrder">
-              Confirm
-            </v-btn>
+        <v-card-text class="pt-10 pb-0">
+          <div class="text-center">
+            <v-alert
+            outlined
+            color="warning"
+            text
+          >
+            <v-icon class="mr-1" color="warning">mdi-alert-circle-outline</v-icon>
+            <span class="">Please confirm your order!</span>
+          </v-alert>
+            <!-- <v-icon class="mr-1">mdi-alert-circle-outline</v-icon>
+            <span class="text-h6">Please confirm your order!</span> -->
           </div>
+        </v-card-text>
+        <v-card-actions class="white">
+          <v-spacer></v-spacer>
+          <v-btn color="secondary" text @click="confirm = false">
+            Cancel
+          </v-btn>
+          <v-btn color="primary" @click="placeOrder">
+            Confirm
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

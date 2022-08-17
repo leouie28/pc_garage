@@ -67,72 +67,74 @@
                         >
                     </div>
                 </div> -->
-                <v-data-table
-                v-if="carts.length"
-                v-model="selected"
-                :headers="headers"
-                :items="available"
-                :single-select="false"
-                item-key="id"
-                :items-per-page="-1"
-                hide-default-footer
-                @toggle-select-all="selectAllToggle"
-                show-select>
-                    <template v-slot:[`header.id`]>
-                        <h3 @click="checkAll">Select All</h3>
-                    </template>
-                    <template v-slot:[`item.data-table-select`]="{ item }">
-                        <v-checkbox
-                        :disabled="item.product.stocks_sum_stocksstocks<item.quantity"
-                        v-model="selected"
-                        :value="item"
-                        :ripple="false"
-                        hide-details=""
-                        ></v-checkbox>
-                    </template>
-                    <template v-slot:[`item.id`]="{ item }">
-                        <div
-                        :class="item.product.stocks_sum_stocksstocks==null || item.product.stocks_sum_stocksstocks==0 ? 'd-flex justify-space-between align-center mt-4 cus-hover cus-disable' : 'd-flex justify-space-between align-center mt-4 cus-hover' ">
-                            <div class="mb-2 d-flex justify-center ml-3 align-center ml-n8">
-                                <v-avatar height="60" width="80" tile>
-                                    <v-img
-                                    :src="item.product.images.length?'/images/products/' + item.product.id + '/' + item.product.images[0].file_name:'/images/default/noimage.png'"
-                                    ></v-img>
-                                </v-avatar>
-                                <div class="ml-3">
-                                    <h3 class="cus-font secondary--text">
-                                        &#8369; {{ item.product.price }}
-                                    </h3>
-                                    <h3 class="cus-font text--primary oneline cart-width">
-                                        {{ item.product.name }}
-                                    </h3>
-                                    <v-chip
-                                    v-if="item.product.stocks_sum_stocksstocks==null || item.product.stocks_sum_stocksstocks==0" 
-                                    label outlined color="red" small class="py-0">
-                                        Out of Stocks
-                                    </v-chip>
-                                    <v-chip
-                                    v-else
-                                    label outlined color="secondary" small class="py-0">
-                                        Stocks: {{ item.product.stocks_sum_stocksstocks }}
-                                    </v-chip>
+                <v-expand-transition>
+                    <v-data-table
+                    v-if="carts.length"
+                    v-model="selected"
+                    :headers="headers"
+                    :items="available"
+                    :single-select="false"
+                    item-key="id"
+                    :items-per-page="-1"
+                    hide-default-footer
+                    @toggle-select-all="selectAllToggle"
+                    show-select>
+                        <template v-slot:[`header.id`]>
+                            <h3 @click="checkAll">Select All</h3>
+                        </template>
+                        <template v-slot:[`item.data-table-select`]="{ item }">
+                            <v-checkbox
+                            :disabled="item.product.stocks_sum_stocksstocks<item.quantity"
+                            v-model="selected"
+                            :value="item"
+                            :ripple="false"
+                            hide-details=""
+                            ></v-checkbox>
+                        </template>
+                        <template v-slot:[`item.id`]="{ item }">
+                            <div
+                            :class="item.product.stocks_sum_stocksstocks==null || item.product.stocks_sum_stocksstocks==0 ? 'd-flex justify-space-between align-center mt-4 cus-hover cus-disable' : 'd-flex justify-space-between align-center mt-4 cus-hover' ">
+                                <div class="mb-2 d-flex justify-center ml-3 align-center ml-n8">
+                                    <v-avatar height="60" width="80" tile>
+                                        <v-img
+                                        :src="item.product.images.length?'/images/products/' + item.product.id + '/' + item.product.images[0].file_name:'/images/default/noimage.png'"
+                                        ></v-img>
+                                    </v-avatar>
+                                    <div class="ml-3">
+                                        <h3 class="cus-font secondary--text">
+                                            &#8369; {{ item.product.price }}
+                                        </h3>
+                                        <h3 class="cus-font text--primary oneline cart-width">
+                                            {{ item.product.name }}
+                                        </h3>
+                                        <v-chip
+                                        v-if="item.product.stocks_sum_stocksstocks==null || item.product.stocks_sum_stocksstocks==0" 
+                                        label outlined color="red" small class="py-0">
+                                            Out of Stocks
+                                        </v-chip>
+                                        <v-chip
+                                        v-else
+                                        label outlined color="secondary" small class="py-0">
+                                            Stocks: {{ item.product.stocks_sum_stocksstocks }}
+                                        </v-chip>
+                                    </div>
+                                </div>
+                                <div :class="item.product.stocks_sum_stocksstocks>=item.quantity ? 'ml-2' : 'ml-2 red--text'">
+                                    Qty
+                                    <input
+                                    :class="item.product.stocks_sum_stocksstocks>=item.quantity ? 'qty' : 'qty red-qty'"
+                                    type="number"
+                                    v-model="item.quantity"
+                                    @change="computeTotal"
+                                    min="1"
+                                    :max="item.product.stocks_sum_stocksstocks"
+                                    >
                                 </div>
                             </div>
-                            <div :class="item.product.stocks_sum_stocksstocks>=item.quantity ? 'ml-2' : 'ml-2 red--text'">
-                                Qty
-                                <input
-                                :class="item.product.stocks_sum_stocksstocks>=item.quantity ? 'qty' : 'qty red-qty'"
-                                type="number"
-                                v-model="item.quantity"
-                                @change="computeTotal"
-                                min="1"
-                                :max="item.product.stocks_sum_stocksstocks"
-                                >
-                            </div>
-                        </div>
-                    </template>
-                </v-data-table>
-                <empty v-else></empty>
+                        </template>
+                    </v-data-table>
+                    <empty v-else></empty>
+                </v-expand-transition>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
