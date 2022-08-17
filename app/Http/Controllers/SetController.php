@@ -37,6 +37,29 @@ class SetController extends Controller
         }
     }
 
+    public function mainItem(Request $request)
+    {
+        try{
+            return Product::with('categories')->find($request->id);
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
+
+    public function availableItem(Request $request)
+    {
+        try{
+            $key = $request->key;
+            $prod = Product::whereHas('sets', function($item) use ($key) {
+                $item->where('settables.settable_part', $key);
+            })->get();
+
+            return $prod;
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *

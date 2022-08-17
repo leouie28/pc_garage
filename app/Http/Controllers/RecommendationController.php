@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Filters\RecommendationFilter;
+use App\Models\Recommendation;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RecommendationController extends Controller
 {
@@ -35,7 +38,23 @@ class RecommendationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            $rmd = Recommendation::create([
+                'recommendation' => $request->text,
+                'customer_id' => Auth::guard('web')->user()->id,
+            ]);
+            return [
+                'data' => $rmd,
+                'type' => 'success',
+                'message' => 'Recommendation submitted...'
+            ];
+        }catch(Exception $e){
+            return [
+                'data' => $request,
+                'type' => 'error',
+                'message' => $e->getMessage()
+            ];
+        }
     }
 
     /**

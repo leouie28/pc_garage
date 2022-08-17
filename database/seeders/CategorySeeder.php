@@ -21,6 +21,8 @@ class CategorySeeder extends Seeder
             'hard drive/storage',
             'power supply',
             'gpu/graphics card',
+            'case',
+            'monitor',
             'peripherals',
         ];
         

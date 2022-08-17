@@ -7,6 +7,8 @@ use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\FeedbackController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ProductController;
+use App\Http\Controllers\RecommendationController;
+use App\Http\Controllers\SetController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware'=>['auth:web']],function(){
@@ -43,12 +45,18 @@ Route::group(['middleware'=>['auth:web']],function(){
         Route::get('products/search', 'customSearch');
     });
 
+    Route::controller(SetController::class)->group(function () {
+        Route::get('compatibilities/main-item', 'mainItem');
+        Route::get('compatibilities/available-item', 'availableItem');
+    });
+
     Route::resources([
         'products' => ProductController::class,
         'cart' => CartController::class,
         'orders' => OrderController::class,
         'feedback' => FeedbackController::class,
         'categories' => CategoryController::class,
+        'recommendations' => RecommendationController::class,
     ]);
 
 });

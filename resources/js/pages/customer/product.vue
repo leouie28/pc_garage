@@ -104,13 +104,14 @@
                                     <h2>Page {{ page }}</h2>
                                 </v-subheader>
                             </div>
-                            <div class="mx-auto">
+                            <div class="text-center d-inline mx-auto">
                                 <div class="d-flex flex-wrap justify-center">
+                                <!-- <div class="d-inline text-left"> -->
                                     <v-card
                                     color="grey lighten-3"
                                     v-for="product in products"
                                     :key="product.id"
-                                    class="mr-4 mb-4"
+                                    class="ma-2 d-inline-block"
                                     max-width="200"
                                     @click="$router.push({path: 'product/'+product.id})"
                                     >

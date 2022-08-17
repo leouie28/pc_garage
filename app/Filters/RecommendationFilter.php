@@ -20,7 +20,7 @@ class RecommendationFilter
     $per_page = Request()->per_page;
     if ($per_page == '-1' || !isset(Request()->per_page)) return $this->model->paginate($this->model->count());
     // $this->model->where('isadmin', false);
-    return $this->model->paginate($per_page);
+    return $this->model->with('customer')->paginate($per_page);
   }
 
   public function searchColumns()

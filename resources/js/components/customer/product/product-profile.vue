@@ -16,7 +16,7 @@
                             <v-img
                             class="mb-6"
                             alt="image"
-                            :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'">
+                            :src="product.images.length>0?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'">
                             </v-img>
                             <!-- <v-sheet color="primary" rounded="" dark class="py-2">
                                 <span class="text-h5">Price: &#8369; {{ product.price }}</span>
@@ -57,7 +57,7 @@
                                 </v-chip>
                             </h4>
                             <div class="d-flex justify-end">
-                                <v-btn color="secondary">
+                                <v-btn color="secondary" @click="$router.push({path: '/compatibility/'+product.id})">
                                     Compatibility
                                     <v-icon small class="ml-2">mdi-play</v-icon>
                                 </v-btn>
@@ -82,11 +82,11 @@
                     <v-subheader>
                         <h3>Feedback</h3>
                     </v-subheader>
-                    <div v-if="product.feedback.length>0">
+                    <div v-if="product.feedback">
                         <div class="d-flex fb" v-for="fb in product.feedback" :key="fb.id">
                             <v-avatar size="36" color="blue-grey" class="mr-2 mt-1">
                                 <v-img
-                                v-if="fb.customer.avatar!=null"
+                                v-if="fb.customer.images.length>0"
                                 src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
                                 ></v-img>
                                 <v-icon v-else color="white">mdi-account</v-icon>
@@ -106,8 +106,12 @@
                                 <div>
                                     {{ fb.text }}
                                     <br>
-                                    <div>
-    
+                                    <div class="ma-2">
+                                        <v-img
+                                        max-width="100"
+                                        max-height="80"
+                                        :src="'/images/feedback/' + fb.id + '/' + fb.images[0].file_name"
+                                        ></v-img>
                                     </div>
                                     <span>{{ moment(fb.created_at).format('YYYY/MM/DD') }}</span>
                                 </div>
@@ -121,7 +125,7 @@
                     <v-subheader>
                         <h3>Recommended Products</h3>
                     </v-subheader>
-                    <div :class="similar.length>=8 ? 'd-flex justify-center py-2 flex-wrap' : 'd-flex justify-start py-2 flex-wrap'">
+                    <div :class="similar.length>=4 ? 'd-flex justify-center py-2 flex-wrap' : 'd-flex justify-start py-2 flex-wrap'">
                         <v-card
                         v-for="product in similar"
                         :key="product.id"
@@ -131,7 +135,7 @@
                         >
                             <v-img
                             height="150"
-                            :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'"
+                            :src="product.images.length>0?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'"
                             ></v-img>
                             <v-card-text>
                                 <h4 class="oneline">
@@ -140,9 +144,6 @@
                                 <h3 class="text--primary">
                                     &#8369; {{ product.price }}
                                 </h3>
-                                <!-- <div class="text--primary text-subtitle-2">
-                                    &#8369; {{ product.price }}
-                                </div> -->
                                 <div class="d-flex">
                                     <v-rating
                                     class="cus-rate mr-1"
@@ -155,9 +156,6 @@
                                     ></v-rating>
                                     <span>({{product.rating_count}})</span>
                                 </div>
-                                <!-- <div class="item-desc">
-                                    {{product.description }}
-                                </div> -->
                             </v-card-text>
                             <v-divider class="mx-2"></v-divider>
                             <v-card-actions>
@@ -179,7 +177,9 @@ import moment from 'moment'
 
 export default {
     data: () => ({
-        product: {},
+        product: {
+            images: []
+        },
         similar: []
     }),
     props: {

@@ -106,6 +106,8 @@ export default {
             'hard drive/storage',
             'power supply',
             'gpu/graphics card',
+            'case',
+            'monitor',
             'peripherals',
         ],
         required: [

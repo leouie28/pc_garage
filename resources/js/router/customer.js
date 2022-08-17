@@ -53,4 +53,10 @@ export default [
         meta: { requireAuth: true },
         name: 'recommendations'
     },
+    {
+        path: '/compatibility/:id',
+        component: () => import('../pages/customer/compatibility.vue'),
+        meta: { requireAuth: true },
+        name: 'compatibility',
+    },
 ]
