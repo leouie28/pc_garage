@@ -48,6 +48,7 @@ Route::group(['middleware'=>['auth:web']],function(){
     Route::controller(SetController::class)->group(function () {
         Route::get('compatibilities/main-item', 'mainItem');
         Route::get('compatibilities/available-item', 'availableItem');
+        Route::post('compatibilities/check-items', 'checkItems');
     });
 
     Route::resources([

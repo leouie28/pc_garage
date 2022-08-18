@@ -60,6 +60,31 @@ class SetController extends Controller
         }
     }
 
+    public function checkItems(Request $request)
+    {
+        try{
+            $sets = array();
+            foreach($request->data as $part){
+                if($part['item']||$part['item']!=null){
+                    $key = $part['component'];
+                    $key_id = $part['item']['id'];
+                    $arr1 = Set::whereHas('products', function($item) use ($key_id) {
+                        $item->where('settables.settable_id', $key_id);
+                    })->get()->value('id');
+                    $arr2 = Set::whereHas('dummyProducts', function($item) use ($key_id) {
+                        $item->where('settables.settable_id', $key_id);
+                    })->get()->value('id');
+                    // $set = $arr1->merge($arr2);
+                    $sets[$key] = $arr1->merge($arr2);
+                    // $sets[$key] = array_unique($set);
+                    // $sets[$key] = array_merge($arr1, $arr2);
+                }
+            }
+            return $sets;
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *

@@ -32,7 +32,7 @@
                                     </v-list-item-title>
                                 </v-list-item-content>
                                 <v-list-item-action>
-                                    <v-btn small color="success">
+                                    <v-btn small color="success" @click="$emit('add', item), $emit('close'), items = []">
                                         Add
                                         <v-icon>mdi-plus</v-icon>
                                     </v-btn>
