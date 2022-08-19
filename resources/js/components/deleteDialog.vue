@@ -4,7 +4,7 @@
             <v-card-title class="text-h5">
                 Delete <span class="ml-2 text-capitalize">{{ data.model}}</span>!
             </v-card-title>
-            <v-card-text>
+            <v-card-text class="text-center">
                 <span class="text-subtitle-1" style="size:'30px'; font-weight:500;">
                     Are you sure you want to delete
                     <strong class="red--text">"{{ data.text }}"</strong>

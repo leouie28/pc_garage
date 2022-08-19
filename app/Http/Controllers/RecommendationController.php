@@ -91,6 +91,27 @@ class RecommendationController extends Controller
         //
     }
 
+    public function markRead($id)
+    {
+        try{
+            $read = Recommendation::find($id);
+            $read->status = 1;
+            $read->save();
+
+            return [
+                'data' => $read,
+                'type' => 'success',
+                'message' => 'Recommendation successfully mark as read...',
+            ];
+        }catch(Exception $e){
+            return [
+                'data' => $id,
+                'type' => 'error',
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
     /**
      * Remove the specified resource from storage.
      *

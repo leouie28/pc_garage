@@ -8,7 +8,7 @@
         @search="fetchPage"
         @resetFilters="resetFilter"
         @filterRecord="fetchPage"
-        :hide="['filter', 'addNew']"
+        :hide="['filter', 'addNew','download']"
       >
         <template v-slot:custom_filter>
           <admin-filter :filter="data.filter"></admin-filter>
@@ -25,7 +25,7 @@
         :options.sync="options"
         :items-per-page="options.itemsPerPage"
         @update:options="fetchPage"
-        @click:row="viewProduct"
+        @click:row="viewRcmd"
         class="cursor-pointer table-fix-height"
         fixed-header
       >
@@ -57,7 +57,7 @@
             small
             elevation="0"
             color="error"
-            @click="warning(item)"
+            @click.stop="warning(item)"
           >
             <v-icon small>mdi-trash-can</v-icon>
           </v-btn>
@@ -69,6 +69,47 @@
     </v-card>
     <v-dialog v-model="deleteForm" persistent width="500">
       <delete-dialog :data="user" @close="close" @confirm="confirm"></delete-dialog>
+    </v-dialog>
+    <v-dialog persistent v-model="showRcmd" max-width="600">
+      <v-card>
+        <v-card-title>
+          Recommendation
+          <v-spacer></v-spacer>
+          <v-btn icon @click="showRcmd=false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="12" md="12">
+              <v-text-field
+              dense
+              filled
+              readonly
+              v-model="selectedItem.customer_name"
+              hide-details=""
+              label="Sender">
+              </v-text-field>
+            </v-col>
+            <v-col cols="12" md="12">
+              <v-textarea
+              dense
+              filled
+              readonly
+              v-model="selectedItem.recommendation"
+              hide-details=""
+              label="Message">
+              </v-textarea>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="markRead" color="secondary">
+            Mark as read
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
     <v-snackbar
     v-model="alert.trigger"
@@ -100,6 +141,7 @@ export default {
     TableHeader,
   },
   data: () => ({
+    showRcmd: false,
     data: {
       title: "Recommendations",
       isFetching: false,
@@ -116,7 +158,9 @@ export default {
     deleteForm: false,
     user: {},
     recommendations: [],
-    selectedItem: {},
+    selectedItem: {
+      customer_name: ''
+    },
     selected: [],
     title: "Recommendations",
     headers: [
@@ -159,7 +203,11 @@ export default {
     ],
   }),
   methods: {
-    viewProduct() {},
+    viewRcmd(val) {
+      this.showRcmd = true
+      this.selectedItem = val
+      this.selectedItem.customer_name = val.customer.first_name + ' ' + val.customer.last_name
+    },
     resetFilter() {},
     fetchPage() {
       this.data.isFetching = true;
@@ -170,6 +218,16 @@ export default {
         this.recommendations = data.data;
         this.total = data.total;
         this.data.isFetching = false;
+      });
+    },
+    markRead() {
+      axios.put(`/admin-api/recommendation/mark-read/${this.selectedItem.id}`).then(({data})=>{
+        this.showRcmd = false
+        this.newAlert(true, data.type, data.message)
+        this.fetchPage()
+        this.selectedItem = {
+          customer_name: ''
+        }
       });
     },
     addNew() {
@@ -183,7 +241,7 @@ export default {
     warning(val){
       this.user = {
         id: val.id,
-        text: val.customer.first_name+' '+val.customer.last_name,
+        text: val.customer.first_name + ' ' + val.customer.last_name,
         model: 'recommendation'
       }
       this.deleteForm = true

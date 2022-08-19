@@ -87,7 +87,7 @@
                             <v-avatar size="36" color="blue-grey" class="mr-2 mt-1">
                                 <v-img
                                 v-if="fb.customer.images.length>0"
-                                :src="'images/customer/'+fb.customer.images[0].file_name"
+                                :src="'/images/customer/'+fb.customer.images[0].file_name"
                                 ></v-img>
                                 <v-icon v-else color="white">mdi-account</v-icon>
                             </v-avatar>

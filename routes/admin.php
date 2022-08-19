@@ -55,6 +55,10 @@ Route::group(['middleware'=>['auth:admin']],function(){
         Route::post('compatibility/add-item', 'addItem');
     });
 
+    Route::controller(RecommendationController::class)->group(function () {
+        Route::put('recommendation/mark-read/{id}', 'markRead');
+    });
+
     Route::resources([
         'category' => CategoryController::class,
         'product' => ProductController::class,

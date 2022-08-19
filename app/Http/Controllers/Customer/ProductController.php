@@ -23,7 +23,7 @@ class ProductController extends Controller
     public function bestSell()
     {
         try{
-            return Product::whereHas('sold')->limit(10)->get();
+            return Product::whereHas('sold')->withCount('sold')->limit(10)->get();
         }catch(Exception $e){
             return $e->getMessage();
         }

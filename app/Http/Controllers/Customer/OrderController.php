@@ -25,7 +25,7 @@ class OrderController extends Controller
                     return Order::where([
                         ['status', 1],
                         ['customer_id', Auth::guard('web')->user()->id]
-                    ])->with('products')->orderBy('id', 'desc')->get();
+                    ])->with('products')->orderBy('updated_at', 'desc')->get();
                 }elseif(Request()->status=='delivery'){
                     return Order::where([
                         ['status', 2],
@@ -33,12 +33,12 @@ class OrderController extends Controller
                     ])->orWhere([
                         ['status', 3],
                         ['customer_id', Auth::guard('web')->user()->id]
-                    ])->with('products')->orderBy('id', 'desc')->get();
+                    ])->with('products')->orderBy('updated_at', 'desc')->get();
                 }elseif(Request()->status=='received'){
                     return Order::where([
                         ['status', 4],
                         ['customer_id', Auth::guard('web')->user()->id]
-                    ])->with('products')->orderBy('id', 'desc')->get();
+                    ])->with('products')->orderBy('updated_at', 'desc')->get();
                 }
             }
         }catch(Exception $e){
@@ -181,6 +181,28 @@ class OrderController extends Controller
                             ])->with('products')->get(),
                 "type" => "success",
                 "message" => "Order ".$order->order_code." successfully cenceled...",
+            ];
+        }catch(Exception $e){
+            return [//return alert
+                "data" => $id,
+                "type" => "error",
+                "message" => $e->getMessage(),
+            ];
+        }
+    }
+
+    public function receiveOrder($id)
+    {
+        try{
+            $order = Order::find($id);
+            $order->status = 4;
+            $order->date_received = date('Y-m-d');
+            $order->save();
+
+            return [
+                "data" => $order,
+                "type" => "success",
+                "message" => 'Order successfully mark as read...',
             ];
         }catch(Exception $e){
             return [//return alert

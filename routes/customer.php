@@ -39,6 +39,7 @@ Route::group(['middleware'=>['auth:web']],function(){
     Route::controller(OrderController::class)->group(function () {
         Route::get('order-stat', 'orderStat');
         Route::put('orders/cancel/{id}', 'cancelOrder');
+        Route::put('orders/receive-order/{id}', 'receiveOrder');
     });
 
     Route::controller(ProductController::class)->group(function () {

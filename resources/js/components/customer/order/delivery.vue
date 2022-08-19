@@ -7,7 +7,7 @@
                 <v-card-title class="py-2">
                 Order Code: {{ order.order_code }}
                 <v-spacer></v-spacer>
-                <v-btn color="grey darken-1" @click.stop="warning = true" small outlined elevation="0">
+                <v-btn color="grey darken-1" @click.stop="warning = true, selected=order" small outlined elevation="0">
                     Order Received
                 </v-btn>
                 </v-card-title>
@@ -57,33 +57,42 @@
         v-model="warning"
         persistent
         max-width="500">
-            <v-card color="">
-                <!-- <v-card-title>
-                    <div style="word-break: keep-all;" class="text-center">
-                        <v-icon class="mr-1">mdi-alert-circle-outline</v-icon>
-                        Sorry! This order is already confirmed by seller and it's on delivery.
-                    </div>
-                </v-card-title> -->
-                <v-card-text class="py-4 mb-0">
-                    <v-alert
-                    class="mb-0"
-                    type="error"
-                    outlined
-                    prominent
-                    border="left"
-                    >
-                        Sorry! This order is already confirmed by seller and it's on delivery.
-                    </v-alert>
+            <v-card>
+                <v-card-title>
+                    Warning
+                </v-card-title>
+                <v-card-text class="text-center">
+                    Are you sure you want to mark <span class="primary--text">"{{selected.order_code}}"</span> order as received?
                 </v-card-text>
-                <v-divider></v-divider>
                 <v-card-actions class="white">
                     <v-spacer></v-spacer>
-                    <v-btn color="secondary" @click="warning = false">
-                        Close
+                    <v-btn text color="secondary" @click="warning=false">
+                        Cancel
+                    </v-btn>
+                    <v-btn color="success" @click="receivedOrder">
+                        Confirm
                     </v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-snackbar
+        v-model="alert.trigger"
+        multi-line
+        elevation="12"
+        :color="alert.color"
+        transition="scroll-x-reverse-transition"
+        top
+        right>
+            <div class="d-flex justify-space-between">
+            <div class="mr-2">
+                <v-icon large>info</v-icon>
+                {{ alert.text }}
+            </div>
+            <v-btn @click="alert.trigger = false">
+                Close
+            </v-btn>
+            </div>
+        </v-snackbar>
     </div>
     <empty v-else></empty>
 </template>
@@ -98,6 +107,7 @@ export default {
         tab: 0,
         warning: false,
         orders: [],
+        selected: {}
         }
     },
     mounted() {
@@ -105,9 +115,16 @@ export default {
     },
     methods: {
         getOrders() {
-        axios.get(`/customer-api/orders?status=delivery`).then(({ data }) => {
-            this.orders = data
-        });
+            axios.get(`/customer-api/orders?status=delivery`).then(({ data }) => {
+                this.orders = data
+            });
+        },
+        receivedOrder() {
+            axios.put(`/customer-api/orders/receive-order/${this.selected.id}`).then(({ data }) => {
+                this.newAlert(true, data.type, data.message)
+                this.getOrders()
+                this.warning = false
+            });
         }
     }
 }

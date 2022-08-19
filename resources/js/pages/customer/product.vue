@@ -34,10 +34,10 @@
                                     <h2>Latest Product</h2>
                                 </v-subheader>
                             </div>
-                            <!-- <div class="d-flex flex-wrap justify-center"> -->
-                            <div class="grid-container mx-auto">
+                            <div class="d-flex flex-wrap justify-center">
+                            <!-- <div class="d-fle mx-auto"> -->
                                 <v-skeleton-loader
-                                class="mr-4 mb-4"
+                                class="ma-2 d-inline-block grid-item"
                                 v-for="n in 15"
                                 elevation="4"
                                 width="200"
@@ -66,12 +66,13 @@
                                     >
                                         <v-card
                                         color="primary"
+                                        @click="$router.push({path: 'product/'+prod.id})"
                                         class="ma-4"
                                         height="250"
                                         width="500">
                                             <div class="best-overlay white--text">
                                                 <v-chip label color="blue-grey lighten-5">
-                                                    Sold: 3 
+                                                    Sold: {{prod.sold_count}} 
                                                     <v-icon>mdi-trophy-award</v-icon>
                                                 </v-chip>
                                                 <!-- <h3 class="">Sold: 3 
@@ -135,6 +136,7 @@
                                                 class="cus-rate mr-1"
                                                 :value="product.rates"
                                                 readonly
+                                                half-increments
                                                 color="yellow darken-3"
                                                 background-color="grey darken-1"
                                                 empty-icon="mdi-star-outline"
@@ -340,7 +342,7 @@ export default {
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* see notes below */
-  /* grid-gap: 1em; */
+  /* grid-gap: 2px; */
 }
 .item-desc{
     overflow: hidden;
