@@ -131,7 +131,7 @@
                         :key="product.id"
                         class="mr-4 mb-4"
                         max-width="200"
-                        @click="$router.push({name: 'product/'+product.id})"
+                        @click="$router.push({path: '/product/'+product.id})"
                         >
                             <v-img
                             height="150"

@@ -118,7 +118,7 @@ export default {
             notification: 0
         },
         page: 1,
-        active: false,
+        active: 0,
         warningDialog: false,
         loading: true,
         links: [
@@ -158,8 +158,17 @@ export default {
         },
         close() {
             this.getStat()
-            this.active = null
             this.cartDialog = false
+            let val = this.$route
+            if(val.name=='product'){
+                this.active = false
+            }else if(val.name=='orders'){
+                this.active = 2
+            }else if(val.name=='profile'){
+                this.active = 3
+            }else{
+                this.active = 4
+            }
         },
         logout(){
             // this.loading = true
@@ -176,8 +185,7 @@ export default {
     watch: { 
         '$route': {
             handler(val){
-                if(val){
-                    console.log(val)
+                if(val.name){
                     if(val.name=='product'){
                         this.active = false
                     }else if(val.name=='orders'){
@@ -185,8 +193,10 @@ export default {
                     }else if(val.name=='profile'){
                         this.active = 3
                     }else{
-                        this.active = 2
+                        this.active = 4
                     }
+                }else{
+                    this.$router.push({name: 'product'})
                 }
             },deep: true, immediate: true
         }
@@ -197,10 +207,13 @@ export default {
 <style scoped>
 .hide{
     width: 0px !important;
-    /* visibility: hidden; */
+    padding: 0 !important;
+    min-width: unset !important;
 }
 .hide >>> .v-tab:before{
+    /* position: absolute; */
     width: 0px !important;
+    min-width: unset !important;
 }
 .product-header{
     width: 600px;

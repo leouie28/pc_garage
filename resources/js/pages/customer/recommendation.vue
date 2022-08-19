@@ -8,13 +8,13 @@
             <v-card-text>
                 <div v-if="recommendations.length>0">
                     <template v-for="text in recommendations.slice().reverse()">
-                        <div class="d-flex fb mb-4" :key="text.id" v-if="text.id">
+                        <div class="d-flex fb mb-4" :key="text.id" v-if="text.id&&text.customer_id!=account.id">
                             <v-avatar size="36" color="blue-grey" class="mr-2 mt-1">
-                                <!-- <v-img
-                                v-if="fb.customer.avatar!=null"
-                                src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
-                                ></v-img> -->
-                                <v-icon color="white">mdi-account</v-icon>
+                                <v-img
+                                v-if="text.customer.images.length>0"
+                                :src="'/images/customer/'+text.customer.images[0].file_name"
+                                ></v-img>
+                                <v-icon v-else color="white">mdi-account</v-icon>
                             </v-avatar>
                             <v-sheet rounded="" color="grey lighten-5" elevation="2" class="pa-2" max-width="100%" width="100%">
                                 <h4 class="d-flex justify-space-between">
@@ -45,6 +45,45 @@
                                     <span>2022/08/16</span>
                                 </div>
                             </v-sheet>
+                        </div>
+                        <div class="d-flex justify-end fb mb-4" :key="text.id" v-else-if="text.id&&text.customer_id==account.id">
+                            
+                            <v-sheet rounded="" color="green lighten-4" elevation="2" class="pa-2" max-width="100%">
+                                <!-- <h4 class="d-flex justify-space-between">
+                                    <span>{{ text.customer.first_name + ' ' + text.customer.last_name}}</span>
+                                    <v-menu
+                                    left
+                                    direction="left"
+                                    transition="slide-x-reverse-transition"
+                                    >
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-icon v-bind="attrs" v-on="on">mdi-dots-vertical</v-icon>
+                                        </template>
+                                        <v-btn small @click="text.id = false">
+                                            Hide
+                                            <v-icon class="ml-1" small>mdi-cancel</v-icon>
+                                        </v-btn>
+                                    </v-menu>
+                                </h4> -->
+                                <div>
+                                    <v-tooltip bottom v-if="text.status==1">
+                                        <template v-slot:activator="{ on, attrs }">
+                                        <v-icon small color="success" v-bind="attrs" v-on="on">mdi-sticker-check-outline</v-icon>
+                                        </template>
+                                        <span>Read by admin</span>
+                                    </v-tooltip>
+                                    {{ text.recommendation }}<br>
+                                    <!-- <span>{{ moment(fb.created_at).format('YYYY/MM/DD') }}</span> -->
+                                    <span>2022/08/16</span>
+                                </div>
+                            </v-sheet>
+                            <v-avatar size="36" color="blue-grey" class="ml-2 mt-1">
+                                <v-img
+                                v-if="text.customer.images.length>0"
+                                :src="'/images/customer/'+text.customer.images[0].file_name"
+                                ></v-img>
+                                <v-icon v-else color="white">mdi-account</v-icon>
+                            </v-avatar>
                         </div>
                     </template>
                     <v-divider></v-divider>
@@ -94,14 +133,22 @@ export default {
         recommendations: [],
         text: '',
         opt: false,
+        account: {}
     }),
     mounted() {
+        this.getUser()
         this.getRecommendation()
     },
     methods: {
+        getUser() {
+            axios.get(`/customer-api/profile`).then(({data})=>{
+                this.account = data.profile
+            });
+        },
         getRecommendation() {
             axios.get(`/customer-api/recommendations`).then(({data})=>{
                 this.recommendations = data.data
+                console.log(data.data)
             });
         },
         submit() {
@@ -111,7 +158,7 @@ export default {
                 this.text = ''
                 this.newAlert(true, data.type, data.message)
             });
-        }
-    }
+        },
+    },
 }
 </script>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Filters\CustomerFilter;
 use App\Models\Admin;
 use App\Models\Customer;
+use App\Models\Image;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -88,6 +89,7 @@ class CustomerController extends Controller
    */
   public function update(Request $request, $id)
   {
+    return $request;
     $customer = Customer::find($id);
     $customer->first_name = $request->first_name;
     $customer->last_name = $request->last_name;
@@ -147,17 +149,25 @@ class CustomerController extends Controller
   public function register(Request $request)
   {
     $customer = new Customer();
-    if ($request->image_base64) {
-      $file = uploadImage($request->image_base64,'images/customer/');
-      $customer->avatar = $file;
-    }
     $customer->first_name = $request->first_name;
     $customer->last_name =  $request->last_name;
-    $customer->birthday =   Carbon::parse($request->birthday);
+    $customer->birthday =   $request->birthday;
     $customer->address =    $request->address;
+    $customer->gender =    $request->gender;
     $customer->phone =      $request->phone;
     $customer->email =      $request->email;
     $customer->password = bcrypt($request->password);
     $customer->save();
+
+    if ($request->image_base64) {
+      $file = uploadImage($request->image_base64,'images/customer/');
+      $image = Image::create([
+          'imagable_id' => $customer->id,
+          'imagable_type' => 'App\Models\Customer',
+          'file_name' => $file
+      ]);
+    }
+
+    return $customer;
   }
 }

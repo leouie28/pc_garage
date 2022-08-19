@@ -34,7 +34,8 @@
                                     <h2>Latest Product</h2>
                                 </v-subheader>
                             </div>
-                            <div class="d-flex flex-wrap justify-center">
+                            <!-- <div class="d-flex flex-wrap justify-center"> -->
+                            <div class="grid-container mx-auto">
                                 <v-skeleton-loader
                                 class="mr-4 mb-4"
                                 v-for="n in 15"
@@ -104,16 +105,16 @@
                                     <h2>Page {{ page }}</h2>
                                 </v-subheader>
                             </div>
-                            <div class="d-inline mx-auto">
-                                <div class="d-flex flex-wrap justify-center">
-                                <!-- <div class="d-inline text-left"> -->
+                            <div class="">
+                                <!-- <div class="d-flex flex-wrap justify-start prod mx-auto"> -->
+                                <div class="grid-container">
                                     <v-card
                                     color="grey lighten-3"
                                     v-for="product in products"
                                     :key="product.id"
-                                    class="ma-2 d-inline-block"
-                                    max-width="200"
                                     @click="$router.push({path: 'product/'+product.id})"
+                                    class="ma-2 d-inline-block grid-item"
+                                    max-width="200"
                                     >
                                         <v-img
                                         height="150"
@@ -330,6 +331,16 @@ export default {
 <style scoped>
 .price{
     font-size: 17px !important;
+}
+.prod{
+    /* width: unset !important; */
+    /* width: auto !important; */
+    /* text-align-last: left; */
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* see notes below */
+  /* grid-gap: 1em; */
 }
 .item-desc{
     overflow: hidden;

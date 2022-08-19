@@ -11,16 +11,22 @@
             <v-card-text>
                 <v-img
                 class="mx-auto cover"
-                lazy-src="https://picsum.photos/id/11/10/6"
                 max-height="120"
                 max-width="494"
-                src="https://picsum.photos/id/11/500/300"
+                :src="profile.images.length>0?image_base64:'https://picsum.photos/id/11/500/300'"
                 ></v-img>
                 <v-card rounded="lg" max-width="500" class="pa-4 mx-auto mt-n6" elevation="4">
                     <div class="text-center profile">
+                        <input
+                        ref="file_input"
+                        type="file"
+                        class="hidden"
+                        accept="image/x-png,image/gif,image/jpeg"
+                        @change="onFileChange($event.target.files)"
+                        />
                         <v-avatar size="160" class="elevation-4 text-center">
                             <v-fab-transition>
-                            <v-btn v-if="readonly==false" absolute rounded bottom class="profile-btn">
+                            <v-btn v-if="readonly==false" @click="triggerUpload" absolute rounded bottom class="profile-btn">
                                 edit
                                 <v-icon>mdi-camera</v-icon>
                             </v-btn>
@@ -30,7 +36,7 @@
                             class="mx-auto"
                             max-height="300"
                             max-width="300"
-                            src="/images/default/person.png"
+                            :src="image_base64"
                             ></v-img>
                         </v-avatar>
                     </div>
@@ -67,6 +73,7 @@
                                         </v-btn>
                                         <v-btn
                                         icon
+                                        @click="update"
                                         color="success">
                                             <v-icon>mdi-check</v-icon>
                                         </v-btn>
@@ -101,7 +108,7 @@
                                 :items="gender"
                                 :readonly="readonly"
                                 hide-details="auto"
-                                label="Genger"
+                                label="Gender"
                                 ></v-select>
                             </v-col>
                             <v-col md="6" cols="12">
@@ -127,7 +134,7 @@
                                     ></v-text-field>
                                     </template>
                                     <v-date-picker
-                                    v-model="date"
+                                    v-model="profile.birthday"
                                     no-title
                                     scrollable
                                     >
@@ -142,7 +149,7 @@
                                     <v-btn
                                         text
                                         color="primary"
-                                        @click="$refs.menu.save(date)"
+                                        @click="$refs.menu.save(profile.birthday)"
                                     >
                                         OK
                                     </v-btn>
@@ -191,7 +198,7 @@
                                 <v-text-field
                                 dense
                                 :outlined="readonly==true ? false : true"
-                                v-model="password"
+                                v-model="profile.password"
                                 :readonly="readonly"
                                 hide-details="auto"
                                 type="password"
@@ -203,15 +210,37 @@
                 </v-card>
             </v-card-text>
         </v-card>
+        <v-snackbar
+        v-model="alert.trigger"
+        multi-line
+        elevation="12"
+        :color="alert.color"
+        transition="scroll-x-reverse-transition"
+        top
+        right>
+        <div class="d-flex justify-space-between">
+            <div class="mr-2">
+            <v-icon large>info</v-icon>
+            {{ alert.text }}
+            </div>
+            <v-btn @click="alert.trigger = false">
+            Close
+            </v-btn>
+        </div>
+        </v-snackbar>
     </div>
 </template>
 <script>
 export default {
     data: () => ({
         profile: {
-            images: []
+            images: [],
+            password: ''
         },
-        password: '',
+        original: {
+            images: [],
+        },
+        image_base64:'',
         readonly: true,
         date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
         menu: false,
@@ -224,10 +253,81 @@ export default {
         getProfile() {
             axios.get(`/customer-api/profile`).then(({ data }) => {
                 this.profile = data.profile
+                this.original = JSON.parse(JSON.stringify(data.profile))
+                if(data.profile.images.length>0){
+                    this.image_base64 = '/images/customer/'+data.profile.images[0].file_name
+                }else{
+                    this.image_base64 = '/images/default/person.png'
+                }
             });
         },
         edit() {
             this.readonly = false
+        },
+        update() {
+            if(this.image_base64!='/images/default/person.png'){
+                if(this.image_base64!='/images/customer/'+this.profile.images[0].file_name){
+                    this.profile.image_base64 = this.image_base64
+                }
+            }
+
+            if(JSON.stringify(this.profile) === JSON.stringify(this.original)){
+                this.readonly = true
+            }else{
+                axios.put(`/customer-api/update-profile`, this.profile).then(({ data }) => {
+                    this.newAlert(true, data.type, data.message)
+                });
+                this.readonly = true
+                this.getProfile()
+            }
+        },
+        triggerUpload() {
+            this.$refs.file_input.click();
+        },
+        async onFileChange(file) {
+            this.isUpload = true;
+            let imageFile = file[0];
+            let temp = {};
+            if (file.length > 0) {
+                if (!imageFile.type.match("image.*")) {
+                this.errorDialog = true;
+                this.errorText = "Please choose an image file";
+                } else {
+                let imageURL = URL.createObjectURL(imageFile);
+                console.log(imageFile.name, "imageURL");
+                this.image_base64 = await this.createImageBase64(imageFile);
+                }
+            }
+            this.isUpload = false;
+        },
+        createImageBase64(file) {
+            var reader = new FileReader();
+
+            return new Promise((resolve, reject) => {
+                reader.onload = (e) => {
+                let res = e.target.result;
+                resolve(res);
+                };
+                reader.readAsDataURL(file);
+            });
+        },
+    },
+    watch: {
+        readonly: {
+            handler(val) {
+                if(val==true){
+                    console.log(val)
+                    if(this.profile.images.length>0){
+                        if(this.image_base64!=this.profile.images[0].file_name||this.image_base64!= '/images/default/person.png'){
+                            if(this.original.images.length>0){
+                                this.image_base64 = '/images/customer/'+this.original.images[0].file_name
+                            }else{
+                                this.image_base64 = '/images/default/person.png'
+                            }
+                        }
+                    }
+                }
+            },immediate:true, deep:true
         }
     }
 }
