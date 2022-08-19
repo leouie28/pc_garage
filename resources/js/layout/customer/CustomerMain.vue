@@ -89,7 +89,8 @@
                     </v-list-item-title>
                 </v-list-item>
             </v-list>
-            </v-menu>
+        </v-menu>
+        <v-tab class="hide"></v-tab>
       </v-tabs>
     </v-app-bar>
 
@@ -117,7 +118,7 @@ export default {
             notification: 0
         },
         page: 1,
-        active: null,
+        active: false,
         warningDialog: false,
         loading: true,
         links: [
@@ -172,10 +173,35 @@ export default {
             localStorage.role = '0'
         },
     },
+    watch: { 
+        '$route': {
+            handler(val){
+                if(val){
+                    console.log(val)
+                    if(val.name=='product'){
+                        this.active = false
+                    }else if(val.name=='orders'){
+                        this.active = 2
+                    }else if(val.name=='profile'){
+                        this.active = 3
+                    }else{
+                        this.active = 2
+                    }
+                }
+            },deep: true, immediate: true
+        }
+    }
 }
 </script>
 
 <style scoped>
+.hide{
+    width: 0px !important;
+    /* visibility: hidden; */
+}
+.hide >>> .v-tab:before{
+    width: 0px !important;
+}
 .product-header{
     width: 600px;
 }

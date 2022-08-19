@@ -106,16 +106,20 @@
     persistent
     max-width="400">
       <v-card color="">
-        <v-card-text class="pt-10 pb-0">
+        <v-card-title>Warning</v-card-title>
+        <v-card-text class="py-4">
           <div class="text-center">
-            <v-alert
+            <v-toolbar-title>
+              Please confirm your order!
+            </v-toolbar-title>
+            <!-- <v-alert
             outlined
             color="warning"
             text
           >
             <v-icon class="mr-1" color="warning">mdi-alert-circle-outline</v-icon>
             <span class="">Please confirm your order!</span>
-          </v-alert>
+          </v-alert> -->
             <!-- <v-icon class="mr-1">mdi-alert-circle-outline</v-icon>
             <span class="text-h6">Please confirm your order!</span> -->
           </div>
@@ -125,7 +129,7 @@
           <v-btn color="secondary" text @click="confirm = false">
             Cancel
           </v-btn>
-          <v-btn color="primary" @click="placeOrder">
+          <v-btn color="success" @click="placeOrder">
             Confirm
           </v-btn>
         </v-card-actions>
