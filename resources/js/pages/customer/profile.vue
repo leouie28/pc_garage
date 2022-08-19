@@ -26,7 +26,7 @@
                         />
                         <v-avatar size="160" class="elevation-4 text-center">
                             <v-fab-transition>
-                            <v-btn v-if="readonly==false" @click="triggerUpload" absolute rounded bottom class="profile-btn">
+                            <v-btn small v-if="readonly==false" @click="triggerUpload" absolute rounded bottom class="profile-btn">
                                 edit
                                 <v-icon>mdi-camera</v-icon>
                             </v-btn>
@@ -36,7 +36,7 @@
                             class="mx-auto"
                             max-height="300"
                             max-width="300"
-                            :src="image_base64"
+                            :src="image_base64?image_base64:'/images/default/person.png'"
                             ></v-img>
                         </v-avatar>
                     </div>
@@ -256,19 +256,20 @@ export default {
                 this.original = JSON.parse(JSON.stringify(data.profile))
                 if(data.profile.images.length>0){
                     this.image_base64 = '/images/customer/'+data.profile.images[0].file_name
-                }else{
-                    this.image_base64 = '/images/default/person.png'
                 }
+                console.log(this.profile)
             });
         },
         edit() {
             this.readonly = false
         },
         update() {
-            if(this.image_base64!='/images/default/person.png'){
+            if(this.profile.images.length>0){
                 if(this.image_base64!='/images/customer/'+this.profile.images[0].file_name){
                     this.profile.image_base64 = this.image_base64
                 }
+            }else{
+                this.profile.image_base64 = this.image_base64
             }
 
             if(JSON.stringify(this.profile) === JSON.stringify(this.original)){
@@ -318,13 +319,11 @@ export default {
                 if(val==true){
                     console.log(val)
                     if(this.profile.images.length>0){
-                        if(this.image_base64!=this.profile.images[0].file_name||this.image_base64!= '/images/default/person.png'){
-                            if(this.original.images.length>0){
-                                this.image_base64 = '/images/customer/'+this.original.images[0].file_name
-                            }else{
-                                this.image_base64 = '/images/default/person.png'
-                            }
+                        if(this.image_base64!=this.profile.images[0].file_name){
+                            this.image_base64 = '/images/customer/'+this.original.images[0].file_name
                         }
+                    }else{
+                        this.image_base64 = ''
                     }
                 }
             },immediate:true, deep:true

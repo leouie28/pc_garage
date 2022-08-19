@@ -30,6 +30,12 @@
         fixed-header
       >
         <template v-slot:[`item.name`]="{ item }">
+          <v-avatar size="35" style="border: 1px solid #ccc">
+            <img
+              alt="image"
+              :src="item.images.length?'/images/customer/' + item.images[0].file_name:'/images/default/person.png'"
+            />
+          </v-avatar>
           {{ item.first_name+ ' '+item.last_name }}
         </template>
         <template v-slot:[`item.created_at`]="{ item }">

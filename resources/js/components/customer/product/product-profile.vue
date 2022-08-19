@@ -83,11 +83,11 @@
                         <h3>Feedback</h3>
                     </v-subheader>
                     <div v-if="product.feedback.length>0">
-                        <div class="d-flex fb" v-for="fb in product.feedback" :key="fb.id">
+                        <div class="d-flex fb mb-3" v-for="fb in product.feedback" :key="fb.id">
                             <v-avatar size="36" color="blue-grey" class="mr-2 mt-1">
                                 <v-img
                                 v-if="fb.customer.images.length>0"
-                                src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
+                                :src="'images/customer/'+fb.customer.images[0].file_name"
                                 ></v-img>
                                 <v-icon v-else color="white">mdi-account</v-icon>
                             </v-avatar>
@@ -106,7 +106,7 @@
                                 <div>
                                     {{ fb.text }}
                                     <br>
-                                    <div class="ma-2">
+                                    <div class="ma-2" v-if="fb.images.length>0">
                                         <v-img
                                         max-width="100"
                                         max-height="80"

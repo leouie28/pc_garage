@@ -89,25 +89,32 @@ class CustomerController extends Controller
    */
   public function update(Request $request, $id)
   {
-    return $request;
-    $customer = Customer::find($id);
-    $customer->first_name = $request->first_name;
-    $customer->last_name = $request->last_name;
-    $customer->gender = $request->gender;
-    $customer->birthday = $request->birthday;
-    $customer->address = $request->address;
-    $customer->phone = $request->phone;
-    $customer->email = $request->email;
-    if(isset($request->password)){
-      $customer->password = Hash::make($request->password);
+    try{
+      $customer = Customer::find($id);
+      $customer->first_name = $request->first_name;
+      $customer->last_name = $request->last_name;
+      $customer->gender = $request->gender;
+      $customer->birthday = $request->birthday;
+      $customer->address = $request->address;
+      $customer->phone = $request->phone;
+      $customer->email = $request->email;
+      if(isset($request->password)){
+        $customer->password = Hash::make($request->password);
+      }
+      $customer->save();
+  
+      return [
+        "data" => $customer,
+        "type" => "success",
+        "message" => "User successfully updated.",
+      ];
+    }catch(Exception $e){
+      return [
+        "data" => $request,
+        "type" => "error",
+        "message" => $e->getMessage(),
+      ];
     }
-    $customer->save();
-
-    return [
-      "data" => $customer,
-      "type" => "success",
-      "message" => "User successfully updated.",
-    ];
   }
 
   /**

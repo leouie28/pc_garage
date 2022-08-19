@@ -56,8 +56,16 @@ class CustomerController extends Controller
             if($request->image_base64){
                 $file = uploadImage($request->image_base64,'images/customer/');
                 $img = Image::where('imagable_id', $user->id)->first();
-                $img->file_name = $file;
-                $img->save();
+                if($img){
+                    $img->file_name = $file;
+                    $img->save();
+                }else{
+                    $img = Image::create([
+                        'imagable_id' => $user->id,
+                        'imagable_type' => 'App\Models\Customer',
+                        'file_name' => $file
+                    ]);
+                }
                 // $img = $user->images;
                 // $image = Image::find($img->id);
                 // $image->file_name = $file;
