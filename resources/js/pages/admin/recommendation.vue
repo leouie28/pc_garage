@@ -35,6 +35,11 @@
         <template v-slot:[`item.created_at`]="{ item }">
           {{ moment(item.created_at).format('MMMM DD YYYY') }}
         </template>
+        <template v-slot:[`item.status`]="{ item }">
+          <v-chip label small>
+            {{ item.status==1?'Read':'Unread' }}
+          </v-chip>
+        </template>
         <template v-slot:[`item.action`]="{ item }">
             <v-tooltip left>
             <template v-slot:activator="{ on, attrs }">
@@ -105,7 +110,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="markRead" color="secondary">
+          <v-btn @click="markRead" :disabled="selectedItem.status==1?true:false" color="secondary">
             Mark as read
           </v-btn>
         </v-card-actions>

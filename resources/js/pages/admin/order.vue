@@ -52,14 +52,15 @@
                     <v-icon small>
                       mdi-filter-outline
                     </v-icon>
-                    All
+                    {{selectedFilter}}
                   </v-chip>
                 </template>
                 <v-list dense>
                   <v-list-item-group>
                     <v-list-item
-                      v-for="stat in statItem"
+                      v-for="stat in filterItem"
                       :key="stat.id"
+                      @click="cusFilter(stat)"
                     >
                       <v-list-item-title>{{ stat.text }}</v-list-item-title>
                     </v-list-item>
@@ -262,6 +263,15 @@ import productVue from './product.vue';
           {id: 3, text: 'On Delivery' },
           {id: 4, text: 'Delivered' },
       ],
+      selectedFilter: 'All',
+      filterItem: [
+          {id: 0, text: 'Cancel' },
+          {id: 1, text: 'Pending' },
+          {id: 2, text: 'Confirm' },
+          {id: 3, text: 'On Delivery' },
+          {id: 4, text: 'Delivered' },
+          {id: 5, text: 'All' },
+      ],
       selected: [],
       title: 'Orders',
       headers: [
@@ -337,6 +347,10 @@ import productVue from './product.vue';
           this.total = data.total;
           this.data.isFetching = false;
         });
+      },
+      cusFilter(item) {
+        this.selectedFilter = item.text
+        // this.fetchPage(item.id)
       },
       updateMultiple(val) {
         console.log(val)

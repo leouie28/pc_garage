@@ -25,13 +25,21 @@ class SetController extends Controller
     public function searchItem(Request $request)
     {
         try{
-            $prod = Product::where('name', 'LIKE', '%'.$request->key.'%')
-            ->limit(8)->get(['id', 'name', 'description']);
-            if(!$prod){
-                $prod = DummyProduct::where('name', 'LIKE', '%'.$request->key.'%')
+            if($request->key){
+                $prod = Product::where('name', 'LIKE', '%'.$request->key.'%')
                 ->limit(8)->get(['id', 'name', 'description']);
+                if(!$prod){
+                    $prod = DummyProduct::where('name', 'LIKE', '%'.$request->key.'%')
+                    ->limit(8)->get(['id', 'name', 'description']);
+                }
+                return $prod;
+            }elseif($request->type){
+                $key = $request->type;
+                $prod = Product::whereHas('categories', function($item) use ($key) {
+                    return $item->where('name', 'LIKE', '%'.$key.'%');
+                })->get();
+                return $prod;
             }
-            return $prod;
         }catch(Exception $e){
             return $e->getMessage();
         }

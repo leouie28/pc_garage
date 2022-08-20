@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Filters\CategoryFilter;
 use App\Models\Category;
+use Exception;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -36,7 +37,29 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
+        try{
+            if(Category::where('name', $request->name)->exists()){
+                return [
+                    'data' => $request,
+                    'type' => 'error',
+                    'message' => 'Category name already registered..',
+                ];
+            }else{
+                $cat = Category::create($request->toArray());
+
+                return [
+                    'data' => $cat,
+                    'type' => 'success',
+                    'message' => 'Category successfully added...',
+                ];
+            }
+        }catch(Exception $e){
+            return [
+                'data' => $request,
+                'type' => 'error',
+                'message' => $e->getMessage(),
+            ];
+        }
     }
 
     /**
@@ -70,7 +93,22 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            $cat = Category::find($id);
+            $cat->update($request->toArray());
+
+            return [
+                'data' => $cat,
+                'type' => 'success',
+                'message' => 'Category successfully updated...'
+            ];
+        }catch(Exception $e){
+            return [
+                'data' => $cat,
+                'type' => 'error',
+                'message' => $e->getMessage(),
+            ];
+        }
     }
 
     /**
@@ -81,6 +119,28 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try{
+            $cat = Category::withCount('products')->where('id', $id)->first();
+            if($cat->products_count>0){
+                return [
+                    'data' => $cat,
+                    'type' => 'error',
+                    'message' => 'The category your trying to delete already has a product record...'
+                ];
+            }else{
+                $cat->delete();
+                return [
+                    'data' => $cat,
+                    'type' => 'success',
+                    'message' => 'Category successfully deleted...'
+                ];
+            }
+        }catch(Exception $e){
+            return [
+                'data' => $cat,
+                'type' => 'error',
+                'message' => $e->getMessage(),
+            ];
+        }
     }
 }

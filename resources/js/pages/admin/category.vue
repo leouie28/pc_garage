@@ -29,17 +29,21 @@
         class="cursor-pointer table-fix-height"
         fixed-header
       >
+        <template v-slot:[`item.name`]="{ item }">
+          <span class="text-capitalize">{{item.name}}</span>
+        </template>
         <template v-slot:[`item.color`]="{ item }">
-          <v-chip small :color="item.color">
+          <v-chip small :color="item.color" v-if="item.color!=null">
             <span class="text-capitalize">{{ item.color }}</span>
           </v-chip>
+          <span v-else>...</span>
         </template>
         <template v-slot:[`item.icon`]="{ item }">
             <v-chip label small v-if="item.icon!=null">
-                <v-icon>mdi-account</v-icon>
-                mdi-account
+                <v-icon small class="mr-1">mdi-{{item.icon}}</v-icon>
+                {{item.icon}}
             </v-chip>
-            <span v-else>No icon</span>
+            <span v-else>...</span>
         </template>
         <template v-slot:[`item.created_at`]="{ item }">
           {{ moment(item.created_at).format('MMMM DD YYYY') }}
@@ -69,11 +73,11 @@
         </template>
       </v-data-table>
     </v-card>
-    <v-dialog v-model="showForm" persistent max-width="600">
-      <customer-form :selectedItem="selectedItem" @cancel="close" @save="save" @update="update"> </customer-form>
+    <v-dialog v-model="showForm" persistent max-width="500">
+      <data-form :selectedItem="selectedItem" @cancel="close" @save="save" @update="update"> </data-form>
     </v-dialog>
     <v-dialog v-model="deleteForm" persistent width="500">
-      <delete-dialog :data="user" @close="close" @confirm="confirm"></delete-dialog>
+      <delete-dialog :data="item" @close="close" @confirm="confirm"></delete-dialog>
     </v-dialog>
     <v-snackbar
     v-model="alert.trigger"
@@ -99,12 +103,12 @@
 <script>
 import moment from "moment";
 import DeleteDialog from "../../components/deleteDialog.vue";
-import CustomerForm from "../../components/admin/customer/form.vue";
+import DataForm from "@/components/admin/category/form.vue";
 import TableHeader from "../../components/table-header.vue";
 export default {
   components: {
     DeleteDialog,
-    CustomerForm,
+    DataForm,
     TableHeader,
   },
   data: () => ({
@@ -124,9 +128,9 @@ export default {
     deleteForm: false,
     showForm: false,
     dialogDelete: false,
-    user: {},
     categories: [],
     selectedItem: {},
+    item: {},
     selected: [],
     title: "Categories",
     headers: [
@@ -189,25 +193,25 @@ export default {
       });
     },
     editItem(val){
-      console.log(this.alert.trigger,'trigger')
+      // console.log(this.alert.trigger,'trigger')
       this.selectedItem = val
       this.showForm = true
     },
     save(payload) {
-      axios.post(`/admin-api/customer`, payload).then(({ data }) => {
+      axios.post(`/admin-api/category`, payload).then(({ data }) => {
         this.fetchPage()
         this.newAlert(true, data.type, data.message)
       }).finally(()=>{
         this.showForm = false;
-        this.payload = null;
+        this.payload = {};
       })
     },
     update(payload) {
-      axios.put(`/admin-api/customer/${this.selectedItem.id}`, payload).then(({ data }) => {
+      axios.put(`/admin-api/category/${this.selectedItem.id}`, payload).then(({ data }) => {
         this.showForm = false;
         this.fetchPage()
         this.newAlert(true, data.type, data.message)
-        this.payload = null;
+        this.payload = {};
       })
     },
     addNew() {
@@ -219,15 +223,15 @@ export default {
       this.deleteForm = false
     },
     warning(val){
-      this.user = {
+      this.item = {
         id: val.id,
-        text: val.first_name+' '+val.last_name,
-        model: 'customer'
+        text: val.name,
+        model: 'category'
       }
       this.deleteForm = true
     },
     confirm() {
-      axios.delete(`/admin-api/${this.user.model}/${this.user.id}`).then(({data})=>{
+      axios.delete(`/admin-api/${this.item.model}/${this.item.id}`).then(({data})=>{
         this.deleteForm = false
         this.fetchPage()
         this.newAlert(true, data.type, data.message)

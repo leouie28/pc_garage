@@ -8,18 +8,72 @@
             <v-container>
                 <v-row>
                     <v-col md="12" cols="12">
-                         <v-combobox
+                        <v-autocomplete
+                        ref="type"
                         label="Component Type*"
                         dense
                         :items="part"
                         v-model="payload.type"
                         filled
                         hide-details=""
-                        :rules="required"
-                        ></v-combobox>
+                        :rules="required">
+                        </v-autocomplete>
                     </v-col>
                     <v-col md="12" cols="12">
-                        <v-menu offset-y tile>
+                        <v-radio-group
+                        class="py-0 my-0"
+                        row
+                        v-model="payload.onSystem"
+                        hide-details=""
+                        dense
+                        >
+                        <v-radio
+                            label="On our system"
+                            value="1"
+                        ></v-radio>
+                        <v-radio
+                            label="Out of the system"
+                            value="0"
+                        ></v-radio>
+                        </v-radio-group>
+                    </v-col>
+                    <v-col md="12" cols="12">
+                        <v-autocomplete
+                        v-if="payload.onSystem=='1'"
+                        label="Item/Product Name*"
+                        dense
+                        :items="items"
+                        item-value="id"
+                        item-text="name"
+                        @click="validateComponent"
+                        @focus="validateComponent"
+                        v-model="payload.name"
+                        filled
+                        hide-details=""
+                        :rules="required">
+                            <template v-slot:selection="{ item }">
+                                <v-avatar size="35" tile style="border: 1px solid #ccc;">
+                                    <img :src="item.images.length>0?'/images/products/'+item.id+'/'+item.images[0].file_name:'/images/default/noimage.png'">
+                                </v-avatar>
+                                <span class="pa-2">{{ item.name }}</span>
+                            </template>
+                            <template v-slot:item="{ item }">
+                                <v-avatar size="35" tile style="border: 1px solid #ccc;">
+                                    <img :src="item.images.length>0?'/images/products/'+item.id+'/'+item.images[0].file_name:'/images/default/noimage.png'">
+                                </v-avatar>
+                                <span class="pa-2">{{ item.name }}</span>
+                            </template>
+                        </v-autocomplete>
+                        <v-text-field
+                        v-if="payload.onSystem=='0'"
+                        label="Item/Product Name*"
+                        dense
+                        v-model="payload.name"
+                        filled
+                        hide-details=""
+                        :rules="required"
+                        ></v-text-field>
+                        <!-- <v-menu offset-y tile>
                             <template v-slot:activator="{ on }">
                                 <v-text-field
                                 label="Item/Product Name*"
@@ -42,9 +96,10 @@
                                     </v-list-item-title>
                                 </v-list-item>
                             </v-list>
-                        </v-menu>
+                        </v-menu> -->
                     </v-col>
-                    <v-col md="12" cols="12" v-if="!payload.id||payload.id==''">
+                    <v-expand-transition>
+                    <v-col md="12" cols="12" v-if="payload.onSystem=='0'">
                          <v-textarea
                         label="Description*"
                         dense
@@ -56,9 +111,11 @@
                         required
                         ></v-textarea>
                     </v-col>
+                    </v-expand-transition>
                 </v-row>
                 <v-row justify="end">
                     <v-btn
+                        text
                         color="secondary"
                         @click="close"
                     >
@@ -89,12 +146,14 @@ export default {
         payload: {
             id: '',
             type: '',
+            onSystem: '1',
             name: '',
             description: ''
         },
         original: {
             id: '',
             type: '',
+            onSystem: '1',
             name: '',
             description: ''
         },
@@ -141,6 +200,11 @@ export default {
                 this.typeWaiting = true
             }
         },
+        validateComponent() {
+            if(!this.payload.type||this.payload.type==''){
+                alert('Please fillup first the "Component Type field"')
+            }
+        },
         save() {
             if(!this.payload.name && !this.payload.type){
                 alert('Important field need to fillup...')
@@ -150,6 +214,12 @@ export default {
                 // console.log(this.payload)
             }
         },
+        getByType() {
+            let key = this.payload.type
+            axios.get(`/admin-api/compatibility/search-item?type=${key}`).then(({ data }) => {
+                this.items = data
+            })
+        }
     },
     watch: {
         type: {
@@ -161,6 +231,20 @@ export default {
             deep: true,
             immediate: true,
         },
+        'payload.type': {
+            handler(val) {
+                if(val){
+                    this.getByType()
+                }
+            },immediate:true,deep:true
+        },
+        'payload.onSystem': {
+            handler(val) {
+                if(val){
+                    this.payload.name = ''
+                }
+            },immediate:true,deep:true
+        }
     }
 }
 </script>
