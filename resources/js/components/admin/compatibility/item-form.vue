@@ -45,9 +45,7 @@
                         :items="items"
                         item-value="id"
                         item-text="name"
-                        @click="validateComponent"
-                        @focus="validateComponent"
-                        v-model="payload.name"
+                        v-model="payload.id"
                         filled
                         hide-details=""
                         :rules="required">
@@ -206,12 +204,22 @@ export default {
             }
         },
         save() {
-            if(!this.payload.name && !this.payload.type){
-                alert('Important field need to fillup...')
+            if(this.payload.onSystem=='1'){
+                if(!this.payload.id && !this.payload.type){
+                    alert('Important field need to fillup...')
+                }else{
+                    this.$emit('save', this.payload)
+                    this.payload = JSON.parse(JSON.stringify(this.original))
+                    // console.log(this.payload)
+                }
             }else{
-                this.$emit('save', this.payload)
-                this.payload = JSON.parse(JSON.stringify(this.original))
-                // console.log(this.payload)
+                if(!this.payload.name && !this.payload.type){
+                    alert('Important field need to fillup...')
+                }else{
+                    this.$emit('save', this.payload)
+                    this.payload = JSON.parse(JSON.stringify(this.original))
+                    // console.log(this.payload)
+                }
             }
         },
         getByType() {

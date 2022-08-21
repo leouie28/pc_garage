@@ -44,7 +44,7 @@
                         <div v-if="set.isEmpty>0">
                             <template v-for="(value, key) in set.items">
                                 <v-card :key="key" class="mb-3" v-if="value.length>0">
-                                    <v-card-title class="text-uppercase">
+                                    <!-- <v-card-title class="text-uppercase">
                                         <v-icon class="mr-2">mdi-monitor-cellphone-star</v-icon>
                                         {{ key }}
                                         <v-spacer></v-spacer>
@@ -53,15 +53,26 @@
                                                 mdi-plus-circle
                                             </v-icon>
                                         </v-btn>
-                                    </v-card-title>
+                                    </v-card-title> -->
                                     <v-card-text>
-                                        <v-chip-group column>
+                                        <v-subheader>
+                                            <v-icon class="mr-2">mdi-devices</v-icon>
+                                            <span class="text-h6 text-capitalize">{{ key }}</span>
+                                            <v-spacer></v-spacer>
+                                            <v-btn icon color="success" @click="showForm=true, type=key">
+                                                <v-icon>
+                                                    mdi-plus-circle
+                                                </v-icon>
+                                            </v-btn>
+                                        </v-subheader>
+                                        <v-chip-group column v-if="value.length>0">
                                             <template v-for="item in value">
-                                                <v-chip :key="item.id" v-if="item.name" close label @click:close="removeItem(item), item.name=false">
+                                                <v-chip :key="item.id" v-if="item.name" close label @click:close="removeItem(item, key)">
                                                     {{ item.name }}
                                                 </v-chip>
                                             </template>
                                         </v-chip-group>
+                                        <v-subheader v-else class="d-flex justify-center">No data...</v-subheader>
                                     </v-card-text>
                                 </v-card>
                             </template>
@@ -131,11 +142,12 @@ export default {
                 this.setItem()
             })
         },
-        removeItem(val) {
-            // let data = {set_id: this.set.data.id, item_id: val}
-            // axios.post(`/admin-api/compatibility/remove-item`, data).then(({ data }) => {
-            //     this.newAlert(true, data.type, data.message)
-            // })
+        removeItem(val, key) {
+            console.log(val, key)
+            let data = {set_id: this.set.data.id, item: val, item_key: key}
+            axios.post(`/admin-api/compatibility/remove-item`, data).then(({ data }) => {
+                this.newAlert(true, data.type, data.message)
+            })
         }
     }
 }

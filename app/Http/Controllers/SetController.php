@@ -135,6 +135,19 @@ class SetController extends Controller
                     'type' => 'success',
                     'message' => 'Item successfully added...'
                 ];
+            }elseif($request->name||$request->name!=null){
+                $dp = DummyProduct::create([
+                    'name' => $request->name,
+                    'description' => $request->description,
+                ]);
+
+                $dp->sets()->attach($dp, ['settable_part' => $request->type, 'set_id' => $request->set_id]);
+
+                return [
+                    'data' => $dp,
+                    'type' => 'success',
+                    'message' => 'Item successfully added...'
+                ];
             }
         }catch(Exception $e){
             return [
@@ -218,5 +231,33 @@ class SetController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function removeItem(Request $request)
+    {
+        try{
+            $set_id = $request->set_id;
+            $set_key = $request->item_key;
+            $item_id = $request->item['id'];
+            if($request->item['images']){
+                $sb = Set::with('products', function($item) use ($item_id) {
+                    $item->where('settable_id', $item_id);
+                })->where('id', $set_id)->first();
+                // $sb = Set::find($set_id)->with('products', function($item) use ($item_id, $set_key) {
+                //     return $item->where([
+                //         ['settable_id', $item_id],
+                //         ['settable_part', $set_key]
+                //     ]);
+                // });
+
+                return $sb;
+            }
+        }catch(Exception $e){
+            return [
+                'data' => $request,
+                'type' => 'error',
+                'message' => $e->getMessage()
+            ];
+        }
     }
 }

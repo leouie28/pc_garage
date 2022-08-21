@@ -53,6 +53,7 @@ Route::group(['middleware'=>['auth:admin']],function(){
     Route::controller(SetController::class)->group(function () {
         Route::get('compatibility/search-item', 'searchItem');
         Route::post('compatibility/add-item', 'addItem');
+        Route::post('compatibility/remove-item', 'removeItem');
     });
 
     Route::controller(RecommendationController::class)->group(function () {
