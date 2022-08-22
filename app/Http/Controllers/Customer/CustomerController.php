@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Image;
 use App\Models\Order;
 use Exception;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -71,6 +72,7 @@ class CustomerController extends Controller
                 // $image->file_name = $file;
                 // $image->save();
             }
+            event(new Registered($user = $user));
             return [
                 'data' => $user,
                 'type' => 'success',

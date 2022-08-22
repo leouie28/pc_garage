@@ -23,7 +23,7 @@
                         <template v-for="item in items">
                             <v-list-item :key="item.id">
                                 <v-list-item-avatar tile>
-                                    <v-img :src="item.images.length>0?'/images/products/' + item.id + '/' + item.images[0].file_name:'/images/default/noimage.png'"
+                                    <v-img :src="item.images&&item.images.length>0?'/images/products/' + item.id + '/' + item.images[0].file_name:'/images/default/noimage.png'"
                                     ></v-img>
                                 </v-list-item-avatar>
                                 <v-list-item-content>

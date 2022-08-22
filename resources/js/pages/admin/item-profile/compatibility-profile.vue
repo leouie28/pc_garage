@@ -67,7 +67,7 @@
                                         </v-subheader>
                                         <v-chip-group column v-if="value.length>0">
                                             <template v-for="item in value">
-                                                <v-chip :key="item.id" v-if="item.name" close label @click:close="removeItem(item, key)">
+                                                <v-chip :key="item.id" v-if="item.name" close label @click:close="removeWarning(item, key)">
                                                     {{ item.name }}
                                                 </v-chip>
                                             </template>
@@ -84,6 +84,21 @@
         </v-card>
         <v-dialog persistent v-model="showForm" max-width="500">
             <item-form @close="showForm = false" :type="type" @save="save"></item-form>
+        </v-dialog>
+        <v-dialog persistent v-model="warning" max-width="500">
+            <v-card>
+                <v-card-title>Warning</v-card-title>
+                <v-card-text class="text-center">
+                    Are you sure you want to remove <span class="red--text">"{{selected.val.name}}"</span> item in {{selected.key}} component?
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn text @click="warning=false">Cancel</v-btn>
+                    <v-btn color="error" @click="removeItem">
+                        Remove
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
         </v-dialog>
         <v-snackbar
         v-model="alert.trigger"
@@ -113,7 +128,13 @@ export default {
     },
     data: () => ({
         type: '',
+        warning: false,
         showForm: false,
+        selected: {
+            val: {
+                name: ''
+            }
+        },
         set: {
             data: {
                 name: '',
@@ -142,11 +163,17 @@ export default {
                 this.setItem()
             })
         },
-        removeItem(val, key) {
-            console.log(val, key)
-            let data = {set_id: this.set.data.id, item: val, item_key: key}
+        removeWarning(val, key) {
+            this.selected = {val, key}
+            this.warning = true
+        },
+        removeItem() {
+            // console.log(this.selected)
+            this.warning = false
+            let data = {set_id: this.set.data.id, item: this.selected.val, item_key: this.selected.key}
             axios.post(`/admin-api/compatibility/remove-item`, data).then(({ data }) => {
                 this.newAlert(true, data.type, data.message)
+                this.setItem()
             })
         }
     }

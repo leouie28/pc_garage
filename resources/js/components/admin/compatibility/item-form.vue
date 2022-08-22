@@ -62,16 +62,18 @@
                                 <span class="pa-2">{{ item.name }}</span>
                             </template>
                         </v-autocomplete>
-                        <v-text-field
+                        <!-- <v-combobox
                         v-if="payload.onSystem=='0'"
                         label="Item/Product Name*"
                         dense
+                        :items="dpItems.name"
                         v-model="payload.name"
                         filled
+                        @keyup="searchItem"
                         hide-details=""
                         :rules="required"
-                        ></v-text-field>
-                        <!-- <v-menu offset-y tile>
+                        ></v-combobox> -->
+                        <v-menu offset-y tile v-if="payload.onSystem=='0'">
                             <template v-slot:activator="{ on }">
                                 <v-text-field
                                 label="Item/Product Name*"
@@ -85,16 +87,16 @@
                                 :rules="required"
                                 ></v-text-field>
                             </template>
-                            <v-list v-if="items.length>0">
+                            <v-list v-if="dpItems.length>0">
                                 <v-list-item
-                                v-for="item in items" :key="item.id"
+                                v-for="item in dpItems" :key="item.id"
                                 @click="payload.id = item.id, payload.name = item.name">
                                     <v-list-item-title>
                                         {{ item.name }}
                                     </v-list-item-title>
                                 </v-list-item>
                             </v-list>
-                        </v-menu> -->
+                        </v-menu>
                     </v-col>
                     <v-expand-transition>
                     <v-col md="12" cols="12" v-if="payload.onSystem=='0'">
@@ -155,6 +157,7 @@ export default {
             name: '',
             description: ''
         },
+        dpItems: [],
         typeWaiting: false,
         part: [
             'motherboard',
@@ -184,16 +187,16 @@ export default {
             // this.payload = JSON.parse(JSON.stringify(this.newPayload))
         },
         searchItem() {
-            this.payload.id = ''
-            if(this.payload.name.length<1||this.payload.name){
+            console.log(this.payload.name)
+            if(this.payload.name.length>=3){
                 if(!this.typeWaiting){
                     setTimeout(() => {
                         let key = this.payload.name
-                        axios.get(`/admin-api/compatibility/search-item?key=${key}`).then(({ data }) => {
-                            this.items = data
+                        axios.get(`/admin-api/compatibility/search-item?dp=${key}`).then(({ data }) => {
+                            this.dpItems = data
                         })
                         this.typeWaiting = false
-                    },800)
+                    },500)
                 }
                 this.typeWaiting = true
             }

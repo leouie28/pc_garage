@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Image;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 

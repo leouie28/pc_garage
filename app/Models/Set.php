@@ -22,6 +22,6 @@ class Set extends Model
 
     public function dummyProducts()
     {
-        return $this->morphedByMany(Product::class, 'settable');
+        return $this->morphedByMany(DummyProduct::class, 'settable');
     }
 }

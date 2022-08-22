@@ -39,6 +39,11 @@ class SetController extends Controller
                     return $item->where('name', 'LIKE', '%'.$key.'%');
                 })->get();
                 return $prod;
+            }elseif($request->dp){
+                $dp = DummyProduct::where('name', 'LIKE', '%'.$request->key.'%')
+                ->limit(8)->get(['id', 'name', 'description']);
+
+                return $dp;
             }
         }catch(Exception $e){
             return $e->getMessage();
@@ -58,11 +63,14 @@ class SetController extends Controller
     {
         try{
             $key = $request->key;
-            $prod = Product::whereHas('sets', function($item) use ($key) {
+            $arr1 = Product::whereHas('sets', function($item) use ($key) {
                 $item->where('settables.settable_part', $key);
             })->get();
-
-            return $prod;
+            $arr2 = DummyProduct::whereHas('sets', function($item) use ($key) {
+                $item->where('settables.settable_part', $key);
+            })->get();
+            $item = $arr1->merge($arr2);
+            return $item;
         }catch(Exception $e){
             return $e->getMessage();
         }
@@ -73,22 +81,28 @@ class SetController extends Controller
         try{
             $sets = array();
             foreach($request->data as $part){
-                if($part['item']||$part['item']!=null){
+                if(isset($part['item'])){
                     $key = $part['component'];
                     $key_id = $part['item']['id'];
                     $arr1 = Set::whereHas('products', function($item) use ($key_id) {
                         $item->where('settables.settable_id', $key_id);
-                    })->get()->value('id');
+                    })->pluck('id');
                     $arr2 = Set::whereHas('dummyProducts', function($item) use ($key_id) {
                         $item->where('settables.settable_id', $key_id);
-                    })->get()->value('id');
+                    })->pluck('id');
                     // $set = $arr1->merge($arr2);
                     $sets[$key] = $arr1->merge($arr2);
                     // $sets[$key] = array_unique($set);
                     // $sets[$key] = array_merge($arr1, $arr2);
                 }
             }
-            return $sets;
+            $arr = json_decode(json_encode($sets), true);
+            $res = call_user_func_array('array_intersect', $arr);
+            if(count($res)>0){
+                return true;
+            }else{
+                return false;
+            }
         }catch(Exception $e){
             return $e->getMessage();
         }
@@ -126,7 +140,7 @@ class SetController extends Controller
     public function addItem(Request $request)
     {
         try{
-            if($request->id||$request->id!=null){
+            if($request->onSystem==1){
                 $item = Product::find($request->id);
                 $item->sets()->attach($item, ['settable_part' => $request->type, 'set_id' => $request->set_id]);
 
@@ -135,7 +149,23 @@ class SetController extends Controller
                     'type' => 'success',
                     'message' => 'Item successfully added...'
                 ];
-            }elseif($request->name||$request->name!=null){
+            }elseif($request->onSystem==0){
+                // $type = $request->type;
+                // $set_id = $request->set_id;
+                // $set = DummyProduct::where('name', '=', $request->name)
+                // ->first();
+                // $set->sets()
+                // ->wherePivot('settables.settable_type', '=', $request->type)
+                // ->wherePivot('settables.id', '=', $request->set_id)->exists();
+                // if($set){
+                //     return [
+                //         'data' => $set,
+                //         'type' => 'error',
+                //         'message' => 'Item already registered in the selected component...'
+                //     ];
+                // }else{
+                //     return 'hello';
+                // }
                 $dp = DummyProduct::create([
                     'name' => $request->name,
                     'description' => $request->description,
@@ -179,7 +209,7 @@ class SetController extends Controller
                         ['settables.settable_part', $key],
                         ['settables.set_id', $id]
                     ]);
-                })->get(['id', 'name', 'description']);
+                })->get(['id', 'name', 'description',]);
                 $arr2 = DummyProduct::whereHas('sets', function($item)use($key,$id){
                     $item->where([
                         ['settables.settable_part', $key],
@@ -239,18 +269,30 @@ class SetController extends Controller
             $set_id = $request->set_id;
             $set_key = $request->item_key;
             $item_id = $request->item['id'];
-            if($request->item['images']){
-                $sb = Set::with('products', function($item) use ($item_id) {
-                    $item->where('settable_id', $item_id);
-                })->where('id', $set_id)->first();
-                // $sb = Set::find($set_id)->with('products', function($item) use ($item_id, $set_key) {
-                //     return $item->where([
-                //         ['settable_id', $item_id],
-                //         ['settable_part', $set_key]
-                //     ]);
-                // });
+            if(isset($request->item['rates'])){
+                $sb = Set::find($set_id);
+                $sb->products()
+                ->wherePivot('settables.settable_id', $item_id)
+                ->wherePivot('settables.settable_part', $set_key)
+                ->detach();
 
-                return $sb;
+                return [
+                    'data' => $sb,
+                    'type' => 'success',
+                    'message' => 'Item successfully removed...'
+                ];
+            }else{
+                $sb = Set::find($set_id);
+                $sb->dummyProducts()
+                ->wherePivot('settables.settable_id', $item_id)
+                ->wherePivot('settables.settable_part', $set_key)
+                ->detach();
+
+                return [
+                    'data' => $sb,
+                    'type' => 'success',
+                    'message' => 'Item successfully removed...'
+                ];
             }
         }catch(Exception $e){
             return [

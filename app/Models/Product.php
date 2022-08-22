@@ -23,7 +23,8 @@ class Product extends Model
     ];
 
     protected $appends = [
-        'rates'
+        'rates',
+        // 'belong'
     ];
 
     public function categories()
@@ -94,6 +95,11 @@ class Product extends Model
         }else{
             return 0;
         }
+    }
+
+    public function getBelongAttribute()
+    {
+        return $this->attributes['belong'] = 'product';
     }
 
     // public function similar()

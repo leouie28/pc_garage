@@ -87,7 +87,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-dialog persistent v-model="resForm" max-width="800">
+        <v-dialog persistent v-model="resForm" max-width="600">
                 <v-card>
                     <v-card-title>
                         Compatibility Result
@@ -95,10 +95,10 @@
                     <v-card-text>
                         <template v-if="resLoader">
                             <v-expand-transition>
-                                <div class="text-center my-6">
+                                <div class="text-center">
                                     <v-progress-circular
-                                    :size="70"
-                                    :width="7"
+                                    :size="50"
+                                    :width="5"
                                     color="success"
                                     indeterminate
                                     ></v-progress-circular>
@@ -109,18 +109,18 @@
                         </template>
                         <template v-else>
                         <v-expand-transition>
-                            <v-alert
-                            outlined
-                            color="success"
-                            class="text-center my-4 mb-2">
-                                <span>Based on our system, your build is</span>
-                                <div class="d-flex justify-center">
-                                    <span class="text-h5 mr-2">
-                                        Compatible
-                                    </span>
-                                    <v-icon large color="success">mdi-check-circle-outline</v-icon>
-                                </div>
-                            </v-alert>
+                            <div class="text-center" v-if="compatible">
+                                <v-icon class="success--text" x-large>mdi-checkbox-marked-circle-outline</v-icon>
+                                <v-toolbar-title>
+                                    Based on our system, your build is Compatible!
+                                </v-toolbar-title>
+                            </div>
+                            <div class="text-center" v-else>
+                                <v-icon class="error--text" x-large>mdi-close-circle-outline</v-icon>
+                                <v-toolbar-title class="error--text">
+                                    Based on our system, your build is not Compatible!
+                                </v-toolbar-title>
+                            </div>
                         </v-expand-transition>
                         </template>
                     </v-card-text>
@@ -166,6 +166,7 @@ export default {
         resLoader: true,
         count: 0,
         disable: true,
+        compatible: false,
         selectedComponent: '',
         parts: [
             {
@@ -232,7 +233,7 @@ export default {
             this.resForm = true
             let params = { data: this.parts }
             axios.post(`/customer-api/compatibilities/check-items`, params).then(({ data }) => {
-                
+                this.compatible = data
             })
             setTimeout(() => {
                 this.resLoader = false

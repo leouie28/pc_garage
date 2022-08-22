@@ -36,7 +36,7 @@ class ProductController extends Controller
             $res = Product::where('name', 'LIKE', '%' . $key . '%')
             ->orWhere('description', 'LIKE', '%' . $key . '%')
             ->orWhereHas('categories', function($cat)use($key) {
-                return $cat->where('name', $key);
+                return $cat->where('name', 'LIKE', '%' . $key . '%');
             })
             ->orderBy('id', 'desc')->limit(10)->get(['id', 'name']);
 
