@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Listeners\AdminNotification;
+use App\Listeners\CustomerNotification;
 use App\Listeners\SendNewUserNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;

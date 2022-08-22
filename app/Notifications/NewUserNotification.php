@@ -18,7 +18,7 @@ class NewUserNotification extends Notification
      */
     public function __construct($customer)
     {
-        $this->user = $customer;
+        $this->customer = $customer;
     }
 
     /**
@@ -44,10 +44,10 @@ class NewUserNotification extends Notification
         //             ->line('The introduction to the notification.')
         //             ->action('Notification Action', url('/'))
         //             ->line('Thank you for using our application!');
-        return [
-            'name' => $this->name,
-            'email' => $this->email,
-        ];
+        // return [
+        //     'name' => $this->customer->first_name,
+        //     'email' => $this->cusutomer->email,
+        // ];
     }
 
     /**
@@ -59,7 +59,9 @@ class NewUserNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'name' => $this->customer->first_name.' '.$this->customer->last_name,
+            'text' => 'joined the system',
+            'link' => 'customer'
         ];
     }
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RecommendationController;
@@ -59,6 +60,9 @@ Route::group(['middleware'=>['auth:admin']],function(){
     Route::controller(RecommendationController::class)->group(function () {
         Route::put('recommendation/mark-read/{id}', 'markRead');
     });
+
+    //Notification
+    Route::get('admin-notification', [NotificationController::class, 'adminNotification']);
 
     Route::resources([
         'category' => CategoryController::class,

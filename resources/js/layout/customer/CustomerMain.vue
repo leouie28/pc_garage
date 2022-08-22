@@ -53,25 +53,7 @@
                         Profile
                     </v-list-item-title>
                 </v-list-item>
-                <v-list-item>
-                    <v-list-item-icon>
-                        <v-icon>mdi-bell</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-title>
-                        Notification
-                        <v-badge
-                        class="ml-1"
-                        color="error"
-                        content="3"
-                        ></v-badge>
-                    <!-- <v-badge
-                    color="warning"
-                    content="3"
-                    >
-                        Notification
-                    </v-badge> -->
-                    </v-list-item-title>
-                </v-list-item>
+                <customer-notification></customer-notification>
                 <v-list-item @click="$router.push({path: '/recommendations'})">
                     <v-list-item-icon>
                         <v-icon>mdi-message-text</v-icon>
@@ -106,10 +88,12 @@
 </template>
 
 <script>
+import CustomerNotification from '@/components/global/notification/customerNotification.vue'
 import Cart from '@/components/customer/cart.vue'
 export default {
     components: {
         Cart,
+        CustomerNotification
     },
     data: () => ({
         cartDialog: false,

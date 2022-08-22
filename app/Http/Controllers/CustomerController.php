@@ -176,6 +176,8 @@ class CustomerController extends Controller
       ]);
     }
 
+    event(new Registered($user = $customer));
+
     return $customer;
   }
 }

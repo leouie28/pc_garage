@@ -3,21 +3,8 @@
     <v-app-bar-nav-icon @click="$emit('handDrawer')"></v-app-bar-nav-icon>
     <v-toolbar-title>PCGarage</v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-badge
-      v-if="isCustomer"
-      :content="CART_COUNT"
-      :value="CART_COUNT"
-      color="primary"
-      left
-      overlap
-      class="card"
-    >
-      <v-avatar @click="CART_COUNT?$router.push({name:'cart'}):''" class="mr-2" size="34">
-        <v-icon size="30"> mdi-cart </v-icon>
-      </v-avatar>
-    </v-badge>
     
-    <admin-notification></admin-notification>
+    <admin-notification :notif="notifications"></admin-notification>
     
     <div class="text-center">
       <v-menu offset-y style="z-index: 10" rounded="0">
@@ -70,7 +57,6 @@
 
 <script>
 import AdminNotification from '@/components/global/notification/adminNotification.vue'
-import { mapGetters } from "vuex";
 // import { component } from 'vue/types/umd';
 export default {
   components: {
@@ -79,37 +65,24 @@ export default {
   data: () => ({
     dialog: false,
     user: {},
+    notifications: [],
     isCustomer: false,
     route: "",
   }),
+  created() {
+    this.notif()
+  },
   methods: {
     logout() {
       this.$emit("logout");
     },
-    editItem(id) {
-      axios.put("/admin-api/userprofile/update" + id).then(({ data }) => {
-        console.log("Success");
-        this.initialize();
-      });
-    },
-    profileDialog() {
-      this.formTitle = "User Profile";
-      this.dialog = true;
-    },
-    getCartCount(){
-      axios.get(`/customer-api/cart-count`).then(({data})=>{
-        this.$store.dispatch("GET_CART_COUNT", data);
+    notif() {
+      axios.get(`/admin-api/admin-notification`).then(({data})=>{
+        this.notifications = data
       })
-    }
-  },
-  created(){
-    if(localStorage.role=='customer'){
-      this.getCartCount()
-      this.isCustomer = true
-    }
+    },
   },
   computed: {
-    ...mapGetters(["CART_COUNT"]),
     getUrl() {
       let url = this.$route.fullPath;
       let path = url.split("/admin");

@@ -72,7 +72,7 @@
                     :rules="[() => !!payload.gender || '']"
                     :items="gender"
                     hide-details="auto"
-                    label="Genger"
+                    label="Gender"
                     ></v-select>
                 </v-col>
                 <v-col md="6" cols="12">
