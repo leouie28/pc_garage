@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
+use App\Models\Notification;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Notifications\OrderCustomerNotification;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -18,6 +21,15 @@ class Controller extends BaseController
     public function groupUpd($value)
     {
         return $value;
+    }
+
+    public function makeNotify($id, $type, $data)
+    {
+        Notification::create([
+            'notifiable_id' => $id,
+            'notifiable_type' => $type,
+            'data' => $data,
+        ]);
     }
 
     public function validateOrder($data, $id)
@@ -91,6 +103,17 @@ class Controller extends BaseController
             $order->arrival = $data->arrival;
         }
         $stat->save();
+        
+        $this->makeNotify(
+            $id = $stat->customer_id,
+            $type = 'App\Models\Customer',
+            $data = array(
+                "name" => $stat->order_code,
+                "text" => 'Order is on delivery',
+                "link" => 'orders',
+                "icon" => 'cart',
+            )
+        );
 
         // return [
         //     "id" => $stat->id,

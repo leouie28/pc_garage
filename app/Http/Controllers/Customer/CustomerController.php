@@ -72,7 +72,6 @@ class CustomerController extends Controller
                 // $image->file_name = $file;
                 // $image->save();
             }
-            event(new Registered($user = $user));
             return [
                 'data' => $user,
                 'type' => 'success',

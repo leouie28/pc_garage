@@ -31,21 +31,22 @@
                 <h4 class="ml-2 toHide">Order</h4>
             <!-- </v-badge> -->
         </v-tab>
-        <v-menu offset-y open-on-hover>
+        <v-menu offset-y :close-on-content-click="false" v-model="user">
             <template v-slot:activator="{ on, attrs }">
                 <v-tab
                 v-bind="attrs"
                 v-on="on"
                 >
                     <v-icon>mdi-account-circle-outline</v-icon>
-                    <v-badge color="warning" content="3">
+                    <v-badge color="error" :content="count" v-if="count>0">
                         <h4 class="ml-2 toHide">Account</h4>
                     </v-badge>
+                    <h4 class="ml-2 toHide" v-else>Account</h4>
                     <v-icon small>mdi-chevron-down</v-icon>
                 </v-tab>
             </template>
             <v-list width="200">
-                <v-list-item @click="$router.push({path: '/profile'})">
+                <v-list-item @click="$router.push({path: '/profile'}).catch(() => {}), user=false">
                     <v-list-item-icon>
                         <v-icon>mdi-account</v-icon>
                     </v-list-item-icon>
@@ -53,8 +54,8 @@
                         Profile
                     </v-list-item-title>
                 </v-list-item>
-                <customer-notification></customer-notification>
-                <v-list-item @click="$router.push({path: '/recommendations'})">
+                <customer-notification :notif="notification" @menu="user=false" @markRead="markRead"></customer-notification>
+                <v-list-item @click="$router.push({path: '/recommendations'}), user=false">
                     <v-list-item-icon>
                         <v-icon>mdi-message-text</v-icon>
                     </v-list-item-icon>
@@ -101,8 +102,11 @@ export default {
             cart: 0,
             notification: 0
         },
+        notification: [],
+        user: false,
         page: 1,
         active: 0,
+        count: 0,
         warningDialog: false,
         loading: true,
         links: [
@@ -130,6 +134,7 @@ export default {
     }),
     mounted() {
         this.getStat()
+        this.getNotify()
         setTimeout(() => {
             this.loading = false
         }, 600)
@@ -140,8 +145,26 @@ export default {
                 this.navStat.cart = data.carts
             })
         },
+        getNotify() {
+            axios.get(`customer-api/customer-notification`).then(({data})=>{
+                this.notification = data
+                let counter = 0
+                data.forEach(elem => {
+                    if(elem.read_at==null){
+                        counter++
+                    }
+                });
+                this.count = counter
+            })
+        },
+        markRead(item) {
+            axios.put(`/customer-api/customer-notification/mark-read?id=${item.id}`).then(({data})=>{
+                this.close()
+            })
+        },
         close() {
             this.getStat()
+            this.getNotify()
             this.cartDialog = false
             let val = this.$route
             if(val.name=='product'){
@@ -156,6 +179,7 @@ export default {
         },
         logout(){
             // this.loading = true
+            this.user = false
             axios.get(`/admin-api/logout`).then(({data})=>{
                 this.isAuth = false
                 localStorage.role = 0

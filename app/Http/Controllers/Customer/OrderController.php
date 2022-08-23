@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Events\OrderProcessed;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
@@ -106,6 +107,7 @@ class OrderController extends Controller
                     $cart->delete();
                 }
             }
+            event(new OrderProcessed($user = Auth::guard('web')->user()));
             return [
                 "data" => Order::find($order->id),
                 "type" => "success",

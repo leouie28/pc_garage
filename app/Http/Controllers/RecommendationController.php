@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Filters\RecommendationFilter;
+use App\Models\Admin;
 use App\Models\Recommendation;
 use Exception;
 use Illuminate\Http\Request;
@@ -43,6 +44,22 @@ class RecommendationController extends Controller
                 'recommendation' => $request->text,
                 'customer_id' => Auth::guard('web')->user()->id,
             ]);
+
+            $admins = Admin::all();
+            $customer = Auth::guard('web')->user();
+            foreach($admins as $admin){
+            $this->makeNotify(
+                $id = $admin->id,
+                $type = 'App\Models\Admin',
+                $data = array(
+                    "name" => $customer->first_name.' '.$customer->last_name,
+                    "text" => 'submit recommendation',
+                    "link" => 'recommendation',
+                    "icon" => 'comment-text',
+                )
+            );
+            }
+
             return [
                 'data' => $rmd,
                 'type' => 'success',

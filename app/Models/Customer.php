@@ -30,6 +30,11 @@ class Customer extends Authenticatable
         // 'orders',
         'images'
     ];
+
+    public function notification()
+    {
+        return $this->morphMany(Notification::class, 'notifiable');
+    }
     
     public function orders()
     {

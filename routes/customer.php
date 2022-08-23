@@ -7,6 +7,7 @@ use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\FeedbackController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ProductController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\SetController;
 use Illuminate\Support\Facades\Route;
@@ -51,6 +52,13 @@ Route::group(['middleware'=>['auth:web']],function(){
         Route::get('compatibilities/main-item', 'mainItem');
         Route::get('compatibilities/available-item', 'availableItem');
         Route::post('compatibilities/check-items', 'checkItems');
+    });
+
+    //notification
+
+    Route::controller(NotificationController::class)->group(function () {
+        Route::get('customer-notification', 'customerNotification');
+        Route::put('customer-notification/mark-read', 'markRead');
     });
 
     Route::resources([

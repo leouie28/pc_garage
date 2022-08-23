@@ -4,7 +4,7 @@
     <v-toolbar-title>PCGarage</v-toolbar-title>
     <v-spacer></v-spacer>
     
-    <admin-notification :notif="notifications"></admin-notification>
+    <admin-notification :notif="notifications" @markRead="markRead"></admin-notification>
     
     <div class="text-center">
       <v-menu offset-y style="z-index: 10" rounded="0">
@@ -81,6 +81,11 @@ export default {
         this.notifications = data
       })
     },
+    markRead(item) {
+      axios.put(`/admin-api/admin-notification/mark-read?id=${item.id}`).then(({data})=>{
+        this.notif()
+      })
+    }
   },
   computed: {
     getUrl() {

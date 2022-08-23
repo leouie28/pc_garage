@@ -23,4 +23,9 @@ class Admin extends Authenticatable
     protected $hidden = [
         'password'
     ];
+
+    public function notification()
+    {
+        return $this->morphMany(Notification::class, 'notifiable');
+    }
 }

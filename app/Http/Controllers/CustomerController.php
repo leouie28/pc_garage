@@ -175,8 +175,19 @@ class CustomerController extends Controller
           'file_name' => $file
       ]);
     }
-
-    event(new Registered($user = $customer));
+    $admins = Admin::all();
+    foreach($admins as $admin){
+      $this->makeNotify(
+        $id = $admin->id,
+        $type = 'App\Models\Admin',
+        $data = array(
+              "name" => $customer->first_name.' '.$customer->last_name,
+              "text" => 'joined the system',
+              "link" => 'customer',
+              "icon" => 'account',
+          )
+      );
+    }
 
     return $customer;
   }

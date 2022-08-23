@@ -62,7 +62,10 @@ Route::group(['middleware'=>['auth:admin']],function(){
     });
 
     //Notification
-    Route::get('admin-notification', [NotificationController::class, 'adminNotification']);
+    Route::controller(NotificationController::class)->group(function () {
+        Route::get('admin-notification', 'adminNotification');
+        Route::put('admin-notification/mark-read', 'markRead');
+    });
 
     Route::resources([
         'category' => CategoryController::class,
