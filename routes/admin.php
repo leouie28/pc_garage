@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
@@ -45,6 +46,10 @@ Route::group(['middleware'=>['auth:admin']],function(){
         Route::put('stock/update-sku/{skuId}', 'updateSkuStocks');
     });
 
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('admin-info', 'adminInfo');
+    });
+
     //sales
     Route::controller(SaleController::class)->group(function () {
         Route::get('sales/check-sales', 'checkSales');
@@ -68,6 +73,7 @@ Route::group(['middleware'=>['auth:admin']],function(){
     });
 
     Route::resources([
+        'admin' => AdminController::class,
         'category' => CategoryController::class,
         'product' => ProductController::class,
         'customer' => CustomerController::class,

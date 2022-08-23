@@ -30,7 +30,9 @@
             >
             <v-toolbar-title class="font-weight-medium">Notifications</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn small color="primary" :disabled="count<=0?true:false" text v-if="notif.length>0">
+            <v-btn small color="primary"
+            @click="$emit('markAll')"
+            :disabled="count<=0?true:false" text v-if="notif.length>0">
                 mark all as read
             </v-btn>
             </v-toolbar>

@@ -32,7 +32,19 @@ class NotificationController extends Controller
                 Notification::find($request->id)
                 ->update(['read_at' => Carbon::now()]);
             }elseif($request->all){
-
+                if(Auth::guard('admin')->user()){
+                    $admin = Auth::guard('admin')->user();
+                    $reads = $admin->notification->where('read_at', null);
+                    foreach($reads as $read){
+                        Notification::where('id', $read->id)->update(['read_at' => Carbon::now()]);
+                    }
+                }elseif(Auth::guard('web')->user()){
+                    $user = Auth::guard('web')->user();
+                    $reads = $user->notification->where('read_at', null);
+                    foreach($reads as $read){
+                        Notification::where('id', $read->id)->update(['read_at' => Carbon::now()]);
+                    }
+                }
             }
         }catch(Exception $e){
             return $e->getMessage();

@@ -54,7 +54,12 @@
                         Profile
                     </v-list-item-title>
                 </v-list-item>
-                <customer-notification :notif="notification" @menu="user=false" @markRead="markRead"></customer-notification>
+                <customer-notification
+                :notif="notification"
+                @menu="user=false"
+                @markRead="markRead"
+                @markAll="markAll">
+                </customer-notification>
                 <v-list-item @click="$router.push({path: '/recommendations'}), user=false">
                     <v-list-item-icon>
                         <v-icon>mdi-message-text</v-icon>
@@ -159,6 +164,11 @@ export default {
         },
         markRead(item) {
             axios.put(`/customer-api/customer-notification/mark-read?id=${item.id}`).then(({data})=>{
+                this.close()
+            })
+        },
+        markAll() {
+            axios.put(`/customer-api/customer-notification/mark-read?all=true`).then(({data})=>{
                 this.close()
             })
         },

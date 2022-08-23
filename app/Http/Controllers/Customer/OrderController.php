@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Events\OrderProcessed;
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Product;
@@ -107,7 +108,22 @@ class OrderController extends Controller
                     $cart->delete();
                 }
             }
-            event(new OrderProcessed($user = Auth::guard('web')->user()));
+
+            $admins = Admin::all();
+            $customer = Auth::guard('web')->user();
+            foreach($admins as $admin){
+                $this->makeNotify(
+                    $id = $admin->id,
+                    $type = 'App\Models\Admin',
+                    $data = array(
+                        "name" => $customer->first_name.' '.$customer->last_name,
+                        "text" => 'Made an order',
+                        "link" => 'order',
+                        "icon" => 'cart',
+                    )
+                );
+            }
+            
             return [
                 "data" => Order::find($order->id),
                 "type" => "success",
