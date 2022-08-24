@@ -66,8 +66,8 @@
                                     >
                                         <v-card
                                         color="primary"
-                                        @click="$router.push({path: 'product/'+prod.id})"
-                                        class="ma-4 best-slider"
+                                        @click="$router.push({path: 'web-product/'+prod.id})"
+                                        class="ma-4"
                                         height="250"
                                         width="500">
                                             <div class="best-overlay white--text">
@@ -110,11 +110,11 @@
                                 <!-- <div class="d-flex flex-wrap justify-start prod mx-auto"> -->
                                 <div class="grid-container">
                                     <v-card
-                                    color="grey lighten-3 "
+                                    color="grey lighten-3"
                                     v-for="product in products"
                                     :key="product.id"
-                                    @click="$router.push({path: 'product/'+product.id})"
-                                    class="ma-2 d-inline-block grid-item prod"
+                                    @click="$router.push({path: 'web-product/'+product.id})"
+                                    class="ma-2 d-inline-block grid-item"
                                     max-width="200"
                                     >
                                         <v-img
@@ -154,7 +154,7 @@
                                             <v-btn
                                             small
                                             color="primary"
-                                            @click.stop="addCart(product)"
+                                            @click.stop="$emit('warning')"
                                             >
                                                 Cart
                                                 <v-icon small>mdi-cart-outline</v-icon>
@@ -163,7 +163,7 @@
                                             small
                                             v-if="product.stocks_sum_stocksstocks>0"
                                             color="success"
-                                            @click.stop="checkout(product)"
+                                            @click.stop="$emit('warning')"
                                             >
                                                 Buy
                                                 <v-icon small>mdi-currency-php</v-icon>
@@ -221,7 +221,7 @@
     </div>
 </template>
 <script>
-import Head from '@/components/customer/product/product-header.vue'
+import Head from './product-header.vue'
 import CartCheckout from '@/components/customer/product/CartOrCheckout.vue'
 export default {
     components: {
@@ -271,7 +271,7 @@ export default {
             if(this.page<=1||!this.page)this.getBestSell()
             if(params) params = '&'+params
             else params = ''
-            axios.get(`/customer-api/products?per_page=15${params}`).then(({ data }) => {
+            axios.get(`/web/web-products?per_page=15${params}`).then(({ data }) => {
                 this.products = data.data
                 this.data.length = data.last_page
             }).finally(()=>{
@@ -298,7 +298,7 @@ export default {
             console.log(this.catFilter)
         },
         getBestSell(){
-            axios.get(`/customer-api/products/best-selling`).then(({ data }) => {
+            axios.get(`/web/web-best-selling`).then(({ data }) => {
                 this.best = data
             });
         },

@@ -44,6 +44,8 @@ class CustomerController extends Controller
   {
     try{
       $customer = Customer::create($request->toArray());
+      $customer->password = bcrypt($request->password);
+      $customer->save();
   
       return [
         "data" => $customer,

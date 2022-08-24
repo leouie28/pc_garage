@@ -48,16 +48,16 @@ class RecommendationController extends Controller
             $admins = Admin::all();
             $customer = Auth::guard('web')->user();
             foreach($admins as $admin){
-            $this->makeNotify(
-                $id = $admin->id,
-                $type = 'App\Models\Admin',
-                $data = array(
-                    "name" => $customer->first_name.' '.$customer->last_name,
-                    "text" => 'submit recommendation',
-                    "link" => 'recommendation',
-                    "icon" => 'comment-text',
-                )
-            );
+                $this->makeNotify(
+                    $id = $admin->id,
+                    $type = 'App\Models\Admin',
+                    $data = array(
+                        "name" => $customer->first_name.' '.$customer->last_name,
+                        "text" => 'submit recommendation',
+                        "link" => 'recommendation',
+                        "icon" => 'comment-text',
+                    )
+                );
             }
 
             return [
@@ -114,6 +114,17 @@ class RecommendationController extends Controller
             $read = Recommendation::find($id);
             $read->status = 1;
             $read->save();
+
+            $this->makeNotify(
+                $id = $read->customer_id,
+                $type = 'App\Models\Customer',
+                $data = array(
+                    "name" => 'Admin',
+                    "text" => 'read your recommendation',
+                    "link" => 'recommendations',
+                    "icon" => 'message-check',
+                )
+            );
 
             return [
                 'data' => $read,

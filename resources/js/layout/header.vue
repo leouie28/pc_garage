@@ -70,7 +70,7 @@
             </template>
             <span>Edit Profile</span>
           </v-tooltip>
-          <v-btn v-else color="success">
+          <v-btn v-else color="success" @click="update">
             <v-icon class="mr-1">mdi-content-save</v-icon>
             Save
           </v-btn>
@@ -94,7 +94,7 @@
               :outlined="readOnly?false:true"
               dense
               v-model="password"
-              label="Password"
+              :label="readOnly?'Password':'New Password'"
               type="password"
               hide-details="auto"
               :filled="readOnly"
@@ -108,6 +108,24 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar
+      v-model="alert.trigger"
+      multi-line
+      elevation="12"
+      :color="alert.color"
+      transition="scroll-x-reverse-transition"
+      top
+      right>
+      <div class="d-flex justify-space-between">
+          <div class="mr-2">
+          <v-icon large>info</v-icon>
+          {{ alert.text }}
+          </div>
+          <v-btn @click="alert.trigger = false">
+          Close
+          </v-btn>
+      </div>
+      </v-snackbar>
   </v-app-bar>
 </template>
 
@@ -136,6 +154,16 @@ export default {
   methods: {
     logout() {
       this.$emit("logout");
+    },
+    update() {
+      this.profileForm = false
+      if(this.password||this.password!=''){
+        this.user['password'] = this.password
+      }
+      axios.put(`/admin-api/admin-info/${this.user.id}`, this.user).then(({data})=>{
+        this.user = data.data
+        this.newAlert(true, data.type, data.message)
+      })
     },
     notif() {
       axios.get(`/admin-api/admin-notification`).then(({data})=>{

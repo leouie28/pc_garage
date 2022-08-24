@@ -303,6 +303,23 @@ class OrderController extends Controller
                     }
                     $order->save();
 
+                    if($request->status==0){
+                        $note = 'cancel';
+                    }elseif($request->status==1){
+                        $note = 'pending';
+                    }
+            
+                    $this->makeNotify(
+                        $id = $order->customer_id,
+                        $type = 'App\Models\Customer',
+                        $data = array(
+                            "name" => $order->order_code,
+                            "text" => 'Order is '.$note,
+                            "link" => 'orders',
+                            "icon" => 'cart-remove',
+                        )
+                    );
+
                     return [
                         "data" => $currentStat,
                         "type" => "success",

@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Customer\ProductController;
+use App\Http\Controllers\SetController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,10 +15,20 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::resource('/web/web-products', ProductController::class);
+Route::resource('/web/web-categories', CategoryController::class);
+Route::get('web/web-best-selling', [ProductController::class, 'bestSell']);
+Route::get('web/web-search', [ProductController::class, 'customSearch']);
+Route::get('/web/web-compatibilities/main-item', [SetController::class, 'mainItem']);
+Route::get('/web/web-compatibilities/available-item', [SetController::class, 'availableItem']);
+Route::post('/web/web-compatibilities/check-items', [SetController::class, 'checkItems']);
 
 Route::get('/{any?}', function () {
     return view('app');
 })->where('any','.*');
+
+// Route::get('company', [CompanyController::class, 'index']);
+
 
 // Route::resource('dashboards','App\Http\Controllers\DashboardController');
 // Route::resource('companies','App\Http\Controllers\CompanyController');

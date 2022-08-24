@@ -57,22 +57,22 @@
                                 </v-chip>
                             </h4>
                             <div class="d-flex justify-end">
-                                <v-btn color="secondary" @click="$router.push({path: '/compatibility/'+product.id})">
+                                <v-btn color="secondary" @click="$router.push({path: '/web-compatibility/'+product.id})">
                                     Compatibility
                                     <v-icon small class="ml-2">mdi-play</v-icon>
                                 </v-btn>
                                 <v-btn
                                 color="primary"
                                 class="mx-2"
-                                @click="addCart(product)"
+                                @click.stop="$emit('warning')"
                                 >
                                     Add to Cart
                                     <v-icon small class="ml-2">mdi-cart-outline</v-icon>
                                 </v-btn>
                                 <v-btn
-                                :disabled="product.stocks_sum_stocksstocks>0?false:true"
+                                v-if="product.stocks_sum_stocksstocks>0"
                                 color="success"
-                                @click="checkout(product)"
+                                @click.stop="$emit('warning')"
                                 >
                                     Buy Now
                                     <v-icon small class="ml-2">mdi-currency-php</v-icon>
@@ -133,7 +133,7 @@
                         :key="product.id"
                         class="mr-4 mb-4"
                         max-width="200"
-                        @click="$router.push({path: '/product/'+product.id})"
+                        @click="$router.push({path: '/web-product/'+product.id})"
                         >
                             <v-img
                             height="150"
@@ -171,53 +171,18 @@
                 </v-card-text>
             </v-card>
         </v-sheet>
-        <v-dialog
-        v-model="cartDialog"
-        max-width="800">
-            <cart-checkout :item="item" :checkout="isCheckout" @save="saveCart" @cancel="cartDialog = false"></cart-checkout>
-        </v-dialog>
-        <v-snackbar
-        v-model="alert.trigger"
-        multi-line
-        elevation="12"
-        :color="alert.color"
-        transition="scroll-x-reverse-transition"
-        top
-        right>
-        <div class="d-flex justify-space-between">
-            <div class="mr-2">
-            <v-icon large>info</v-icon>
-            {{ alert.text }}
-            </div>
-            <v-btn @click="alert.trigger = false">
-            Close
-            </v-btn>
-        </div>
-        </v-snackbar>
     </div>
 </template>
 
 <script>
 import moment from 'moment'
-import CartCheckout from '@/components/customer/product/CartOrCheckout.vue'
 export default {
-    components: {
-        CartCheckout,
-    },
     data: () => ({
         product: {
             images: [],
             feedback: []
         },
-        isCheckout: true,
-        cartDialog: false,
-        warningDialog: false,
-        item: {},
-        similar: [],
-        data: {
-            product_id: '',
-            quantity: 1
-        },
+        similar: []
     }),
     props: {
         selectedItem: {}
@@ -228,27 +193,10 @@ export default {
     methods: {
         show() {
             let id = this.$route.params.id
-            axios.get(`/customer-api/products/${id}`).then(({data})=>{
+            axios.get(`/web/web-products/${id}`).then(({data})=>{
                 this.product = data.product
                 this.similar = data.similar
             })
-        },
-        saveCart(data) {
-            axios.post(`/customer-api/cart`, data).then(({ data }) => {
-                this.newAlert(true, data.type, data.message)
-                this.cartDialog = false
-                this.$emit('event')
-            });
-        },
-        addCart(item){
-            this.item = item
-            this.isCheckout = false
-            this.cartDialog = true
-        },
-        checkout(item){
-            this.item = item
-            this.isCheckout = true
-            this.cartDialog = true
         },
         pars(val){
             if(val){
@@ -261,7 +209,7 @@ export default {
     watch: {
         '$route': {
             handler(val) {
-                if(val) {
+                if(val){
                     this.show()
                 }
             },immediate:true, deep:true

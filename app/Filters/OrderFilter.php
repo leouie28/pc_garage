@@ -17,6 +17,7 @@ class OrderFilter
   {
     $this->searchColumns();
     $this->sortBy();
+    $this->filter();
     $this->byCustomer();
     $per_page = Request()->per_page;
     if ($per_page == '-1' || !isset(Request()->per_page)) return $this->model->paginate($this->model->count());
@@ -34,6 +35,14 @@ class OrderFilter
           $this->model->orWhere($column, 'like', "%" . $keyword . "%");
         }
       }
+    }
+  }
+
+  public function filter()
+  {
+    if(isset(Request()->filter)) {
+      $key = Request()->filter;
+      $this->model->where('status', $key);
     }
   }
 

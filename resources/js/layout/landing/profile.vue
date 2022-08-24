@@ -29,7 +29,7 @@
 
     <v-main class="grey lighten-3">
       <v-container fluid>
-        <Item @warning="warningDialog=true"></Item>
+        <profile-item @warning="warningDialog=true"></profile-item>
       </v-container>
       <div>
         <v-dialog
@@ -87,10 +87,10 @@
 </template>
 
 <script>
-import Item from './item.vue'
+import ProfileItem from './item-profile.vue'
 export default {
     components: {
-        Item
+        ProfileItem
     },
     data: () => ({
         page: 1,

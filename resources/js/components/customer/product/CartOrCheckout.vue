@@ -95,7 +95,7 @@ export default {
             this.$emit('save', this.data)
         },
         makeLink() {
-            this.params = 'checkout?items='+this.data.product_id+'~'+this.qty
+            this.params = '/checkout?items='+this.data.product_id+'~'+this.qty
         },
         close() {
             this.qty = 1

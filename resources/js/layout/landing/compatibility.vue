@@ -29,7 +29,7 @@
 
     <v-main class="grey lighten-3">
       <v-container fluid>
-        <Item @warning="warningDialog=true"></Item>
+        <Item></Item>
       </v-container>
       <div>
         <v-dialog
@@ -87,14 +87,14 @@
 </template>
 
 <script>
-import Item from './item.vue'
+import Item from './item-compatibility.vue'
 export default {
     components: {
         Item
     },
     data: () => ({
         page: 1,
-        active: 0   ,
+        active: 10,
         warningDialog: false,
         loading: true,
         links: [

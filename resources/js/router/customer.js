@@ -17,6 +17,12 @@ export default [
         meta: { requireAuth: true },
         name: 'product-profile'
     },
+    // {
+    //     path: '/web-product/:id',
+    //     component: () => import('../components/customer/product/product-profile.vue'),
+    //     // meta: { requireAuth: true },
+    //     name: 'product-profile'
+    // },
     {
         path: '/orders',
         component: () => import('../pages/customer/orders.vue'),

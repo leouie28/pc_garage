@@ -118,7 +118,7 @@ class OrderController extends Controller
                     $data = array(
                         "name" => $customer->first_name.' '.$customer->last_name,
                         "text" => 'Made an order',
-                        "link" => 'order',
+                        "link" => 'order/'.$order->id,
                         "icon" => 'cart',
                     )
                 );
@@ -192,6 +192,21 @@ class OrderController extends Controller
             $order->status = 0;
             $order->save();
 
+            $admins = Admin::all();
+            $customer = Auth::guard('web')->user();
+            foreach($admins as $admin){
+                $this->makeNotify(
+                    $id = $admin->id,
+                    $type = 'App\Models\Admin',
+                    $data = array(
+                        "name" => $customer->first_name.' '.$customer->last_name,
+                        "text" => 'cancel an order',
+                        "link" => 'order/'.$order->id,
+                        "icon" => 'cart-remove',
+                    )
+                );
+            }
+
             return [//return alert
                 "data" => Order::where([
                                 ['status', 1],
@@ -216,6 +231,21 @@ class OrderController extends Controller
             $order->status = 4;
             $order->date_received = date('Y-m-d');
             $order->save();
+
+            $admins = Admin::all();
+            $customer = Auth::guard('web')->user();
+            foreach($admins as $admin){
+                $this->makeNotify(
+                    $id = $admin->id,
+                    $type = 'App\Models\Admin',
+                    $data = array(
+                        "name" => $customer->first_name.' '.$customer->last_name,
+                        "text" => 'received order',
+                        "link" => 'order/'.$id,
+                        "icon" => 'cart-check',
+                    )
+                );
+            }
 
             return [
                 "data" => $order,

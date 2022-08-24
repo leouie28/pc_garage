@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -74,7 +76,26 @@ class AdminController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            $admin = Admin::find($id);
+            $admin->email = $request->email;
+            if($request->password||$request->password!=''){
+                $admin->password = bcrypt($request->password);
+            }
+            $admin->save();
+
+            return [
+                'data' => $admin,
+                'type' => 'success',
+                'message' => 'Login information successfully updated...',
+            ];
+        }catch(Exception $e){
+            return [
+                'data' => $request,
+                'type' => 'error',
+                'message' => $e->getMessage(),
+            ];
+        }
     }
 
     /**

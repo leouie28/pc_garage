@@ -36,6 +36,7 @@
                 <v-tab
                 v-bind="attrs"
                 v-on="on"
+                @click="getNotify"
                 >
                     <v-icon>mdi-account-circle-outline</v-icon>
                     <v-badge color="error" :content="count" v-if="count>0">
@@ -82,7 +83,7 @@
       </v-tabs>
     </v-app-bar>
 
-    <v-main class="grey lighten-3">
+    <v-main class="grey lighten-3 mb-16">
       <v-container fluid>
         <router-view @event="getStat"></router-view>
       </v-container>
@@ -90,6 +91,23 @@
         <cart :event="cartDialog" @cancel="close"></cart>
       </v-dialog>
     </v-main>
+    <div class="footer">
+        <v-footer
+        dark
+        padless
+        absolute
+        >
+        <v-card
+        width="100%"
+            flat
+            tile
+        >
+            <v-card-text class="py-5 text-center">
+            2022 - PCGarage
+            </v-card-text>
+        </v-card>
+        </v-footer>
+    </div>
   </v-app>
 </template>
 
@@ -138,6 +156,13 @@ export default {
         ],
     }),
     mounted() {
+        // this.getStat()
+        // this.getNotify()
+        // setTimeout(() => {
+        //     this.loading = false
+        // }, 600)
+    },
+    created() {
         this.getStat()
         this.getNotify()
         setTimeout(() => {
@@ -146,12 +171,12 @@ export default {
     },
     methods: {
         getStat() {
-            axios.get(`customer-api/user/nav-stat`).then(({data})=>{
+            axios.get(`/customer-api/user/nav-stat`).then(({data})=>{
                 this.navStat.cart = data.carts
             })
         },
         getNotify() {
-            axios.get(`customer-api/customer-notification`).then(({data})=>{
+            axios.get(`/customer-api/customer-notification`).then(({data})=>{
                 this.notification = data
                 let counter = 0
                 data.forEach(elem => {
@@ -210,11 +235,21 @@ export default {
                         this.active = 2
                     }else if(val.name=='profile'){
                         this.active = 3
+                    }else if(val.name=='login'){
+                        if(localStorage.role==0){
+                        this.$router.push({name: 'login'})
+                        }else{
+                            this.$router.push({name: 'product'})
+                        }
                     }else{
                         this.active = 4
                     }
                 }else{
-                    this.$router.push({name: 'product'})
+                    if(localStorage.role==0){
+                        this.$router.push({name: 'login'})
+                    }else{
+                        this.$router.push({name: 'product'})
+                    }
                 }
             },deep: true, immediate: true
         }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Feedback;
 use App\Models\Image;
 use Exception;
@@ -58,6 +59,20 @@ class FeedbackController extends Controller
                     'imagable_type' => 'App\Models\Feedback',
                     'file_name' => $file
                 ]);
+            }
+            $admins = Admin::all();
+            $customer = Auth::guard('web')->user();
+            foreach($admins as $admin){
+                $this->makeNotify(
+                    $id = $admin->id,
+                    $type = 'App\Models\Admin',
+                    $data = array(
+                        "name" => $customer->first_name.' '.$customer->last_name,
+                        "text" => 'submit feedback',
+                        "link" => 'product',
+                        "icon" => 'comment-processing',
+                    )
+                );
             }
             return [
                 "data" => $fb,

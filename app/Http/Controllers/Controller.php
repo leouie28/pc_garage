@@ -163,6 +163,23 @@ class Controller extends BaseController
         }
         $stat->save();
 
+        if($data->status==0){
+            $note = 'cancel';
+        }elseif($data->status==1){
+            $note = 'pending';
+        }
+
+        $this->makeNotify(
+            $id = $stat->customer_id,
+            $type = 'App\Models\Customer',
+            $data = array(
+                "name" => $stat->order_code,
+                "text" => 'Order is '.$note,
+                "link" => 'orders',
+                "icon" => 'cart-remove',
+            )
+        );
+
         return [
             'data' => $stat,
             'type' => 'success',

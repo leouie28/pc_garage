@@ -48,6 +48,7 @@ Route::group(['middleware'=>['auth:admin']],function(){
 
     Route::controller(AdminController::class)->group(function () {
         Route::get('admin-info', 'adminInfo');
+        Route::put('admin-info/{id}', 'update');
     });
 
     //sales

@@ -52,7 +52,7 @@
                     <v-icon small>
                       mdi-filter-outline
                     </v-icon>
-                    {{selectedFilter}}
+                    {{status(selectedFilter).text}}
                   </v-chip>
                 </template>
                 <v-list dense>
@@ -263,7 +263,7 @@ import productVue from './product.vue';
           {id: 3, text: 'On Delivery' },
           {id: 4, text: 'Delivered' },
       ],
-      selectedFilter: 'All',
+      selectedFilter: 5,
       filterItem: [
           {id: 0, text: 'Cancel' },
           {id: 1, text: 'Pending' },
@@ -342,6 +342,9 @@ import productVue from './product.vue';
         let params = this._createParams(this.options);
         params = params + this._createFilterParams(this.data.filter);
         if (this.data.keyword) params = params + "&keyword=" + this.data.keyword;
+        if(this.selectedFilter!=5){
+          params = params+'&filter='+this.selectedFilter
+        }
         axios.get(`/admin-api/order?${params}`).then(({ data }) => {
           this.orders = data.data;
           this.total = data.total;
@@ -349,7 +352,8 @@ import productVue from './product.vue';
         });
       },
       cusFilter(item) {
-        this.selectedFilter = item.text
+        this.selectedFilter = item.id
+        this.fetchPage()
         // this.fetchPage(item.id)
       },
       updateMultiple(val) {
@@ -450,6 +454,9 @@ import productVue from './product.vue';
         }
         else if(val==4){
           return {text: 'Delivered', color: 'success'}
+        }
+        else if(val==5){
+          return {text: 'All', color: 'success'}
         }
       },
       addNew(){

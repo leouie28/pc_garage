@@ -1,10 +1,10 @@
 <template>
-    <div style="width:100%">
-        <div class="d-flex product-header" style="width:100%">
+    <div>
+        <div class="d-flex product-header">
             <v-menu offset-y tile>
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                    class="mr-1 search-prod"
+                    class="mr-1"
                     v-model="search"
                     placeholder="Search..."
                     append-icon="mdi-magnify"
@@ -34,7 +34,7 @@
                     <div v-else>
                         <div v-if="items.length>0">
                             <template v-for="item in items">
-                                <v-list-item :key="item.id" @click=" item.id>=1 ? $router.push({path: 'product/'+item.id}) : false">
+                                <v-list-item :key="item.id" @click=" item.id>=1 ? $router.push({path: 'web-product/'+item.id}) : false">
                                     <v-list-item-avatar tile v-if="item.id!=0">
                                         <v-img
                                         :src="item.images.length?'/images/products/' + item.id + '/' + item.images[0].file_name:'/images/default/noimage.png'"
@@ -65,7 +65,7 @@
             dense
             ></v-text-field> -->
             <v-select
-            class="cat cat-prod"
+            class="cat"
             v-model="catSelected"
             :items="category"
             item-text="name"
@@ -101,7 +101,7 @@ export default {
                 },500)
                 if(!this.searchWait){
                     setTimeout(() => {
-                        axios.get(`/customer-api/products/search?key=${this.search}`).then(({ data }) => {
+                        axios.get(`/web/web-search?key=${this.search}`).then(({ data }) => {
                             this.items = data
                         });
                         this.loading = false
@@ -114,7 +114,7 @@ export default {
             }
         },
         getCategory() {
-            axios.get(`/customer-api/categories`).then(({ data }) => {
+            axios.get(`/web/web-categories`).then(({ data }) => {
                 this.category = data.data
                 this.category.push({id:0, name: 'All Category'})
             });
@@ -133,6 +133,9 @@ export default {
 }
 </script>
 <style scoped>
+.product-header{
+    width: 600px;
+}
 .product-header .cat{
     width: 10px !important;
     min-width: unset !important;
