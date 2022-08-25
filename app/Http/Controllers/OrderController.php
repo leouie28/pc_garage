@@ -314,7 +314,7 @@ class OrderController extends Controller
                         $type = 'App\Models\Customer',
                         $data = array(
                             "name" => $order->order_code,
-                            "text" => 'Order is '.$note,
+                            "text" => 'Order is '. $note,
                             "link" => 'orders',
                             "icon" => 'cart-remove',
                         )

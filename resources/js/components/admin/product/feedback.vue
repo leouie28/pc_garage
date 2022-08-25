@@ -38,14 +38,14 @@
             </v-avatar>
           <span class="text-capitalize">{{item.customer.first_name}}</span>
         </template>
-        <template v-slot:[`item.feedback`]="{ item }">
-            <v-avatar size="35" style="border: 1px solid #ccc" v-if="item.image.length>0">
+        <template v-slot:[`item.text`]="{ item }">
+            <v-avatar size="35" tile style="border: 1px solid #ccc" v-if="item.images.length>0">
                 <img
                 alt="image"
-                :src="item.images.length?'/images/customer/' + item.images[0].file_name:'/images/default/person.png'"
+                :src="item.images.length>0?'/images/feedback/'+ item.id + '/' + item.images[0].file_name:'/images/default/person.png'"
                 />
             </v-avatar>
-            <span class="text-capitalize">{{item.feedback}}</span>
+            <span class="text-capitalize">{{item.text}}</span>
         </template>
         <template v-slot:[`item.rating`]="{ item }">
             <div class="d-flex align-center">

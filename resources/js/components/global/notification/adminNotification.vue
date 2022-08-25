@@ -41,7 +41,7 @@
                 <template v-for="item in notif.slice().reverse()">
                     <v-list-item
                     :key="item.id"
-                    @click="$router.push({path: '/admin/'+item.data.link}).catch(() => {}), $emit('markRead',item)"
+                    @click="$router.push({path: '/admin'+item.data.link}), $emit('markRead',item)"
                     :style="item.read_at==null?'background: #607D8B; color: white;':'background: #ECEFF1;'">
                         <v-list-item-avatar>
                             <v-icon

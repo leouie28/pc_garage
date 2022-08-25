@@ -111,6 +111,7 @@ class OrderController extends Controller
 
             $admins = Admin::all();
             $customer = Auth::guard('web')->user();
+            $link = stripslashes('/order/'. $order->id);
             foreach($admins as $admin){
                 $this->makeNotify(
                     $id = $admin->id,
@@ -118,7 +119,7 @@ class OrderController extends Controller
                     $data = array(
                         "name" => $customer->first_name.' '.$customer->last_name,
                         "text" => 'Made an order',
-                        "link" => 'order/'.$order->id,
+                        "link" => $link,
                         "icon" => 'cart',
                     )
                 );
@@ -193,15 +194,15 @@ class OrderController extends Controller
             $order->save();
 
             $admins = Admin::all();
-            $customer = Auth::guard('web')->user();
+            $link = stripslashes('/order/'. $id);
             foreach($admins as $admin){
                 $this->makeNotify(
                     $id = $admin->id,
                     $type = 'App\Models\Admin',
                     $data = array(
-                        "name" => $customer->first_name.' '.$customer->last_name,
-                        "text" => 'cancel an order',
-                        "link" => 'order/'.$order->id,
+                        "name" => $order->order_code,
+                        "text" => 'cancel by customer',
+                        "link" => $link,
                         "icon" => 'cart-remove',
                     )
                 );
@@ -233,16 +234,16 @@ class OrderController extends Controller
             $order->save();
 
             $admins = Admin::all();
-            $customer = Auth::guard('web')->user();
+            $link = stripslashes('/order/'. $id);
             foreach($admins as $admin){
                 $this->makeNotify(
                     $id = $admin->id,
                     $type = 'App\Models\Admin',
                     $data = array(
-                        "name" => $customer->first_name.' '.$customer->last_name,
-                        "text" => 'received order',
-                        "link" => 'order/'.$id,
-                        "icon" => 'cart-check',
+                        "name" => $order->order_code,
+                        "text" => 'received by customer',
+                        "link" => $link,
+                        "icon" => 'shield-check',
                     )
                 );
             }

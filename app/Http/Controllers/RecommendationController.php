@@ -54,8 +54,8 @@ class RecommendationController extends Controller
                     $data = array(
                         "name" => $customer->first_name.' '.$customer->last_name,
                         "text" => 'submit recommendation',
-                        "link" => 'recommendation',
-                        "icon" => 'comment-text',
+                        "link" => '/recommendation',
+                        "icon" => 'message-processing',
                     )
                 );
             }
@@ -122,7 +122,7 @@ class RecommendationController extends Controller
                     "name" => 'Admin',
                     "text" => 'read your recommendation',
                     "link" => 'recommendations',
-                    "icon" => 'message-check',
+                    "icon" => 'message-reply-text',
                 )
             );
 

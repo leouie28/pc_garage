@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Recommendation;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class DashboardController extends Controller
             "product" => Product::count(),
             "order" => Order::count(),
             "customer" => Customer::count(),
-            "recommendation" => 0,
+            "recommendation" => Recommendation::count(),
         ];
     }
 

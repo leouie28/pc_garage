@@ -185,7 +185,7 @@ class CustomerController extends Controller
         $data = array(
               "name" => $customer->first_name.' '.$customer->last_name,
               "text" => 'joined the system',
-              "link" => 'customer',
+              "link" => '/customer',
               "icon" => 'account',
           )
       );

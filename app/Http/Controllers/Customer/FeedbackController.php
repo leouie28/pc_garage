@@ -63,6 +63,7 @@ class FeedbackController extends Controller
             }
             $admins = Admin::all();
             $customer = Auth::guard('web')->user();
+            $link = stripslashes('/product/' . $request->product_id);
             foreach($admins as $admin){
                 $this->makeNotify(
                     $id = $admin->id,
@@ -70,7 +71,7 @@ class FeedbackController extends Controller
                     $data = array(
                         "name" => $customer->first_name.' '.$customer->last_name,
                         "text" => 'submit feedback',
-                        "link" => 'product',
+                        "link" => $link,
                         "icon" => 'comment-processing',
                     )
                 );
