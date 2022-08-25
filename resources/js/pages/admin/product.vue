@@ -258,8 +258,9 @@ export default {
   }),
   methods: {
     viewProduct(item) {
-      this.selectedItem = item
-      this.showProd = true
+      // this.selectedItem = item
+      // this.showProd = true
+      this.$router.push({path: '/admin/product/'+item.id})
     },
     resetFilter() {},
     fetchPage() {

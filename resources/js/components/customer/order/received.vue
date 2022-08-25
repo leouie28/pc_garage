@@ -18,7 +18,7 @@
                 <v-card-text class="white pt-4">
                 <div class="d-flex justify-space-between">
                     <div class="mb-2 d-flex justify-center align-center">
-                    <v-avatar height="60" width="80" tile>
+                    <v-avatar height="60" width="80" tile style="min-width:60px;">
                         <v-img
                         alt="Product Image"
                         :src="order.products[0].images.length?'/images/products/' + order.products[0].id + '/' + order.products[0].images[0].file_name:'/images/default/noimage.png'"

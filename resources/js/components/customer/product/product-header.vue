@@ -1,7 +1,7 @@
 <template>
     <div style="width:100%">
         <div class="d-flex product-header" style="width:100%">
-            <v-menu offset-y tile>
+            <v-menu offset-y tile z-index="11">
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                     class="mr-1 search-prod"
@@ -65,6 +65,7 @@
             dense
             ></v-text-field> -->
             <v-select
+            style="z-index:11;"
             class="cat cat-prod"
             v-model="catSelected"
             :items="category"

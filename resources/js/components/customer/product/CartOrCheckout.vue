@@ -9,6 +9,7 @@
                 <v-row>
                     <v-col md="6" cols="12">
                         <v-img
+                        class="prod-profile-img"
                         alt="Feature Image"
                         :src="product.images.length>0 ? '/images/products/' + product.id + '/' + product.images[0].file_name : '/images/default/noimage.png'"
                         ></v-img>
@@ -16,6 +17,14 @@
                     <v-col md="6" cols="12">
                         <div class="text-h5 text--primary cus-font font-weight-bold">{{ product.name }}</div>
                         <div class="text-h5 primary--text">&#8369; {{ product.price }}</div>
+                        <!-- <div class="d-flex justify-space-between">
+                            <div class="text-h5 primary--text">&#8369; {{ product.price }}</div>
+                            <div>
+                                <v-btn color="secondary" @click="close">Cancel</v-btn>
+                                <v-btn color="error" v-if="isCheckout" link :href="params">Checkout</v-btn>
+                                <v-btn color="primary" @click="addCart" v-else>Add to Cart</v-btn>
+                            </div>
+                        </div> -->
                         <v-chip-group
                             column
                         >

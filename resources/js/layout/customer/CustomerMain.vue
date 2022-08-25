@@ -7,6 +7,7 @@
       dark
       elevation="4"
       elevate-on-scroll
+      style="z-index:25;"
     >
       <v-tabs
         v-model="active"
@@ -26,19 +27,19 @@
             <h4 class="ml-2 toHide" v-else>Cart</h4>
         </v-tab>
         <v-tab @click="$router.push({name: 'orders'}).catch(() => {})">
-            <v-icon>mdi-format-list-checks</v-icon>
+            <v-icon>mdi-shopping</v-icon>
             <!-- <v-badge color="success" content="13"> -->
                 <h4 class="ml-2 toHide">Order</h4>
             <!-- </v-badge> -->
         </v-tab>
-        <v-menu offset-y :close-on-content-click="false" v-model="user">
+        <v-menu offset-y :close-on-content-click="false" v-model="user" z-index="15">
             <template v-slot:activator="{ on, attrs }">
                 <v-tab
                 v-bind="attrs"
                 v-on="on"
                 @click="getNotify"
                 >
-                    <v-icon>mdi-account-circle-outline</v-icon>
+                    <v-icon>mdi-account-circle</v-icon>
                     <v-badge color="error" :content="count" v-if="count>0">
                         <h4 class="ml-2 toHide">Account</h4>
                     </v-badge>

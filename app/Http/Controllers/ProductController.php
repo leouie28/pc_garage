@@ -87,7 +87,24 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        return Product::with('categories')->find($id);
+        // return Product::with('categories')->find($id);
+        try{
+            $product = Product::where('id', $id)
+            ->with('categories')
+            ->with('feedback')
+            ->withCount('rating')
+            // ->withCount('feedbackCount')
+            ->withSum('sold', 'order_product.quantity')
+            ->withSum('toDeliver', 'order_product.quantity')
+            ->withSum('pending', 'order_product.quantity')
+            ->withSum('canceled', 'order_product.quantity')
+            ->withSum('stocks', 'stocks.stocks')
+            ->first();
+            
+            return $product;
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
     }
 
     /**

@@ -5,30 +5,30 @@
         :key="order.id">
             <v-card elevation="0" outlined @click="$router.push({path: 'orders/'+order.id})">
                 <v-card-title class="py-2">
-                Order Code: {{ order.order_code }}
+                Order<span class="tohide"> Code</span>: {{ order.order_code }}
                 <v-spacer></v-spacer>
                 <v-btn color="grey darken-1" @click.stop="warning = true, selected=order" small outlined elevation="0">
-                    Order Received
+                    Receive Order
                 </v-btn>
                 </v-card-title>
                 <v-card-text class="white pt-4">
                 <div class="d-flex justify-space-between">
                     <div class="mb-2 d-flex justify-center align-center">
-                    <v-avatar height="60" width="80" tile>
-                        <v-img
-                        alt="Product Image"
-                        :src="order.products[0].images.length?'/images/products/' + order.products[0].id + '/' + order.products[0].images[0].file_name:'/images/default/noimage.png'"
-                        ></v-img>
-                    </v-avatar>
-                    <div class="ml-3">
-                        <h3 class="cus-font text--primary text-max-width">
-                        {{ order.products[0].name }}
-                        </h3>
-                        <div class="cus-font secondary--text text-max-width">
-                        {{ order.products[0].description }}
+                        <v-avatar height="60" width="80" tile style="min-width:60px;">
+                            <v-img
+                            alt="Product Image"
+                            :src="order.products[0].images.length?'/images/products/' + order.products[0].id + '/' + order.products[0].images[0].file_name:'/images/default/noimage.png'"
+                            ></v-img>
+                        </v-avatar>
+                        <div class="ml-2">
+                            <h3 class="cus-font text--primary text-max-width">
+                            {{ order.products[0].name }}
+                            </h3>
+                            <div class="cus-font secondary--text text-max-width">
+                            {{ order.products[0].description }}
+                            </div>
+                        <!-- <p class="text-h6 cus-font">Quantity: 8</p> -->
                         </div>
-                    <!-- <p class="text-h6 cus-font">Quantity: 8</p> -->
-                    </div>
                     </div>
                     <div class="d-flex">
                     <!-- <span class="text-h6 cus-font">&#8369; 89</span> -->

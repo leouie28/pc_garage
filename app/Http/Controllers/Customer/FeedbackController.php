@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Filters\FeedbackFilter;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\Feedback;
@@ -19,7 +20,7 @@ class FeedbackController extends Controller
      */
     public function index()
     {
-        //
+        return (new FeedbackFilter)->searchable();
     }
 
     /**

@@ -14,61 +14,9 @@
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text class="py-0">
-                <!-- <div class="my-2">
-                    <v-checkbox
-                    v-model="all"
-                    hide-details=""
-                    @change="checkAll"
-                    label="Select all"
-                    ></v-checkbox>
-                </div>
-                <v-divider></v-divider>
-                <div
-                v-for="cart in carts" :key="cart.id" style="border-bottom: 1px dotted #ccc;"
-                :class="cart.product.stocks_sum_stocksstocks==null || cart.product.stocks_sum_stocksstocks==0 ? 'd-flex justify-space-between align-center mt-4 cus-hover cus-disable' : 'd-flex justify-space-between align-center mt-4 cus-hover' ">
-                    <div class="d-flex align-center">
-                        <v-checkbox
-                        :id="'item-'+cart.id"
-                        v-model="item[cart.id]"
-                        ></v-checkbox>
-                        <div class="mb-2 d-flex justify-center ml-3 align-center">
-                            <v-avatar height="60" width="80" tile>
-                            <v-img
-                            :src="cart.product.images.length?'/images/products/' + cart.product.id + '/' + cart.product.images[0].file_name:'/images/default/noimage.png'"
-                            ></v-img>
-                            </v-avatar>
-                            <div class="ml-3">
-                            <h3 class="cus-font secondary--text">
-                                &#8369; {{ cart.product.price }}
-                            </h3>
-                            <h3 class="cus-font text--primary oneline">
-                                {{ cart.product.name }}
-                            </h3>
-                            <v-chip
-                            v-if="cart.product.stocks_sum_stocksstocks==null || cart.product.stocks_sum_stocksstocks==0" 
-                            label outlined color="red" small class="py-0">
-                                Out of Stocks
-                            </v-chip>
-                            <v-chip
-                            v-else
-                            label outlined color="secondary" small class="py-0">
-                                Stocks: {{ cart.product.stocks_sum_stocksstocks }}
-                            </v-chip>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        Qty
-                        <input
-                        class="qty"
-                        type="number"
-                        :value="cart.quantity"
-                        min="1"
-                        >
-                    </div>
-                </div> -->
                 <v-expand-transition>
                     <v-data-table
+                    class="cart-mobile"
                     v-if="carts.length"
                     v-model="selected"
                     :headers="headers"
@@ -80,18 +28,88 @@
                     @toggle-select-all="selectAllToggle"
                     show-select>
                         <template v-slot:[`header.id`]>
-                            <h3 @click="checkAll">Select All</h3>
+                            <h3 @click="checkAll" class="tohide">Select All</h3>
                         </template>
-                        <template v-slot:[`item.data-table-select`]="{ item }">
+                        <template #item="{ item }">
+                            <tr>
+                                <td colspan="5">
+                                    <div class="d-flex align-center">
+                                        <v-checkbox
+                                        class="cart-checkbox"
+                                        :disabled="item.product.stocks_sum_stocksstocks<item.quantity"
+                                        v-model="selected"
+                                        :value="item"
+                                        :ripple="false"
+                                        hide-details=""
+                                        ></v-checkbox>
+                                        <div
+                                        style="width:100%;"
+                                        :class="item.product.stocks_sum_stocksstocks==null || item.product.stocks_sum_stocksstocks==0 ? 'd-flex justify-space-between align-center mt-4 cus-hover cus-disable' : 'd-flex justify-space-between align-center mt-4 cus-hover' ">
+                                            <div class="mb-2 d-flex justify-center ml-3 align-center">
+                                                <v-avatar height="60" width="80" tile max-width="70">
+                                                    <v-img
+                                                    :src="item.product.images.length?'/images/products/' + item.product.id + '/' + item.product.images[0].file_name:'/images/default/noimage.png'"
+                                                    ></v-img>
+                                                </v-avatar>
+                                                <div class="ml-3">
+                                                    <h3 class="cus-font text--primary oneline cart-width">
+                                                        {{ item.product.name }}
+                                                    </h3>
+                                                    <div class="d-flex">
+                                                        <h3 class="cus-font secondary--text mr-2">
+                                                            &#8369; {{ item.product.price }}
+                                                        </h3>
+                                                        <v-chip
+                                                        v-if="item.product.stocks_sum_stocksstocks==null || item.product.stocks_sum_stocksstocks==0" 
+                                                        label outlined color="red" small class="py-0">
+                                                            Stock Out
+                                                        </v-chip>
+                                                        <v-chip
+                                                        v-else
+                                                        label outlined color="secondary" small class="py-0">
+                                                            Stocks: {{ item.product.stocks_sum_stocksstocks }}
+                                                        </v-chip>
+                                                    </div>
+                                                    <!-- <div :class="item.product.stocks_sum_stocksstocks>=item.quantity ? 'ml-2 text-right' : 'ml-2 red--text'">
+                                                        Qty
+                                                        <input
+                                                        :class="item.product.stocks_sum_stocksstocks>=item.quantity ? 'qty' : 'qty red-qty'"
+                                                        type="number"
+                                                        v-model="item.quantity"
+                                                        @change="computeTotal"
+                                                        min="1"
+                                                        :max="item.product.stocks_sum_stocksstocks"
+                                                        >
+                                                    </div> -->
+                                                </div>
+                                            </div>
+                                            <div :class="item.product.stocks_sum_stocksstocks>=item.quantity ? 'ml-2' : 'ml-2 red--text'">
+                                                Qty
+                                                <input
+                                                :class="item.product.stocks_sum_stocksstocks>=item.quantity ? 'qty' : 'qty red-qty'"
+                                                type="number"
+                                                v-model="item.quantity"
+                                                @change="computeTotal"
+                                                min="1"
+                                                :max="item.product.stocks_sum_stocksstocks"
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                        <!-- <template v-slot:[`item.data-table-select`]="{ item }">
                             <v-checkbox
+                            class="cart-checkox"
                             :disabled="item.product.stocks_sum_stocksstocks<item.quantity"
                             v-model="selected"
                             :value="item"
                             :ripple="false"
                             hide-details=""
                             ></v-checkbox>
-                        </template>
-                        <template v-slot:[`item.id`]="{ item }">
+                        </template> -->
+                        <!-- <template v-slot:[`item.id`]="{ item }">
                             <div
                             :class="item.product.stocks_sum_stocksstocks==null || item.product.stocks_sum_stocksstocks==0 ? 'd-flex justify-space-between align-center mt-4 cus-hover cus-disable' : 'd-flex justify-space-between align-center mt-4 cus-hover' ">
                                 <div class="mb-2 d-flex justify-center ml-3 align-center ml-n8">
@@ -131,7 +149,7 @@
                                     >
                                 </div>
                             </div>
-                        </template>
+                        </template> -->
                     </v-data-table>
                     <empty v-else></empty>
                 </v-expand-transition>
@@ -168,7 +186,7 @@ import empty from '../global/empty.vue'
         total: '0',
         carts: [],
         headers: [
-            { text: 'Select all', sortable: false, value: 'id' },
+            { sortable: false, value: 'id' },
         ]
       }
     },
@@ -307,5 +325,13 @@ import empty from '../global/empty.vue'
 .red-qty{
     color: rgb(255, 51, 0);
     border: 2px solid rgb(255, 51, 0) !important;
+}
+@media screen and (max-width: 600px){
+    .cart-width{
+        max-width: 120px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 </style>

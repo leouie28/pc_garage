@@ -17,7 +17,7 @@
                                 <v-subheader>
                                     <h2>Top Selling Product</h2>
                                 </v-subheader>
-                                <div class="d-flex">
+                                <div class="d-flex best-loader">
                                     <v-skeleton-loader
                                     class="ma-4"
                                     elevation="0"
@@ -34,7 +34,7 @@
                                     <h2>Latest Product</h2>
                                 </v-subheader>
                             </div>
-                            <div class="d-flex flex-wrap justify-center">
+                            <div class="d-flex flex-wrap justify-center prod-loader">
                             <!-- <div class="d-fle mx-auto"> -->
                                 <v-skeleton-loader
                                 class="ma-2 d-inline-block grid-item"
@@ -56,7 +56,7 @@
                                     v-if="best.length>0"
                                 >
                                     <v-slide-group
-                                    class="px-1"
+                                    class="px-1 best-group-slider"
                                     active-class="success"
                                     show-arrows
                                     >

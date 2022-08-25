@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Customer\FeedbackController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
@@ -84,5 +85,6 @@ Route::group(['middleware'=>['auth:admin']],function(){
         'sales' => SaleController::class,
         'sku-profile' => SkuProfileController::class,
         'compatibility' => SetController::class,
+        'admin-feedback' => FeedbackController::class,
     ]);
 });

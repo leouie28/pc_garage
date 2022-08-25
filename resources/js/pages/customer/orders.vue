@@ -122,9 +122,16 @@ export default {
 </script>
 <style>
 .text-max-width{
-    max-width: 360px !important;
+    /* max-width: 360px !important;
     white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis; */
+    max-width: 100%;
+    overflow: hidden;
     text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
+            line-clamp: 1; 
+    -webkit-box-orient: vertical;
 }
 </style>

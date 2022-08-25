@@ -16,33 +16,35 @@
               <v-subheader>
                 <h3>Products</h3>
               </v-subheader>
-              <v-divider class="mb-4"></v-divider>
-              <div class="d-flex justify-space-between align-center py-4 my-0 px-8"
+              <v-divider class=""></v-divider>
+              <div class="d-flex justify-space-between pt-2 align-center my-0 "
                 v-for="product in items" :key="product.id" style="border-bottom: 1px dotted #ccc;">
                     <div class="d-flex align-center">
                         <v-btn large icon color="red" @click="remove(product.id+'~'+product.quantity)" elevation="0">
                           <v-icon large>mdi-delete-circle</v-icon>
                         </v-btn>
-                        <div class="mb-2 d-flex justify-center ml-3 align-center">
-                            <v-avatar height="60" width="80" tile>
+                        <div class="mb-2 d-flex justify-center align-center">
+                            <v-avatar height="60" width="80" tile class="prod-img">
                               <v-img
                               :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'"
                               ></v-img>
                             </v-avatar>
                             <div class="ml-3">
-                              <h3 class="cus-font secondary--text">
-                                  &#8369; {{ product.price }}
-                              </h3>
-                              <h3 class="cus-font text--primary oneline">
+                              <h3 class="cus-font text--primary oneline cart-width">
                                   {{ product.name }}
                               </h3>
-                              <div class="cus-font secondary--text twoline">
+                              <div class="cus-font secondary--text twoline cart-width">
                                   {{ product.description }}
                               </div>
-                              <v-chip
-                              label outlined :color="product.stocks_sum_stocksstocks>=product.quantity ? 'secondary' : 'error' " small class="py-0">
-                                  {{ product.stocks_sum_stocksstocks>0 ? 'Stocks: '+product.stocks_sum_stocksstocks : 'Out of Stocks' }}
-                              </v-chip>
+                              <div class="d-flex">
+                                <h3 class="mr-2 cus-font secondary--text">
+                                    &#8369; {{ product.price }}
+                                </h3>
+                                <v-chip
+                                label outlined :color="product.stocks_sum_stocksstocks>=product.quantity ? 'secondary' : 'error' " small class="py-0">
+                                    {{ product.stocks_sum_stocksstocks>0 ? 'Stocks: '+product.stocks_sum_stocksstocks : 'Out of Stocks' }}
+                                </v-chip>
+                              </div>
                             </div>
                         </div>
                     </div>
@@ -288,4 +290,15 @@ export default {
             line-clamp: 1; 
     -webkit-box-orient: vertical;
 } */
+@media screen and (max-width: 600px){
+    .cart-width{
+        max-width: 150px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .prod-img{
+      max-width: 60px !important;
+    }
+}
 </style>

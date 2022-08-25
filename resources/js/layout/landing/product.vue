@@ -14,7 +14,7 @@
       >
         <v-tab @click="$router.push({path: '/'}).catch(() => {})">
             <v-icon>mdi-devices</v-icon>
-            <h4 class="ml-2">Products</h4>
+            <h4 class="ml-2 tohide">Products</h4>
         </v-tab>
         <v-tab
           v-for="link in links"
@@ -22,12 +22,12 @@
           @click="warningDialog = true"
         >
             <v-icon>{{ link.icon }}</v-icon>
-            <h4 class="ml-2">{{ link.title }}</h4>
+            <h4 class="ml-2 tohide">{{ link.title }}</h4>
         </v-tab>
       </v-tabs>
     </v-app-bar>
 
-    <v-main class="grey lighten-3">
+    <v-main class="grey lighten-3 mb-16">
       <v-container fluid>
         <Item @warning="warningDialog=true"></Item>
       </v-container>
@@ -67,14 +67,14 @@
             <v-btn
                 color="success"
                 link
-                href="register"
+                href="/register"
             >
                 Register
             </v-btn>
             <v-btn
                 color="primary"
                 link
-                href="login"
+                href="/login"
             >
                 Login
             </v-btn>
@@ -83,6 +83,23 @@
         </v-dialog>
       </div>
     </v-main>
+    <div class="footer">
+        <v-footer
+        dark
+        padless
+        absolute
+        >
+        <v-card
+        width="100%"
+            flat
+            tile
+        >
+            <v-card-text class="py-5 text-center">
+            2022 - PCGarage
+            </v-card-text>
+        </v-card>
+        </v-footer>
+    </div>
   </v-app>
 </template>
 
@@ -110,12 +127,12 @@ export default {
             },
             {
                 title: 'Order',
-                icon: 'mdi-format-list-checks',
+                icon: 'mdi-shopping',
                 path: 'products'
             },
             {
                 title: 'Account',
-                icon: 'mdi-account-circle-outline',
+                icon: 'mdi-account-circle',
                 path: 'products'
             },
         ],

@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <v-sheet color="blue-grey lighten-5" class="pa-10">
+    <div class="profile-prod">
+        <v-sheet color="blue-grey lighten-5" class="prod-profile">
             <v-card style="max-width:1000px;" class="mx-auto">
                 <v-card-title>
                     Product Info
@@ -14,7 +14,7 @@
                     <v-row>
                         <v-col md="5" cols="12" class="text-center">
                             <v-img
-                            class="mb-6"
+                            class="prod-profile-img"
                             alt="image"
                             :src="product.images.length>0?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'">
                             </v-img>
@@ -58,7 +58,8 @@
                             </h4>
                             <div class="d-flex justify-end">
                                 <v-btn color="secondary" @click="$router.push({path: '/web-compatibility/'+product.id})">
-                                    Compatibility
+                                    <span class="tohide">Compatibility</span>
+                                    <span class="formobile">Check</span>
                                     <v-icon small class="ml-2">mdi-play</v-icon>
                                 </v-btn>
                                 <v-btn
@@ -66,7 +67,7 @@
                                 class="mx-2"
                                 @click.stop="$emit('warning')"
                                 >
-                                    Add to Cart
+                                    <span class="tohide">Add to</span> Cart
                                     <v-icon small class="ml-2">mdi-cart-outline</v-icon>
                                 </v-btn>
                                 <v-btn
@@ -74,7 +75,7 @@
                                 color="success"
                                 @click.stop="$emit('warning')"
                                 >
-                                    Buy Now
+                                    Buy<span class="tohide"> Now</span>
                                     <v-icon small class="ml-2">mdi-currency-php</v-icon>
                                 </v-btn>
                             </div>
@@ -131,7 +132,7 @@
                         <v-card
                         v-for="product in similar"
                         :key="product.id"
-                        class="mr-4 mb-4"
+                        class="mr-4 mb-4 prod"
                         max-width="200"
                         @click="$router.push({path: '/web-product/'+product.id})"
                         >
@@ -192,8 +193,8 @@ export default {
     },
     methods: {
         show() {
-            let id = this.$route.params.id
-            axios.get(`/web/web-products/${id}`).then(({data})=>{
+            let id = this.$route.path.split('/')
+            axios.get(`/web/web-products/${id[2]}`).then(({data})=>{
                 this.product = data.product
                 this.similar = data.similar
             })

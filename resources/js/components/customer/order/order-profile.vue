@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card elevation="0" max-width="1200" class="mx-auto pa-2">
+        <v-card elevation="0" max-width="1200" class="mx-auto pa-2 order-profile">
             <v-card-title>
                 Order Info
                 <v-spacer></v-spacer>
@@ -10,15 +10,16 @@
                     Back
                 </v-btn>
             </v-card-title>
+            <v-divider></v-divider>
             <v-card-text>
                 <v-row>
-                    <v-col md="5" cols="12">
+                    <v-col md="5" cols="12" class="order-info">
                         <v-card elevation="0">
-                            <v-card-text>
+                            <v-card-text class="order-info">
                             <div class="d-flex justify-space-between">
                                 <div>
                                     <h4>Order Id:</h4>
-                                    <p class="text-h3 text--primary">
+                                    <p class="text-h3 code text--primary">
                                         {{ order.order_code }}
                                     </p>
                                 </div>
@@ -109,17 +110,17 @@
                         </v-card>
                     </v-col>
                     <v-col md="7" cols="12" class="cus-border">
-                        <v-card class="mb-4" elevation="0">
+                        <v-card class="mb-2" elevation="0">
                             <v-card-title>
                                 Order Items
                             </v-card-title>
                             <v-card-text>
                                 <v-divider></v-divider>
-                                <div class="d-flex justify-space-between align-center py-4 my-0 px-8"
+                                <div class="d-flex justify-space-between align-center py-4 my-0"
                                     v-for="product in order.products" :key="product.id" style="border-bottom: 1px dotted #ccc;">
 
                                     <div class="mb-2 d-flex justify-center ml-3 align-center">
-                                        <v-avatar height="60" width="80" tile>
+                                        <v-avatar height="60" width="80" tile min-width="60">
                                             <v-img
                                             :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'"
                                             ></v-img>
@@ -128,10 +129,10 @@
                                             <h3 class="cus-font secondary--text">
                                                 &#8369; {{ product.price }}
                                             </h3>
-                                            <h3 class="cus-font text--primary oneline">
+                                            <h3 class="cus-font text--primary oneline text-max-width">
                                                 {{ product.name }}
                                             </h3>
-                                            <div class="cus-font secondary--text twoline">
+                                            <div class="cus-font secondary--text twoline text-max-width">
                                                 {{ product.description }}
                                             </div>
                                         </div>
@@ -252,9 +253,9 @@ export default {
     border-left: 1px solid #ccc;
 }
 .oneline, .twoline{
-    max-width: 290px !important;
+    /* max-width: 290px !important;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis; */
 }
 </style>

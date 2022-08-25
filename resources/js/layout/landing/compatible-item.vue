@@ -2,7 +2,7 @@
     <div>
         <v-card>
             <v-card-title>
-                <span class="mr-2 text-uppercase primary--text">{{ component }}</span>Compatible List
+                <span class="mr-2 text-uppercase primary--text">{{ component }}</span>LIST
                 <v-spacer></v-spacer>
                 <v-btn color="secondary" @click="$emit('close'), items = []" icon>
                     <v-icon>mdi-close</v-icon>

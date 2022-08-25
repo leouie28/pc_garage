@@ -1,10 +1,10 @@
 <template>
-    <div>
-        <div class="d-flex product-header">
-            <v-menu offset-y tile>
+    <div style="width:100%">
+        <div class="d-flex product-header" style="width:100%">
+            <v-menu offset-y tile z-index="11">
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                    class="mr-1"
+                    class="mr-1 search-prod"
                     v-model="search"
                     placeholder="Search..."
                     append-icon="mdi-magnify"
@@ -65,7 +65,8 @@
             dense
             ></v-text-field> -->
             <v-select
-            class="cat"
+            style="z-index:11;"
+            class="cat cat-prod"
             v-model="catSelected"
             :items="category"
             item-text="name"
