@@ -244,7 +244,7 @@ export default {
         readonly: true,
         date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
         menu: false,
-        gender: ['Female', 'Male', 'Hide']
+        gender: ['Female', 'Male', 'Hide'],
     }),
     mounted() {
         this.getProfile()

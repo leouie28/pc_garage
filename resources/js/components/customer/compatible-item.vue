@@ -13,9 +13,12 @@
                     <v-text-field
                     dense
                     hide-details=""
+                    v-model="key"
                     outlined
                     :placeholder="'Search '+component+'...'"
                     append-icon="mdi-magnify"
+                    @click:append="available"
+                    @keyup="search"
                     ></v-text-field>
                 </div>
                 <div>
@@ -50,7 +53,9 @@
 <script>
 export default {
     data: () => ({
-        items: []
+        items: [],
+        key: '',
+        searchWait: false,
     }),
     props: {
         component: {
@@ -64,9 +69,21 @@ export default {
     methods: {
         available() {
             let key = this.component
+            if(this.key.length!='')key = key + '&search=' + this.key
             axios.get(`/customer-api/compatibilities/available-item?key=${key}`).then(({ data }) => {
                 this.items = data
             })
+        },
+        search() {
+            if(this.key.length>2){
+                if(!this.searchWait){
+                    setTimeout(() => {
+                        this.available()
+                    },1000)
+                    this.searchWait = false
+                }
+                this.searchWait = true
+            }
         }
     },
     watch: {

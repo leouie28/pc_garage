@@ -63,6 +63,17 @@ class SetController extends Controller
     {
         try{
             $key = $request->key;
+            $search = $request->search;
+            if($request->search && isset($request->search)){
+                $arr1 = Product::whereHas('sets', function($item) use ($key) {
+                    $item->where('settables.settable_part', $key);
+                })->where('name', 'LIKE', '%' . $search . '%')->get();
+                $arr2 = DummyProduct::whereHas('sets', function($item) use ($key) {
+                    $item->where('settables.settable_part', $key);
+                })->where('name', 'LIKE', '%' . $search . '%')->get();
+                $item = $arr1->merge($arr2);
+                return $item;
+            }
             $arr1 = Product::whereHas('sets', function($item) use ($key) {
                 $item->where('settables.settable_part', $key);
             })->get();
