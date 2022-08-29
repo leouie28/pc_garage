@@ -45,7 +45,7 @@ export default {
     },
     data() {
         return {
-            drawer: false,
+            drawer: true,
             login: false,
             isAuth: false,
             fetching: true,

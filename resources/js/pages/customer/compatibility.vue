@@ -230,6 +230,7 @@ export default {
         },
         check() {
             this.warningForm = false
+            this.resLoader = true
             this.resForm = true
             let params = { data: this.parts }
             axios.post(`/customer-api/compatibilities/check-items`, params).then(({ data }) => {

@@ -65,20 +65,20 @@ class SetController extends Controller
             $key = $request->key;
             $search = $request->search;
             if($request->search && isset($request->search)){
-                $arr1 = Product::whereHas('sets', function($item) use ($key) {
-                    $item->where('settables.settable_part', $key);
+                $arr1 = Product::whereHas('categories', function($item) use ($key) {
+                    $item->where('name', $key);
                 })->where('name', 'LIKE', '%' . $search . '%')->get();
                 $arr2 = DummyProduct::whereHas('sets', function($item) use ($key) {
-                    $item->where('settables.settable_part', $key);
+                    $item->where('settable_part', $key);
                 })->where('name', 'LIKE', '%' . $search . '%')->get();
                 $item = $arr1->merge($arr2);
                 return $item;
             }
-            $arr1 = Product::whereHas('sets', function($item) use ($key) {
-                $item->where('settables.settable_part', $key);
+            $arr1 = Product::whereHas('categories', function($item) use ($key) {
+                $item->where('name', $key);
             })->get();
             $arr2 = DummyProduct::whereHas('sets', function($item) use ($key) {
-                $item->where('settables.settable_part', $key);
+                $item->where('settable_part', $key);
             })->get();
             $item = $arr1->merge($arr2);
             return $item;
@@ -91,6 +91,8 @@ class SetController extends Controller
     {
         try{
             $sets = array();
+            $res = [];
+            $last = [];
             foreach($request->data as $part){
                 if(isset($part['item'])){
                     $key = $part['component'];
@@ -103,13 +105,23 @@ class SetController extends Controller
                     })->pluck('id');
                     // $set = $arr1->merge($arr2);
                     $sets[$key] = $arr1->merge($arr2);
+                    $res[] = $arr1->merge($arr2);
                     // $sets[$key] = array_unique($set);
-                    // $sets[$key] = array_merge($arr1, $arr2);
+                    // $res[] = array_merge($arr1, $arr2);
                 }
             }
-            $arr = json_decode(json_encode($sets), true);
-            $res = call_user_func_array('array_intersect', $arr);
-            if(count($res)>0){
+            // return $test;
+            // return $last;
+            // $arr = array();
+            $arr = json_decode(json_encode($res), true);
+            // $arr2['test'] = array(1, 4);
+            // $arr1['test1'] = array(1, 4);
+            // return array_intersect($sets);
+            // return $arr;
+            // return $arr;
+            $rest = call_user_func_array('array_intersect', $arr);
+            // return $rest;
+            if(count($rest)>0){
                 return true;
             }else{
                 return false;

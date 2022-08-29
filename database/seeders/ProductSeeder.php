@@ -22,7 +22,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
                 'price' => random_int(11, 99)
             ]);
-            $product->categories()->sync(random_int(1,3));
+            $product->categories()->sync(random_int(1,9));
             $count++;
         }
 
@@ -31,20 +31,20 @@ class ProductSeeder extends Seeder
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
             'price' => 12
         ]);
-        $product->categories()->sync(1);
+        $product->categories()->sync(random_int(1,9));
 
         $product = Product::create([
             'name' => 'New Product Testing Number Two',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
             'price' => 10
         ]);
-        $product->categories()->sync(2);
+        $product->categories()->sync(random_int(1,9));
 
         $product = Product::create([
             'name' => 'Third Testing Product Number Three',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
             'price' => 26
         ]);
-        $product->categories()->sync(3);
+        $product->categories()->sync(random_int(1,9));
     }
 }
