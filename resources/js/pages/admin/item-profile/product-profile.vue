@@ -13,12 +13,23 @@
                 </v-card-title>
                 <v-card-text class="py-4 pb-6">
                     <v-row>
-                        <v-col md="5" cols="12" class="text-center">
+                        <v-col md="4" lg="4" cols="12">
                             <v-img
                             class="mb-6"
                             alt="image"
                             :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'">
                             </v-img>
+                            <h3 class="text-uppercase">Actions</h3>
+                            <div class="my-2">
+                                <v-btn outlined color="primary">
+                                    Edit Info
+                                    <v-icon>mdi-square-edit-outline</v-icon>
+                                </v-btn>
+                                <v-btn outlined color="warning">
+                                    Reorder Point
+                                    <v-icon>mdi-clipboard-play-multiple-outline</v-icon>
+                                </v-btn>
+                            </div>
                             <v-sheet color="primary" rounded="" dark class="py-2">
                                 <span class="text-h5">Price: &#8369; {{ product.price }}</span>
                             </v-sheet>
@@ -29,7 +40,7 @@
                                 <p class="text-h6 my-0">Sold: <span class="green--text">{{ pars(product.sold_sum_order_productquantity) }}</span></p>
                             </div>
                         </v-col>
-                        <v-col md="7" cols="12">
+                        <v-col md="8" lg="8" cols="12">
                             <span class="text-h4 font-weight-bold">
                                 {{ product.name }}
                             </span>
@@ -47,6 +58,14 @@
                                     ></v-rating>
                                     <h3 class="text-h6">({{product.rating_count}})</h3>
                                 </div>
+                            </div>
+                            <div>
+                                <v-chip color="success">
+                                    <h3>Cost Price: &#8369; 34</h3>
+                                </v-chip>
+                                <v-chip color="primary">
+                                    <h3>Selling Price: &#8369; 34</h3>
+                                </v-chip>
                             </div>
                             <h3 class="text-uppercase mt-2 mb-4">Description</h3>
                             <v-sheet color="grey lighten-3" rounded="" class="pa-3">
