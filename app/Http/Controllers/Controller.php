@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\Customer;
 use App\Models\Notification;
 use App\Models\Order;
@@ -30,6 +31,27 @@ class Controller extends BaseController
             'notifiable_type' => $type,
             'data' => $data,
         ]);
+    }
+
+    public function stockAlert($id)
+    {
+        $prod = Product::withSum('stocks', 'stocks.stocks')->find($id);
+        $stock = $prod->stocks_sum_stocksstocks;
+        $admins = Admin::all();
+        if($prod->reoder_point>=$stock) {
+            foreach($admins as $admin) {
+                $this->makeNotify(
+                    $admin->id,
+                    'App\Models\Admin',
+                    $data = array(
+                        "name" => 'Stock Alert',
+                        "text" => 'Product ' . $prod->id . ' reach the stock alert point',
+                        "link" => 'products',
+                        "icon" => 'devices',
+                    )
+                );
+            }
+        }
     }
 
     public function validateOrder($data, $id)
@@ -91,6 +113,7 @@ class Controller extends BaseController
                 }
                 DB::table('order_product')->delete($toDl);
             }
+            $this->stockAlert($prod->id);
         }
 
         $stat = Order::find($id);
