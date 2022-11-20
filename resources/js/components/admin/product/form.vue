@@ -17,7 +17,7 @@
                         required
                         ></v-text-field>
                     </v-col>
-                    <v-col cols="9">
+                    <v-col cols="12">
                         <v-autocomplete
                         chips
                         deletable-chips
@@ -33,9 +33,22 @@
                         multiple
                         ></v-autocomplete>
                     </v-col>
-                    <v-col md="3" cols="12">
+                    <v-col md="6" cols="12">
                         <v-text-field
-                        label="Price*"
+                        label="Cost Price*"
+                        dense
+                        :rules="required"
+                        v-model="payload.cost_price"
+                        type="number"
+                        filled
+                        min="1"
+                        hide-details=""
+                        required
+                        ></v-text-field>
+                    </v-col>
+                    <v-col md="6" cols="12">
+                        <v-text-field
+                        label="Selling Price*"
                         dense
                         :rules="required"
                         v-model="payload.price"

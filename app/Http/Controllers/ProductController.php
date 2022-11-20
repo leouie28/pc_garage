@@ -46,6 +46,7 @@ class ProductController extends Controller
                 'name' => $request->name,
                 'description' => $request->description,
                 'price' => $request->price,
+                'cost_price' => $request->cost_price,
             ]);
             $product->save();
     
@@ -118,6 +119,15 @@ class ProductController extends Controller
         //
     }
 
+    public function updateReoder(Request $request)
+    {
+        $prod = Product::find($request->id);
+        $prod->reoder_point = $request->val;
+        $prod->save();
+
+        return $prod;
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -132,6 +142,7 @@ class ProductController extends Controller
             $product->name = $request->name;
             $product->description = $request->description;
             $product->price = $request->price;
+            $product->cost_price = $request->cost_price;
             
             $product->save();
     

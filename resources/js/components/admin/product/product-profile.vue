@@ -12,7 +12,7 @@
                 </v-card-title>
                 <v-card-text class="py-4 pb-6">
                     <v-row>
-                        <v-col md="5" cols="12" class="text-center">
+                        <v-col md="4" lg="4" cols="12" class="text-center">
                             <v-img
                             class="mb-6"
                             alt="image"
@@ -28,7 +28,7 @@
                                 <p class="text-h6 my-0">Sold: <span class="green--text">{{ pars(product.sold_sum_order_productquantity) }}</span></p>
                             </div>
                         </v-col>
-                        <v-col md="7" cols="12">
+                        <v-col md="8" lg="8" cols="12">
                             <span class="text-h4 font-weight-bold">
                                 {{ product.name }}
                             </span>

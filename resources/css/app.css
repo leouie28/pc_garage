@@ -26,6 +26,18 @@ body,html {
   margin:0;
   font-family:lato !important;
 } */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Secular+One&display=swap');
+
+.font-1 {
+    font-family: 'Roboto Slab', serif !important;
+}
+.font-2 {
+    font-family: 'Secular One', sans-serif !important;
+}
+.fs-17 {
+    font-size: 17px !important;
+}
 .v-application--is-ltr .v-list-item__icon:first-child {
     margin-right: 10px !important;
 }

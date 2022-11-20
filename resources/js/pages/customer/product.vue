@@ -188,6 +188,7 @@
                             <v-pagination
                             v-model="page"
                             :length="data.length"
+                            total-visible="5"
                             @input="changePage"
                             ></v-pagination>
                         </div>

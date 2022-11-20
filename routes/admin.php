@@ -74,6 +74,11 @@ Route::group(['middleware'=>['auth:admin']],function(){
         Route::put('admin-notification/mark-read', 'markRead');
     });
 
+    //product
+    Route::controller(ProductController::class)->group(function () {
+        Route::post('product/reoder-update', 'updateReoder');
+    });
+
     Route::resources([
         'admin' => AdminController::class,
         'category' => CategoryController::class,
