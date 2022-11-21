@@ -161,6 +161,7 @@ export default {
             this.payload = JSON.parse(JSON.stringify(this.newPayload))
         },
         save() {
+          if(this.payload.name!='' || this.payload.categories.length!=0 || this.payload.cost_price!='' || this.payload.price!='') {
             if(this.isEdit){
                 this.$emit('update', this.payload)
             }else{
@@ -168,6 +169,9 @@ export default {
             }
             this.isEdit = false
             this.payload = JSON.parse(JSON.stringify(this.newPayload))
+          }else {
+            alert('Important field required!')
+          }
         },
     },
     watch: {
