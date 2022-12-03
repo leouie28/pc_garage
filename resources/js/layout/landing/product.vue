@@ -28,7 +28,7 @@
     </v-app-bar>
 
     <v-main class="grey lighten-3 mb-16">
-      <v-container fluid>
+      <v-container fluid class="c-mw">
         <Item @warning="warningDialog=true"></Item>
       </v-container>
       <div>

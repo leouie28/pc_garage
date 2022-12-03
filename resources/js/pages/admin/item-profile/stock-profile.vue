@@ -62,15 +62,17 @@
                                 <template v-slot:[`item.add`]="{ item }">
                                     <v-text-field
                                     class="mx-auto"
-                                    style="width:100px;"
-                                    placeholder="Add"
+                                    style="width:120px;"
+                                    placeholder="0"
                                     outlined
                                     type="number"
                                     append-icon="mdi-plus"
+                                    prepend-inner-icon="mdi-minus"
                                     min="1"
                                     dense
                                     v-model="stocks[item.id]"
-                                    @click:append="addStocks(item)"
+                                    @click:prepend-inner="addStocks(item, 'minus')"
+                                    @click:append="addStocks(item, 'plus')"
                                     hide-details=""
                                     ></v-text-field>
                                 </template>
@@ -164,7 +166,7 @@ export default {
                 value: 'stocks',
             },
             {
-                text: 'Add Stocks',
+                text: 'Update Stocks',
                 align: 'center',
                 value: 'add',
             },
@@ -194,10 +196,10 @@ export default {
                 // console.log(data)
             })
         },
-        addStocks(val) {
+        addStocks(val, fnc) {
             // console.log(this.stocks[val.id])
             this.isLoading = true
-            axios.put(`/admin-api/stock/update-sku/${val.id}?&stocks=${this.stocks[val.id]}`).then(({data})=>{
+            axios.put(`/admin-api/stock/update-sku/${val.id}?&stocks=${this.stocks[val.id]}&fnc=${fnc}`).then(({data})=>{
                 this.stocks = ''
                 this.show()
                 this.newAlert(true, data.type, data.message)

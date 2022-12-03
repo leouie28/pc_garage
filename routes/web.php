@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Customer\ProductController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SetController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,9 @@ Route::get('web/web-search', [ProductController::class, 'customSearch']);
 Route::get('/web/web-compatibilities/main-item', [SetController::class, 'mainItem']);
 Route::get('/web/web-compatibilities/available-item', [SetController::class, 'availableItem']);
 Route::post('/web/web-compatibilities/check-items', [SetController::class, 'checkItems']);
+
+Route::get('/web/sales', [SaleController::class, 'todaysSales']);
+Route::get('/web/sales-report', [SaleController::class, 'salesReport']);
 
 Route::get('/{any?}', function () {
     return view('app');

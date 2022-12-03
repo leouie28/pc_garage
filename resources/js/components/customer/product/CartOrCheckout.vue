@@ -7,14 +7,14 @@
             <v-divider></v-divider>
             <v-card-text>
                 <v-row>
-                    <v-col md="6" cols="12">
+                    <v-col md="5" cols="12">
                         <v-img
                         class="prod-profile-img"
                         alt="Feature Image"
                         :src="product.images.length>0 ? '/images/products/' + product.id + '/' + product.images[0].file_name : '/images/default/noimage.png'"
                         ></v-img>
                     </v-col>
-                    <v-col md="6" cols="12">
+                    <v-col md="7" cols="12">
                         <div class="text-h5 text--primary cus-font font-weight-bold">{{ product.name }}</div>
                         <div class="text-h5 primary--text">&#8369; {{ product.price }}</div>
                         <!-- <div class="d-flex justify-space-between">
@@ -25,6 +25,25 @@
                                 <v-btn color="primary" @click="addCart" v-else>Add to Cart</v-btn>
                             </div>
                         </div> -->
+                        <v-row>
+                            <v-col md="4" cols="12">
+                                <v-text-field
+                                outlined
+                                dense
+                                v-model="qty"
+                                type="number"
+                                min="1"
+                                label="Quantity"
+                                hide-details="">
+                                </v-text-field>
+                            </v-col>
+                            <v-col md="8" cols="12" class="text-right">
+                                <v-btn color="secondary" @click="close">Cancel</v-btn>
+                                <v-btn color="error" v-if="isCheckout" link :href="params">Checkout</v-btn>
+                                <v-btn color="primary" @click="addCart" v-else>Add to Cart</v-btn>
+                            </v-col>
+                        </v-row>
+                        <h3 class="mt-3">categories</h3>
                         <v-chip-group
                             column
                         >
@@ -37,43 +56,19 @@
                             {{ category.name }}
                             </v-chip>
                         </v-chip-group>
-                        <v-divider></v-divider>
-                        <p class="text-subtitle-1 cust-font">{{ product.description }}</p>
-                        <v-row>
-                            <v-col md="6" cols="12">
-                                <v-text-field
-                                outlined
-                                dense
-                                v-model="total"
-                                type="number"
-                                label="Total"
-                                prepend-inner-icon="mdi-currency-php"
-                                readonly
-                                hide-details="">
-                                </v-text-field>
-                            </v-col>
-                            <v-col md="6" cols="12">
-                                <v-text-field
-                                outlined
-                                dense
-                                v-model="qty"
-                                type="number"
-                                min="1"
-                                label="Quantity"
-                                hide-details="">
-                                </v-text-field>
-                            </v-col>
-                        </v-row>
                     </v-col>
                 </v-row>
+                <v-divider class="mt-4 mb-2"></v-divider>
+                <h3>Description</h3>
+                <p class="text-subtitle-1 cust-font">{{ product.description }}</p>
             </v-card-text>
-            <v-divider></v-divider>
+            <!-- <v-divider></v-divider>
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="secondary" @click="close">Cancel</v-btn>
                 <v-btn color="error" v-if="isCheckout" link :href="params">Checkout</v-btn>
                 <v-btn color="primary" @click="addCart" v-else>Add to Cart</v-btn>
-            </v-card-actions>
+            </v-card-actions> -->
         </v-card>
     </div>
 </template>

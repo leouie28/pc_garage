@@ -15,6 +15,7 @@
                         <v-col md="5" cols="12" class="text-center">
                             <v-img
                             class="prod-profile-img"
+                            style="border: 1px solid #ccc;"
                             alt="image"
                             :src="product.images.length>0?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'">
                             </v-img>
@@ -39,24 +40,7 @@
                                 </v-chip>
                                 <!-- <div class="text-h6 ml-4">Stocks: {{ product.price }}</div> -->
                             </div>
-                            <v-sheet color="grey lighten-3" rounded="" class="pa-3">
-                                <h4 class="text-uppercase">Description</h4>
-                                <p class="text-subtitle-1" style="font-size:18px;">
-                                    {{ product.description }}
-                                </p>
-                            </v-sheet>
-                            <h4 class="text-uppercase mt-4 mb-2">Category:
-
-                                <v-chip
-                                v-for="category in product.categories"
-                                :key="category.id"
-                                class="mr-2"
-                                small
-                                :color="category.color">
-                                    {{category.name}}
-                                </v-chip>
-                            </h4>
-                            <div class="d-flex justify-end flex-wrap">
+                            <div class="d-flex justify-start flex-wrap">
                                 <v-btn color="secondary" class="mb-2" @click="$router.push({path: '/compatibility/'+product.id})">
                                     <span class="tohide">Compatibility</span>
                                     <span class="formobile">Check</span>
@@ -80,8 +64,25 @@
                                     <v-icon small class="ml-2">mdi-currency-php</v-icon>
                                 </v-btn>
                             </div>
+                            <h4 class="text-uppercase mt-2 mb-2">Category:
+
+                                <v-chip
+                                v-for="category in product.categories"
+                                :key="category.id"
+                                class="mr-2"
+                                small
+                                :color="category.color">
+                                    {{category.name}}
+                                </v-chip>
+                            </h4>
                         </v-col>
                     </v-row>
+                    <v-sheet color="grey lighten-3" rounded="" class="pa-3 mt-4">
+                        <h4 class="text-uppercase">Description</h4>
+                        <p class="text-subtitle-1" style="font-size:18px;">
+                            {{ product.description }}
+                        </p>
+                    </v-sheet>
                     <v-divider class="mt-4"></v-divider>
                     <v-subheader>
                         <h3>Feedback</h3>

@@ -6,6 +6,7 @@ use App\Filters\OrderFilter;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Stock;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -54,6 +55,14 @@ class OrderController extends Controller
                 'arrival' => $request->arrival,
                 'customer_id' => $request->customer,
             ]);
+
+            if($request->status == 4) {
+                $order->date_received = Carbon::now()->toDateString();
+            }
+
+            if(empty($request->arrival)) {
+                $order->arrival = Carbon::now()->toDateString();
+            }
     
             $order->save();
     

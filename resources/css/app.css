@@ -179,6 +179,15 @@ body,html {
             line-clamp: 1; 
     -webkit-box-orient: vertical;
 }
+.c-mw {
+    max-width: 1500px !important;
+}
+.a-mw {
+    position: relative !important;
+    max-width: 2000px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
 
 @media screen and (max-width: 600px){
     .v-data-table__wrapper td {

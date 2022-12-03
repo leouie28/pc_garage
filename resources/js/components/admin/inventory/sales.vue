@@ -8,6 +8,7 @@
         @search="fetchPage"
         @resetFilters="resetFilter"
         @filterRecord="fetchPage"
+        @download="download"
         :hide="toHide"
       >
       </table-header>
@@ -46,7 +47,7 @@
             class="px-2"
             small
             elevation="0"
-            color="primary"
+            color="success"
             @click="editItem(item)"
           >
             <v-icon small>mdi-square-edit-outline</v-icon>
@@ -59,6 +60,15 @@
             @click="warning(item)"
           >
             <v-icon small>mdi-trash-can</v-icon>
+          </v-btn>
+          <v-btn
+            class="px-2"
+            small
+            elevation="0"
+            color="primary"
+            @click="downloadSales(item)"
+          >
+            <v-icon small>mdi-download</v-icon>
           </v-btn>
         </template>
         <template v-slot:no-data>
@@ -105,7 +115,7 @@ export default {
   },
   data: () => ({
     data: {
-      title: "Sales",
+      title: "Sales Report",
       isFetching: false,
       keyword: "",
       filter: {},
@@ -127,27 +137,33 @@ export default {
     selected: [],
     title: "Sales",
     headers: [
-      {
-        text: "ID",
-        align: "start",
-        sortable: true,
-        value: "id",
-      },
+      // {
+      //   text: "ID",
+      //   align: "start",
+      //   sortable: true,
+      //   value: "id",
+      // },
       {
         text: "Date",
         align: "start",
         sortable: true,
-        value: "date",
+        value: "date_received",
       },
       {
         text: "Orders",
-        align: "center",
+        align: "start",
         sortable: false,
         value: "order_count",
       },
       {
+        text: "Products",
+        align: "start",
+        sortable: false,
+        value: "product_count",
+      },
+      {
         text: "Sales",
-        align: "center",
+        align: "start",
         sortable: false,
         value: "sales",
       },
@@ -173,11 +189,18 @@ export default {
           let hide = ['filter', 'addNew', 'download']
           this.toHide = hide
         }else{
-          let hide = ['filter']
+          let hide = ['filter', 'addNew']
+          this.toHide = hide
         }
         this.total = data.total;
         this.data.isFetching = false;
       });
+    },
+    download() {
+      window.open(`${window.location.origin}/web/sales-report`);
+    },
+    downloadSales(val) {
+      window.open(`${window.location.origin}/web/sales?date=${val.date_received}`);
     },
     editItem(val){
       console.log(this.alert.trigger,'trigger')

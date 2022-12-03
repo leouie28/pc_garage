@@ -16,21 +16,12 @@
                         <v-col md="4" lg="4" cols="12">
                             <v-img
                             class="mb-6"
+                            min-height="380"
                             style="border: 1px solid #ccc;"
                             alt="image"
                             :src="product.images.length?'/images/products/' + product.id + '/' + product.images[0].file_name:'/images/default/noimage.png'">
                             </v-img>
                             <!-- <h3 class="text-uppercase">Actions</h3> -->
-                            <div class="my-2">
-                                <!-- <v-btn outlined color="primary">
-                                    Edit Info
-                                    <v-icon>mdi-square-edit-outline</v-icon>
-                                </v-btn> -->
-                                <v-btn outlined color="warning" large block @click="reoder_modal = true">
-                                    Stock Alert
-                                    <v-icon>mdi-clipboard-play-multiple-outline</v-icon>
-                                </v-btn>
-                            </div>
                             <!-- <v-sheet color="primary" rounded="" dark class="py-2">
                                 <span class="text-h5">Price: &#8369; {{ product.price }}</span>
                             </v-sheet>
@@ -60,20 +51,20 @@
                                     <h3 class="text-h6">({{product.rating_count}})</h3>
                                 </div>
                             </div>
-                            <div>
-                                <v-chip color="success">
-                                    <h3>Cost Price: &#8369; {{product.cost_price}}</h3>
-                                </v-chip>
-                                <v-chip color="primary">
-                                    <h3>Selling Price: &#8369; {{ product.price }}</h3>
-                                </v-chip>
+                            <div class="d-flex justify-space-between">
+                                <div>
+                                    <v-chip color="success">
+                                        <h3>Cost Price: &#8369; {{product.cost_price}}</h3>
+                                    </v-chip>
+                                    <v-chip color="primary">
+                                        <h3>Selling Price: &#8369; {{ product.price }}</h3>
+                                    </v-chip>
+                                </div>
+                                <v-btn outlined color="warning" @click="reoder_modal = true">
+                                    Stock Alert
+                                    <v-icon>mdi-bell</v-icon>
+                                </v-btn>
                             </div>
-                            <h3 class="text-uppercase mt-2 mb-4">Description</h3>
-                            <v-sheet color="grey lighten-3" rounded="" class="pa-3">
-                                <p class="text-subtitle-1 font-2" style="font-size:18px;">
-                                    {{ product.description }}
-                                </p>
-                            </v-sheet>
                             <h3 class="text-uppercase mt-4 mb-2">Category</h3>
                             <v-chip
                             v-for="category in product.categories"
@@ -105,6 +96,12 @@
                             </v-sheet> -->
                         </v-col>
                     </v-row>
+                    <h3 class="text-uppercase mb-4">Description</h3>
+                    <v-sheet color="grey lighten-3" rounded="" class="pa-3">
+                        <p class="text-subtitle-1 font-2" style="font-size:18px;">
+                            {{ product.description }}
+                        </p>
+                    </v-sheet>
                     <v-divider class="my-4"></v-divider>
                     <v-sheet
                     rounded=""

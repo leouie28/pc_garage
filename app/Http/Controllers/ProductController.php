@@ -47,6 +47,7 @@ class ProductController extends Controller
                 'description' => $request->description,
                 'price' => $request->price,
                 'cost_price' => $request->cost_price,
+                'reorder_point' => $request->reorder_point,
             ]);
             $product->save();
     

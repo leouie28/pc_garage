@@ -132,7 +132,7 @@ export default {
     stocks: [],
     selectedItem: {},
     selected: [],
-    title: "Sales",
+    title: "Sales ",
     headers: [
       {
         text: "ID",

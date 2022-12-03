@@ -85,7 +85,7 @@
     </v-app-bar>
 
     <v-main class="grey lighten-3 mb-16">
-      <v-container fluid>
+      <v-container fluid class="c-mw">
         <router-view @event="getStat"></router-view>
       </v-container>
       <v-dialog v-model="cartDialog" max-width="600">

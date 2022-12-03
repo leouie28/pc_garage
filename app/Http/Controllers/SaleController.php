@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Filters\SaleFilter;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Sale;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SaleController extends Controller
 {
@@ -19,7 +21,50 @@ class SaleController extends Controller
      */
     public function index()
     {
-        return (new SaleFilter)->searchable();
+        // return (new SaleFilter)->searchable();
+        $orders = DB::table('orders')
+        ->join('order_product', 'orders.id', '=', 'order_product.order_id')
+        ->select(DB::raw('orders.date_received, count(orders.id) as order_count, sum(order_product.quantity) as product_count, sum(orders.total) as sales'))
+        ->where('status', 4)
+        // ->whereBetween('date_received', [$first_order, Carbon::now()->toDateString()])
+        ->groupBy('date_received')
+        ->paginate(25);
+
+        return $orders;
+    }
+
+    public function todaysSales(Request $request)
+    {
+        $date = $request->date;
+        $sales = DB::table('order_product')
+                ->join('products', 'order_product.product_id', '=', 'products.id')
+                ->join('orders', function($order) use ($date) {
+                    $order->on('order_product.order_id', '=', 'orders.id')
+                    ->where('orders.status', '=', 4)
+                    ->whereDate('orders.date_received', $date);
+                })
+                ->select('products.*', DB::raw('SUM(quantity) as total'))
+                ->groupBy('product_id')->get()->toArray();
+        $pdf = Pdf::loadView('table', ['sales' => $sales]);
+        return $pdf->stream();
+    }
+
+    public function salesReport(Request $request)
+    {
+        try{
+            $orders = DB::table('orders')
+            ->join('order_product', 'orders.id', '=', 'order_product.order_id')
+            ->select(DB::raw('orders.date_received, count(orders.id) as order_count, sum(order_product.quantity) as product_count, sum(orders.total) as sales'))
+            ->where('status', 4)
+            // ->whereBetween('date_received', [$first_order, Carbon::now()->toDateString()])
+            ->groupBy('date_received')
+            ->paginate(100);
+
+            $pdf = Pdf::loadView('report', ['reports' => $orders]);
+            return $pdf->stream();
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
     }
 
     /**
@@ -43,9 +88,18 @@ class SaleController extends Controller
 
             while($counter < 7){
                 $selector = Carbon::parse($start)->addDay($counter)->toDateString();
-                $sales[] = Sale::whereDate('date', $selector)->sum('sales');
+                $sales[] = DB::table('orders')
+                // ->select(DB::raw('date_received, count(id) as order_count, sum(total) as sales'))
+                ->where('status', 4)
+                ->whereDate('date_received', $selector)
+                ->sum('total');
                 $counter++;
             }
+            // while($counter < 7){
+            //     $selector = Carbon::parse($start)->addDay($counter)->toDateString();
+            //     $sales[] = Sale::whereDate('date', $selector)->sum('sales');
+            //     $counter++;
+            // }
 
             return $sales;
             
@@ -67,31 +121,22 @@ class SaleController extends Controller
                 if($first_order){
                     $first_order = $first_order->date_received;
     
-                    if($first_order<=$yesterday){
-                        // $orders = Order::where('status', 4)
-                        // ->groupBy('date_received')
-                        // ->sum('total');
-                        
-                        $orders = DB::table('orders')
-                        ->select(DB::raw('date_received, count(id) as order_count, sum(total) as sales'))
-                        ->where('status', 4)
-                        ->whereBetween('date_received', [$first_order, $yesterday])
-                        ->groupBy('date_received')
-                        ->get();
-    
-                        foreach($orders as $order){
-                            $sale = Sale::create([
-                                'date' => $order->date_received,
-                                'order_count' => $order->order_count,
-                                'sales' => $order->sales
-                            ]);
-                        }
-    
-                        return 'Sales created';
+                    $orders = DB::table('orders')
+                    ->select(DB::raw('date_received, count(id) as order_count, sum(total) as sales'))
+                    ->where('status', 4)
+                    ->whereBetween('date_received', [$first_order, Carbon::now()->toDateString()])
+                    ->groupBy('date_received')
+                    ->get();
+
+                    foreach($orders as $order){
+                        $sale = Sale::create([
+                            'date' => $order->date_received,
+                            'order_count' => $order->order_count,
+                            'sales' => $order->sales
+                        ]);
                     }
-                    else{
-                        return 'No sales yet.';
-                    }
+
+                    return 'Sales created';
                 }else{
                     return 'No order yet.';
                 }

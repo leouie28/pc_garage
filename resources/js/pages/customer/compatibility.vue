@@ -34,7 +34,7 @@
                                 </td>
                                 <td>
                                     <v-chip color="secondary" label v-if="part.item" close @click:close="part.item=false">
-                                        {{ part.item.name }}
+                                        <span class="mw">{{ part.item.name }}</span>
                                     </v-chip>
                                     <v-btn small color="secondary" @click="selectedComponent=part.component, showForm=true" outlined v-else>
                                         {{ part.component }}
@@ -206,6 +206,11 @@ export default {
                 item: '',
             },
         ],
+        invalid_ono: [
+            {partA: 'cpu/processor', partB: 'ram/memory'},
+            {partA: 'power supply', partB: 'cpu/processor'}
+        ],
+        invalid_all: ['monitor', 'peripherals', 'hard drive/storage']
     }),
     mounted() {
         this.getMainItem()
@@ -230,15 +235,44 @@ export default {
         },
         check() {
             this.warningForm = false
-            this.resLoader = true
-            this.resForm = true
-            let params = { data: this.parts }
-            axios.post(`/customer-api/compatibilities/check-items`, params).then(({ data }) => {
-                this.compatible = data
-            })
-            setTimeout(() => {
-                this.resLoader = false
-            },4000)
+            if(this.validateBuild()==true) {
+                this.resLoader = true
+                this.resForm = true
+                let params = { data: this.parts }
+                axios.post(`/customer-api/compatibilities/check-items`, params).then(({ data }) => {
+                    this.compatible = data
+                })
+                setTimeout(() => {
+                    this.resLoader = false
+                },4000)
+            }else {
+                alert('Invalid build! Looks like your build does not have connection.')
+            }
+        },
+
+        validateBuild() {
+            let count = 0
+            let items = []
+            this.parts.forEach(elem => {
+                if(typeof elem.item === 'object' && elem.item != null) {
+                    count++
+                    items.push(elem.component)
+                }
+            });
+            if(count==2) {
+                let check = false
+                if(items[0]==this.invalid_ono[0].partA && items[1]==this.invalid_ono[0].partB) return false
+                if(items[0]==this.invalid_ono[0].partB && items[1]==this.invalid_ono[0].partA) return false
+                if(items[0]==this.invalid_ono[1].partA && items[1]==this.invalid_ono[1].partB) return false
+                if(items[0]==this.invalid_ono[1].partB && items[1]==this.invalid_ono[1].partA) return false
+                items.forEach(val => {
+                    if(this.invalid_all.includes(val)) {
+                        check = true
+                    }
+                });
+                if(check) return false
+            }
+            return true
         }
     },
     watch: {
@@ -261,3 +295,14 @@ export default {
     }
 }
 </script>
+<style scoped>
+.mw {
+    max-width: 95%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
+            line-clamp: 1; 
+    -webkit-box-orient: vertical;
+}
+</style>

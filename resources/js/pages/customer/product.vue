@@ -31,7 +31,7 @@
                             </div>
                             <div class="d-flex justify-center mt-3">
                                 <v-subheader>
-                                    <h2>Latest Product</h2>
+                                    <h2>Newly Added</h2>
                                 </v-subheader>
                             </div>
                             <div class="d-flex flex-wrap justify-center prod-loader">
@@ -100,7 +100,7 @@
                             </div>
                             <div class="d-flex justify-center">
                                 <v-subheader v-if="page<=1">
-                                    <h2>Latest Product</h2>
+                                    <h2>Newly Added</h2>
                                 </v-subheader>
                                 <v-subheader v-else>
                                     <h2>Page {{ page }}</h2>

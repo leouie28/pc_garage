@@ -47,7 +47,18 @@ class StockController extends Controller
             $stock = Stock::find($skuId);
             $old = $stock->stocks;
 
-            $new = $old + $request->stocks;
+            if($request->fnc == 'plus') {
+                $new = $old + $request->stocks;
+            }else {
+                if($old<$request->stocks){
+                    return [
+                        "data" => $stock,
+                        "type" => "error",
+                        "message" => "Input field is greater than current stocks"
+                    ];
+                }
+                $new = $old - $request->stocks;
+            }
             $stock->stocks = $new;
             $stock->save();
 

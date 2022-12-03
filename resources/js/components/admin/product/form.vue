@@ -33,7 +33,7 @@
                         multiple
                         ></v-autocomplete>
                     </v-col>
-                    <v-col md="6" cols="12">
+                    <v-col md="4" cols="12">
                         <v-text-field
                         label="Cost Price*"
                         dense
@@ -46,12 +46,25 @@
                         required
                         ></v-text-field>
                     </v-col>
-                    <v-col md="6" cols="12">
+                    <v-col md="4" cols="12">
                         <v-text-field
                         label="Selling Price*"
                         dense
                         :rules="required"
                         v-model="payload.price"
+                        type="number"
+                        filled
+                        min="1"
+                        hide-details=""
+                        required
+                        ></v-text-field>
+                    </v-col>
+                    <v-col md="4" cols="12">
+                        <v-text-field
+                        label="Stock Alert*"
+                        dense
+                        :rules="required"
+                        v-model="payload.reorder_point"
                         type="number"
                         filled
                         min="1"
@@ -123,6 +136,7 @@ export default {
             name: '',
             categories: [],
             stocks: 1,
+            reorder_point: 0,
             description: '',
             image: null
         }
