@@ -235,7 +235,7 @@ export default {
         },
         check() {
             this.warningForm = false
-            thsi.resLoader = true
+            this.resLoader = true
             this.resForm = true
             if(this.validateBuild()==true) {
                 let items = []
