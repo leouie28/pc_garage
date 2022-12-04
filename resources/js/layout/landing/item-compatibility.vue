@@ -235,18 +235,25 @@ export default {
         },
         check() {
             this.warningForm = false
+            thsi.resLoader = true
+            this.resForm = true
             if(this.validateBuild()==true) {
-                this.resForm = true
-                let params = { data: this.parts }
+                let items = []
+                this.parts.forEach(elem => {
+                    if(!this.invalid_all.includes(elem.component)) {
+                        items.push(elem)
+                    }
+                });
+                let params = { data: items }
                 axios.post(`/web/web-compatibilities/check-items`, params).then(({ data }) => {
                     this.compatible = data
                 })
-                setTimeout(() => {
-                    this.resLoader = false
-                },4000)
             }else {
-                alert('Invalid build! Looks like your build does not have connection.')
+                this.compatible = true
             }
+            setTimeout(() => {
+                this.resLoader = false
+            },4000)
         },
         validateBuild() {
             let count = 0
