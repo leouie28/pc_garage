@@ -83,10 +83,11 @@
                                                     </div> -->
                                                 </div>
                                             </div>
-                                            <div :class="item.product.stocks_sum_stocksstocks>=item.quantity ? 'ml-2' : 'ml-2 red--text'">
+                                            <div :class="parseStock(item.product.stocks_sum_stocksstocks)>item.quantity ? 'ml-2' : 'ml-2 red--text'">
                                                 Qty
                                                 <input
-                                                :class="item.product.stocks_sum_stocksstocks>=item.quantity ? 'qty' : 'qty red-qty'"
+                                                class="qty"
+                                                :class="parseStock(item.product.stocks_sum_stocksstocks)>item.quantity ? '' : 'red-qty'"
                                                 type="number"
                                                 v-model="item.quantity"
                                                 @change="computeTotal"
@@ -240,6 +241,9 @@ import empty from '../global/empty.vue'
                 } 
                 });
             } else this.selected = [];
+        },
+        parseStock(val) {
+            return parseInt(val)
         }
         // filter() {
         //     this.available = this.available.map(x => ({ ...x, isSelectable: x.product.stocks_sum_stocksstocks >= x.quantity }))

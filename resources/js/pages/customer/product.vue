@@ -72,7 +72,7 @@
                                         width="500">
                                             <div class="best-overlay white--text">
                                                 <v-chip label color="blue-grey lighten-5">
-                                                    Sold: {{prod.sold_count}} 
+                                                    Sold: {{prod.order_sum_order_productquantity}} 
                                                     <v-icon>mdi-trophy-award</v-icon>
                                                 </v-chip>
                                                 <!-- <h3 class="">Sold: 3 
