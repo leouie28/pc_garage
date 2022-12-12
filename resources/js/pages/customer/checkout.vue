@@ -208,13 +208,14 @@ export default {
         }
       });
       this.linkParams = newParams.slice(0, -1);
+      console.log(this.linkParams, 'ine')
       let link = JSON.parse(JSON.stringify(this.$route.query));
-      link.items = newParams
+      link.items = this.linkParams
       console.log(newParams)
       this.$router.replace({ query: link });
       setTimeout(() => {
         this.getData()
-      }, 200)
+      },300)
     },
     computeTotal() {
       let compute = 0

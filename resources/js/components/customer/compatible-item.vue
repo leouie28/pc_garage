@@ -55,6 +55,7 @@ export default {
     data: () => ({
         items: [],
         key: '',
+        timer: null,
         searchWait: false,
     }),
     props: {
@@ -69,20 +70,26 @@ export default {
     methods: {
         available() {
             let key = this.component
-            if(this.key.length!='')key = key + '&search=' + this.key
+            if(this.key.length>1)key = key + '&search=' + this.key
             axios.get(`/customer-api/compatibilities/available-item?key=${key}`).then(({ data }) => {
                 this.items = data
             })
         },
         search() {
-            if(this.key.length>2){
-                if(!this.searchWait){
-                    setTimeout(() => {
-                        this.available()
-                    },1000)
-                    this.searchWait = false
-                }
-                this.searchWait = true
+            if(this.key.length>1){
+
+                clearTimeout(this.timer)
+                this.timer = setTimeout(() => {
+                    this.available()
+                },1000)
+
+                // if(!this.searchWait){
+                //     setTimeout(() => {
+                //         this.available()
+                //     },1000)
+                //     this.searchWait = false
+                // }
+                // this.searchWait = true
             }
         }
     },
@@ -93,6 +100,13 @@ export default {
                     this.available()
                 }
             },immediate:true, deep:true
+        },
+        key(val) {
+            if(val.length>1) {
+                this.search()
+            }else {
+                this.available()
+            }
         }
     }
 }
