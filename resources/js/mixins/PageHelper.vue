@@ -295,8 +295,8 @@ export default {
         },
         numberSeparator(value) {
             return value
-                .toString()
-                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                // .toString()
+                // .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         },
         ucase(value) {
             if (value) return value.toUpperCase();
