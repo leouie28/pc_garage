@@ -9799,5 +9799,8 @@
         "php": "^7.4.10||^8.1"
     },
     "platform-dev": [],
+    "platform-overrides": {
+        "php": "7.4.10"
+    },
     "plugin-api-version": "2.3.0"
 }
